@@ -1,34 +1,26 @@
-/* public/css/style.css */
+:root {
+    --hippo-red: #E2001A;    /* Le rouge emblématique */
+    --hippo-dark: #2D2926;   /* Noir/Gris anthracite pour le texte */
+    --hippo-cream: #F4F1EA;  /* Fond clair cassé pour le confort visuel */
+    --hippo-wood: #8B4513;   /* Marron pour les touches de rappel grillade/bois */
+}
+
 body {
-    background-color: #f4f7f6;
-    color: #333;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: 'Trebuchet MS', sans-serif; /* Proche de leur com */
+    background-color: var(--hippo-cream);
+    color: var(--hippo-dark);
     margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
 }
 
-.card {
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-    text-align: center;
-    border-top: 5px solid #0070f3;
+header {
+    background-color: white;
+    border-bottom: 3px solid var(--hippo-red);
 }
 
-h1 {
-    color: #0070f3;
-    margin-bottom: 10px;
-}
-
-.time-box {
-    font-size: 1.2rem;
-    background: #eef2ff;
-    padding: 10px;
-    border-radius: 8px;
-    display: inline-block;
-    margin: 20px 0;
+.btn {
+    background-color: var(--hippo-red);
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
 }
