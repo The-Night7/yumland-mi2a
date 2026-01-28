@@ -2,42 +2,77 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Hippopotamus | Creative Yumland</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Le Grand Miam | Steakhouse & Grill</title>
     <link rel="stylesheet" href="public/css/style.css">
 </head>
 <body>
 
 <header>
     <nav>
-        <div class="logo">
-            <img src="public/images/logo/logo-hippo.svg" alt="Logo Hippopotamus">
+        <div class="logo-container">
+            <a href="index.html" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
         </div>
-        <ul>
-            <li><a href="index.html">Accueil</a></li>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Accueil</a></li>
             <li><a href="public/html/carte.html">La Carte</a></li>
-            <li><a href="public/html/inscription.html">Devenir Fidèle</a></li>
+            <li><a href="public/html/connexion.html" class="btn-login">Mon Compte</a></li>
         </ul>
     </nav>
 </header>
 
 <main>
     <section id="hero">
-        <h1>Le spécialiste de la viande grillée</h1>
-        <p>Découvrez nos pièces de bœuf sélectionnées avec soin.</p>
-        <a href="public/html/carte.html" class="btn">Consulter la carte</a>
+        <div class="hero-content">
+            <h1>Grand par le goût, géant par l'appétit.</h1>
+            <p>Le spécialiste de la viande grillée et des burgers XXL.</p>
+            <a href="public/html/carte.html" class="cta-button">Voir la Carte</a>
+        </div>
     </section>
 
-    <section id="notre-histoire">
-        <h2>Depuis 1968</h2>
-        <div class="flex-container">
-            <p>Hippopotamus, c'est l'art de la grillade à la française...</p>
-            <img src="public/images/fondateur/fondateur.jpg" alt="Christian Guignard">
+    <section id="presentation">
+        <div class="container flex-row">
+
+            <article class="concept-text">
+                <h2>L'Esprit Steakhouse</h2>
+                <p>Chez <strong>Le Grand Miam</strong>, nous ne faisons pas dans la demi-mesure. Fondé en 2015 par des passionnés de barbecue, notre restaurant vous propose des viandes maturées et grillées à la flamme sous vos yeux.</p>
+                <p>Que vous soyez en famille ou entre amis, venez partager un moment convivial autour d'une planche généreuse.</p>
+            </article>
+
+            <aside class="info-box">
+                <h3>📢 L'Info du Chef</h3>
+                <p>Ce mois-ci, découvrez notre nouvelle sauce <em>"Fumée du Texas"</em> offerte avec tous les burgers !</p>
+            </aside>
+        </div>
+    </section>
+
+    <section id="galerie">
+        <h2>Nos Incontournables</h2>
+        <div class="gallery-grid">
+            <figure>
+                <img src="public/images/nourriture/entrecote.png" alt="Entrecôte grillée 300g">
+                <figcaption>L'Entrecôte Royale</figcaption>
+            </figure>
+            <figure>
+                <img src="public/images/nourriture/burger.png" alt="Burger Double Steak">
+                <figcaption>Le Grand Miam Burger</figcaption>
+            </figure>
+            <figure>
+                <img src="public/images/nourriture/profiteroles.png" alt="Profiteroles géantes">
+                <figcaption>Profiteroles XXL</figcaption>
+            </figure>
         </div>
     </section>
 </main>
 
 <footer>
-    <p>&copy; 2026 Creative Yumland - Projet CY Tech</p>
+    <div class="footer-content">
+        <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland (CY Tech)</p>
+        <div class="footer-links">
+            <a href="public/html/mentions.html">Mentions Légales</a> |
+            <a href="public/html/inscription.html">Devenir Membre</a>
+        </div>
+    </div>
 </footer>
 
 <script src="public/js/script.js"></script>

@@ -1,10 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>La Carte | Le Grand Miam</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<header>
+    <nav>
+        <div class="logo-container">
+            <a href="../../index.html" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../../index.html">Accueil</a></li>
+            <li><a href="carte.html" class="active">La Carte</a></li>
+            <li><a href="connexion.html" class="btn-login">Mon Compte</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="menu-container">
+    <h1>Notre Carte des Viandes</h1>
+    <p class="intro-text">Toutes nos viandes sont servies avec frites à volonté et sauce au choix.</p>
+
+    <table class="menu-table">
+        <caption>Nos Pièces du Boucher</caption>
+        <thead>
+        <tr>
+            <th>Catégorie</th>
+            <th>Nom de la Pièce</th>
+            <th>Poids</th>
+            <th>Prix</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td rowspan="3" class="category-cell">Bœuf<br>Charolais</td>
+            <td>L'Entrecôte XXL</td>
+            <td>350g</td>
+            <td>24.90 €</td>
+        </tr>
+        <tr>
+            <td>Le Pavé du Chef</td>
+            <td>200g</td>
+            <td>18.50 €</td>
+        </tr>
+        <tr>
+            <td>La Côte de Bœuf (pour 2)</td>
+            <td>1 kg</td>
+            <td>59.00 €</td>
+        </tr>
+
+        <tr class="separator"><td colspan="4"></td></tr>
+
+        <tr>
+            <td rowspan="2" class="category-cell">Burgers<br>Maison</td>
+            <td>Le Grand Miam Burger</td>
+            <td>Double Steak</td>
+            <td>16.90 €</td>
+        </tr>
+        <tr>
+            <td>Le Cheesy Tower</td>
+            <td>180g</td>
+            <td>15.50 €</td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr>
+            <td colspan="3">Supplément sauce (Poivre, Roquefort, BBQ)</td>
+            <td>+ 1.50 €</td>
+        </tr>
+        </tfoot>
+    </table>
+</main>
+
+<footer>
+    <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
+</footer>
 
 </body>
 </html>

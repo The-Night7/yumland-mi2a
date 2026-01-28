@@ -1,26 +1,395 @@
 :root {
-    --hippo-red: #E2001A;    /* Le rouge emblématique */
-    --hippo-dark: #2D2926;   /* Noir/Gris anthracite pour le texte */
-    --hippo-cream: #F4F1EA;  /* Fond clair cassé pour le confort visuel */
-    --hippo-wood: #8B4513;   /* Marron pour les touches de rappel grillade/bois */
+    /* --- PALETTE DE COULEURS (Charte Le Grand Miam) --- */
+
+    /* Couleur Primaire : Rouge Grill (Utilisé pour les boutons, prix, titres forts) */
+    --color-primary: #D32F2F;
+
+    /* Couleur Secondaire : Noir Charbon (Pour le header, footer, contrastes) */
+    --color-secondary: #2D2D2D;
+
+    /* Couleur d'Accent : Or Frites (Pour les étoiles, focus, promos) */
+    --color-accent: #FFC107;
+
+    /* Couleur de Fond : Crème (Plus doux que le blanc pur pour la lecture) */
+    --color-bg: #FDFBF7;
+
+    /* Couleur de Texte : Gris foncé (Pour le confort visuel) */
+    --color-text: #333333;
+
+    /* Blanc Pur (Pour les cartes et conteneurs) */
+    --color-white: #FFFFFF;
+
+    /* --- TYPOGRAPHIE --- */
+    --font-heading: 'Oswald', sans-serif; /* Police titres (impact) */
+    --font-body: 'Lato', sans-serif;      /* Police texte (lisibilité) */
+
+    /* --- ESPACEMENT & BORDURES --- */
+    --border-radius: 6px;
+    --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 body {
-    font-family: 'Trebuchet MS', sans-serif; /* Proche de leur com */
-    background-color: var(--hippo-cream);
-    color: var(--hippo-dark);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
     margin: 0;
+}
+
+h1, h2 {
+    color: var(--color-primary);
+    font-family: var(--font-heading);
+}
+
+/* Le bouton d'appel à l'action */
+.cta-button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--border-radius);
+}
+
+.cta-button:hover {
+    /* On peut même foncer la couleur dynamiquement ou définir une variable --primary-dark */
+    background-color: #B71C1C;
+}
+
+/* Le Footer */
+footer {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
 }
 
 header {
     background-color: white;
-    border-bottom: 3px solid var(--hippo-red);
+    border-bottom: 3px solid var(--color-primary);
 }
 
 .btn {
-    background-color: var(--hippo-red);
-    color: white;
+    background-color: var(--color-primary);
+    color: var(--color-white);
     padding: 10px 20px;
     text-decoration: none;
+    border-radius: var(--border-radius);
+}
+
+/* Style spécifique pour le logo */
+.text-highlight {
+    color: var(--color-primary); /* Le rouge #D32F2F défini avant */
+    font-size: 1.3em;          /* Plus grand que le reste */
+    text-transform: uppercase;
+    font-weight: 800;          /* Très gras */
+}
+
+/* Mise en page de la section présentation */
+.flex-row {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    padding: 2rem;
+}
+
+.concept-text {
+    flex: 2; /* Prend 2/3 de l'espace */
+}
+
+.info-box {
+    flex: 1; /* Prend 1/3 de l'espace */
+    background-color: #ffebee; /* Un rouge très pâle */
+    padding: 1.5rem;
+    border-radius: 8px;
+    border-left: 5px solid var(--color-primary);
+}
+
+/* Galerie simple pour les images */
+.gallery-grid {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    padding: 2rem;
+}
+
+figure {
+    margin: 0;
+    text-align: center;
+}
+
+figure img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: var(--shadow-soft);
+}
+
+figure figcaption {
+    margin-top: 0.5rem;
+    font-weight: bold;
+    color: var(--color-text);
+}
+
+/* --- Styles de la page Carte --- */
+
+.menu-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    text-align: center;
+}
+
+.menu-table {
+    width: 100%;
+    border-collapse: collapse; /* Fusionne les bordures adjacentes */
+    margin-top: 2rem;
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-soft);
+}
+
+.menu-table caption {
+    caption-side: top;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--color-primary);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+}
+
+.menu-table th, .menu-table td {
+    padding: 15px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+/* En-tête du tableau */
+.menu-table th {
+    background-color: var(--color-secondary);
+    color: var(--color-white);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Colonne Catégorie stylisée */
+.category-cell {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+    width: 15%;
+}
+
+/* Prix en gras */
+.menu-table td:last-child {
+    font-weight: bold;
+    color: var(--color-primary);
+    font-size: 1.1rem;
+}
+
+/* Pied de tableau */
+.menu-table tfoot td {
+    background-color: #f9f9f9;
+    font-style: italic;
+    text-align: right;
+    border-top: 2px solid var(--color-primary);
+}
+
+/* Responsive : scroll horizontal sur mobile si nécessaire */
+@media (max-width: 600px) {
+    .menu-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+
+/* --- STYLES DES FORMULAIRES --- */
+
+/* Mise en page globale de la page formulaire */
+.form-page {
+    background-color: #f4f4f4;
+    min-height: 80vh; /* Prend au moins 80% de la hauteur de l'écran */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+/* Le conteneur blanc du formulaire */
+.form-container {
+    background-color: var(--color-white);
+    padding: 2.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    width: 100%;
+    max-width: 600px; /* Largeur max pour l'inscription */
+}
+
+/* Version plus étroite pour la connexion */
+.form-container.narrow {
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Style des fieldset et legend */
+fieldset {
+    border: 1px solid #ddd;
     border-radius: 5px;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+}
+
+legend {
+    font-weight: bold;
+    color: var(--color-primary);
+    padding: 0 10px;
+    font-size: 1.1rem;
+}
+
+/* Groupes de champs (Label + Input) */
+.form-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--color-text);
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    box-sizing: border-box; /* Important pour que le padding ne casse pas la largeur */
+}
+
+input:focus {
+    border-color: var(--color-primary);
+    outline: none;
+    box-shadow: 0 0 5px rgba(211, 47, 47, 0.2);
+}
+
+/* Bouton pleine largeur */
+.full-width {
+    width: 100%;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+    transition: background-color 0.3s;
+}
+
+.full-width:hover {
+    background-color: #b71c1c; /* Rouge un peu plus foncé */
+}
+
+/* Lien de basculement Inscription/Connexion */
+.switch-form {
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+    text-align: center;
+}
+
+.switch-form a {
+    color: var(--color-primary);
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.switch-form a:hover {
+    text-decoration: underline;
+}
+
+/* --- STYLES PAGE MENTIONS LEGALES --- */
+
+.legal-page {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+/* Menu latéral (Sommaire) */
+.legal-nav {
+    flex: 1; /* Prend 1 part de l'espace */
+    min-width: 250px;
+    background-color: var(--color-white);
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    height: fit-content; /* S'adapte au contenu */
+    position: sticky; /* Reste visible au scroll */
+    top: 2rem;
+}
+
+.legal-nav ul {
+    list-style: none;
+    padding: 0;
+}
+
+.legal-nav li {
+    margin-bottom: 10px;
+}
+
+.legal-nav a {
+    text-decoration: none;
+    color: var(--color-text);
+    font-weight: 500;
+}
+
+.legal-nav a:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+/* Contenu principal texte */
+.legal-content {
+    flex: 3; /* Prend 3 parts de l'espace */
+    background-color: var(--color-white);
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    text-align: justify; /* Pour faire "pro" et juridique */
+}
+
+.legal-content h1 {
+    color: var(--color-primary);
+    border-bottom: 2px solid var(--color-secondary);
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.legal-content h2 {
+    color: var(--color-secondary);
+    margin-top: 0;
+}
+
+.legal-content h3 {
+    font-size: 1.1rem;
+    color: var(--color-text);
+    margin-top: 1.5rem;
+}
+
+.legal-content hr {
+    border: 0;
+    border-top: 1px solid #eee;
+    margin: 2rem 0;
+}
+
+/* Responsive : Sur mobile, le menu passe au dessus */
+@media (max-width: 768px) {
+    .legal-page {
+        flex-direction: column;
+    }
+
+    .legal-nav {
+        position: static; /* Ne flotte plus */
+        width: auto;
+    }
 }

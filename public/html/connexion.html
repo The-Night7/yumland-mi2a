@@ -1,10 +1,55 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion | Le Grand Miam</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<header>
+    <nav>
+        <div class="logo-container">
+            <a href="../../index.html" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../../index.html">Accueil</a></li>
+            <li><a href="carte.html">La Carte</a></li>
+            <li><a href="inscription.html" class="btn-login">Inscription</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="form-page">
+    <section class="form-container narrow">
+        <h1>Bon retour parmi nous !</h1>
+
+        <form action="#" method="post">
+            <fieldset>
+                <legend>Accès Espace Client</legend>
+
+                <div class="form-group">
+                    <label for="email-login">Email :</label>
+                    <input type="email" id="email-login" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password-login">Mot de passe :</label>
+                    <input type="password" id="password-login" name="password" required>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="cta-button full-width">Se Connecter</button>
+        </form>
+
+        <p class="switch-form">Pas encore de compte ? <a href="inscription.html">Inscrivez-vous</a></p>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
+</footer>
 
 </body>
 </html>

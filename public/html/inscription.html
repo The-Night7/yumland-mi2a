@@ -1,10 +1,77 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rejoindre le Club | Le Grand Miam</title>
+    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
+
+<header>
+    <nav>
+        <div class="logo-container">
+            <a href="../../index.html" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../../index.html">Accueil</a></li>
+            <li><a href="carte.html">La Carte</a></li>
+            <li><a href="connexion.html" class="btn-login">Mon Compte</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="form-page">
+    <section class="form-container">
+        <h1>Devenir Membre</h1>
+        <p>Rejoignez le clan des carnivores et profitez d'offres exclusives !</p>
+
+        <form action="#" method="post">
+
+            <fieldset>
+                <legend>Vos Informations Personnelles</legend>
+
+                <div class="form-group">
+                    <label for="nom">Nom :</label>
+                    <input type="text" id="nom" name="nom" placeholder="Ex: Dupont" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="prenom">Prénom :</label>
+                    <input type="text" id="prenom" name="prenom" placeholder="Ex: Jean" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tel">Téléphone :</label>
+                    <input type="tel" id="tel" name="tel" placeholder="06 12 34 56 78">
+                </div>
+            </fieldset>
+
+            <fieldset>
+                <legend>Vos Identifiants</legend>
+
+                <div class="form-group">
+                    <label for="email">Email :</label>
+                    <input type="email" id="email" name="email" placeholder="jean.dupont@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Mot de passe :</label>
+                    <input type="password" id="password" name="password" required minlength="8">
+                    <small>8 caractères minimum.</small>
+                </div>
+            </fieldset>
+
+            <button type="submit" class="cta-button full-width">Créer mon compte</button>
+        </form>
+
+        <p class="switch-form">Déjà membre ? <a href="connexion.html">Connectez-vous ici</a></p>
+    </section>
+</main>
+
+<footer>
+    <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
+</footer>
 
 </body>
 </html>
