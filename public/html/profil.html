@@ -156,7 +156,27 @@
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
         document.getElementById(tabName).style.display = "block";
+        document.getElementById(tabName).classList.add("active");
         evt.currentTarget.className += " active";
+    }
+
+    // Récupérer l'utilisateur connecté depuis la session temporaire
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+
+    if (currentUser) {
+        // Manipulation DOM simple
+        const welcomeMsg = document.createElement('p');
+        welcomeMsg.style.color = 'var(--rouge-grill)';
+        welcomeMsg.style.fontWeight = 'bold';
+        welcomeMsg.textContent = `Bienvenue, ${currentUser.prenom} ${currentUser.nom}`;
+
+        // Insérer après le titre h1
+        const title = document.querySelector('h1');
+        if(title) title.after(welcomeMsg);
+    } else {
+        // Si personne n'est connecté, on redirige (Sécurité Front-end basique)
+        alert("Vous devez vous connecter pour voir cette page.");
+        window.location.href = "connexion.html";
     }
 </script>
 </body>
