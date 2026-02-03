@@ -1,90 +1,164 @@
+/* --- IMPORT DES POLICES (Google Fonts) --- */
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@300;400;700&display=swap');
+
 :root {
     /* --- PALETTE DE COULEURS (Charte Le Grand Miam) --- */
-
-    /* Couleur Primaire : Rouge Grill (Utilisé pour les boutons, prix, titres forts) */
+    /* Couleur Primaire : Rouge Grill (Boutons, prix, titres forts) */
     --color-primary: #D32F2F;
+    --color-primary-dark: #B71C1C; /* Pour les hovers */
 
-    /* Couleur Secondaire : Noir Charbon (Pour le header, footer, contrastes) */
+    /* Couleur Secondaire : Noir Charbon (Header, footer, contrastes) */
     --color-secondary: #2D2D2D;
 
-    /* Couleur d'Accent : Or Frites (Pour les étoiles, focus, promos) */
+    /* Couleur d'Accent : Or Frites (Étoiles, focus, promos, points fidélité) */
     --color-accent: #FFC107;
 
-    /* Couleur de Fond : Crème (Plus doux que le blanc pur pour la lecture) */
+    /* Couleur de Fond : Crème (Plus doux que le blanc pur) */
     --color-bg: #FDFBF7;
-
-    /* Couleur de Texte : Gris foncé (Pour le confort visuel) */
-    --color-text: #333333;
-
-    /* Blanc Pur (Pour les cartes et conteneurs) */
     --color-white: #FFFFFF;
 
-    /* --- TYPOGRAPHIE --- */
-    --font-heading: 'Oswald', sans-serif; /* Police titres (impact) */
-    --font-body: 'Lato', sans-serif;      /* Police texte (lisibilité) */
+    /* Couleur de Texte : Gris foncé (Lecture) */
+    --color-text: #333333;
+    --color-grey-light: #BDBDBD; /* Gris Pierre */
 
-    /* --- ESPACEMENT & BORDURES --- */
+    /* --- TYPOGRAPHIE --- */
+    --font-heading: 'Oswald', sans-serif; /* Titres (Impact) */
+    --font-body: 'Lato', sans-serif;      /* Texte (Lisibilité) */
+
+    /* --- UI ELEMENTS --- */
     --border-radius: 6px;
     --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 15px rgba(0,0,0,0.15);
 }
 
+/* --- RESET & BASES --- */
 body {
     background-color: var(--color-bg);
     color: var(--color-text);
     font-family: var(--font-body);
     margin: 0;
+    line-height: 1.6;
 }
 
-h1, h2 {
+h1, h2, h3, h4 {
     color: var(--color-primary);
     font-family: var(--font-heading);
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Le bouton d'appel à l'action */
-.cta-button {
-    background-color: var(--color-primary);
-    color: var(--color-white);
-    border-radius: var(--border-radius);
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
 }
 
-.cta-button:hover {
-    /* On peut même foncer la couleur dynamiquement ou définir une variable --primary-dark */
-    background-color: #B71C1C;
+ul {
+    list-style: none; /* Reset par défaut, on réactive si besoin */
+    padding-left: 0;
 }
 
-/* Le Footer */
-footer {
-    background-color: var(--color-secondary);
-    color: var(--color-white);
-}
-
-header {
-    background-color: white;
-    border-bottom: 3px solid var(--color-primary);
-}
-
+/* Boutons génériques */
 .btn {
+    display: inline-block;
     background-color: var(--color-primary);
     color: var(--color-white);
     padding: 10px 20px;
     text-decoration: none;
     border-radius: var(--border-radius);
-}
-
-/* Style spécifique pour le logo */
-.text-highlight {
-    color: var(--color-primary); /* Le rouge #D32F2F défini avant */
-    font-size: 1.3em;          /* Plus grand que le reste */
+    font-family: var(--font-heading);
     text-transform: uppercase;
-    font-weight: 800;          /* Très gras */
+    transition: background-color 0.3s;
+    border: none;
+    cursor: pointer;
 }
 
-/* Mise en page de la section présentation */
+.btn:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.cta-button {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--border-radius);
+    padding: 12px 25px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.cta-button:hover {
+    background-color: var(--color-primary-dark);
+}
+
+/* --- HEADER & NAVIGATION --- */
+header {
+    background-color: var(--color-white);
+    border-bottom: 4px solid var(--color-primary);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 10px 20px;
+}
+
+.logo-text {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+}
+
+.text-highlight {
+    color: var(--color-primary);
+    font-weight: 800;
+}
+
+.nav-links {
+    display: flex;
+    gap: 20px;
+}
+
+.nav-links li a {
+    font-weight: 700;
+    color: var(--color-secondary);
+    font-family: var(--font-heading);
+    padding: 5px 10px;
+}
+
+.nav-links li a:hover,
+.nav-links li a.active {
+    color: var(--color-primary);
+}
+
+/* Bouton spécifique dans le menu */
+.btn-login {
+    border: 2px solid var(--color-primary);
+    border-radius: var(--border-radius);
+    padding: 5px 15px !important;
+    color: var(--color-primary) !important;
+}
+
+.btn-login:hover {
+    background-color: var(--color-primary);
+    color: var(--color-white) !important;
+}
+
+/* --- PAGE ACCUEIL & PRESENTATION (Nouveau) --- */
 .flex-row {
     display: flex;
     gap: 2rem;
     align-items: flex-start;
     padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .concept-text {
@@ -93,147 +167,233 @@ header {
 
 .info-box {
     flex: 1; /* Prend 1/3 de l'espace */
-    background-color: #ffebee; /* Un rouge très pâle */
+    background-color: #ffebee; /* Rouge très pâle */
     padding: 1.5rem;
     border-radius: 8px;
     border-left: 5px solid var(--color-primary);
+    box-shadow: var(--shadow-soft);
 }
 
-/* Galerie simple pour les images */
+/* Galerie d'images */
 .gallery-grid {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
     padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 figure {
     margin: 0;
     text-align: center;
+    background: white;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.3s;
+}
+
+figure:hover {
+    transform: scale(1.02);
 }
 
 figure img {
     width: 300px;
     height: 200px;
     object-fit: cover;
-    border-radius: 8px;
-    box-shadow: var(--shadow-soft);
+    border-radius: 4px;
 }
 
 figure figcaption {
     margin-top: 0.5rem;
     font-weight: bold;
     color: var(--color-text);
+    font-family: var(--font-heading);
 }
 
-/* --- Styles de la page Carte --- */
 
+/* --- PAGE CARTE & MENUS (STYLES SPÉCIFIQUES) --- */
 .menu-container {
     max-width: 1000px;
     margin: 2rem auto;
-    padding: 0 1rem;
-    text-align: center;
+    padding: 0 20px;
 }
 
+.intro-text {
+    text-align: center;
+    font-size: 1.2rem;
+    margin-bottom: 40px;
+    color: var(--color-secondary);
+}
+
+/* TABLEAUX DE LA CARTE */
 .menu-table {
     width: 100%;
-    border-collapse: collapse; /* Fusionne les bordures adjacentes */
-    margin-top: 2rem;
+    border-collapse: collapse;
+    margin-bottom: 40px;
     background-color: var(--color-white);
     box-shadow: var(--shadow-soft);
+    border-radius: var(--border-radius);
+    overflow: hidden; /* Pour garder les coins arrondis */
 }
 
 .menu-table caption {
     caption-side: top;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--color-primary);
-    margin-bottom: 1rem;
-    text-transform: uppercase;
-}
-
-.menu-table th, .menu-table td {
-    padding: 15px;
-    border: 1px solid #ddd;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--color-secondary);
+    margin-bottom: 10px;
     text-align: left;
+    border-left: 5px solid var(--color-primary);
+    padding-left: 15px;
+    font-family: var(--font-heading);
 }
 
-/* En-tête du tableau */
-.menu-table th {
+.menu-table thead {
     background-color: var(--color-secondary);
     color: var(--color-white);
-    text-transform: uppercase;
-    letter-spacing: 1px;
 }
 
-/* Colonne Catégorie stylisée */
+.menu-table th {
+    padding: 15px;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: var(--font-heading);
+    letter-spacing: 1px;
+    font-weight: 400;
+}
+
+.menu-table td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+/* Colonne Prix */
+.menu-table td:nth-child(3) { /* Cible souvent le prix selon ta structure */
+    font-weight: bold;
+    color: var(--color-primary);
+    font-size: 1.1rem;
+    white-space: nowrap;
+}
+
+/* Colonne Catégorie (fusionnée avec rowspan) */
 .category-cell {
     background-color: var(--color-primary);
     color: var(--color-white);
     font-weight: bold;
     text-align: center;
-    vertical-align: middle;
-    width: 15%;
+    font-family: var(--font-heading);
+    font-size: 1.2rem;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Prix en gras */
-.menu-table td:last-child {
-    font-weight: bold;
-    color: var(--color-primary);
-    font-size: 1.1rem;
+/* Ligne de séparation dans le tableau */
+.separator td {
+    background-color: var(--color-bg);
+    height: 10px;
+    padding: 0;
+    border: none;
 }
 
-/* Pied de tableau */
+/* Pied de tableau (infos supp) */
 .menu-table tfoot td {
     background-color: #f9f9f9;
     font-style: italic;
-    text-align: right;
+    color: #666;
+    font-size: 0.9rem;
+    padding: 10px 15px;
     border-top: 2px solid var(--color-primary);
 }
 
-/* Responsive : scroll horizontal sur mobile si nécessaire */
-@media (max-width: 600px) {
-    .menu-table {
-        display: block;
-        overflow-x: auto;
-    }
+/* BLOCS FORMULES (MENUS) */
+.menu-formule {
+    background-color: var(--color-white);
+    border: 2px solid var(--color-secondary);
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    transition: transform 0.2s ease;
 }
 
-/* --- STYLES DES FORMULAIRES --- */
+.menu-formule:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--color-primary);
+}
 
-/* Mise en page globale de la page formulaire */
+.menu-formule h3 {
+    margin-top: 0;
+    border-bottom: 2px solid var(--color-accent); /* Ligne Or */
+    padding-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.menu-formule ul {
+    list-style-type: disc; /* Remet les puces pour les menus */
+    padding-left: 20px;
+    margin-top: 10px;
+}
+
+.menu-formule ul ul {
+    list-style-type: circle;
+    margin-bottom: 10px;
+}
+
+.formule-details {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+/* Highlight spécifique pour le menu enfant */
+.menu-formule:nth-of-type(2) {
+    border-color: var(--color-accent);
+}
+
+/* Highlight spécifique pour le menu Grill Master */
+.menu-formule:nth-of-type(3) {
+    border-color: var(--color-primary);
+    border-width: 3px;
+}
+
+/* --- FORMULAIRES (LOGIN/INSCRIPTION) --- */
 .form-page {
-    background-color: #f4f4f4;
-    min-height: 80vh; /* Prend au moins 80% de la hauteur de l'écran */
+    background-color: var(--color-bg);
+    min-height: 80vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
+    padding: 40px 20px;
 }
 
-/* Le conteneur blanc du formulaire */
 .form-container {
     background-color: var(--color-white);
-    padding: 2.5rem;
-    border-radius: var(--border-radius);
+    padding: 40px;
+    border-radius: 8px; /* Un peu plus rond */
     box-shadow: var(--shadow-soft);
     width: 100%;
-    max-width: 600px; /* Largeur max pour l'inscription */
+    max-width: 600px;
+    border-top: 5px solid var(--color-primary);
 }
 
-/* Version plus étroite pour la connexion */
 .form-container.narrow {
     max-width: 400px;
-    text-align: center;
 }
 
-/* Style des fieldset et legend */
+/* Fieldset & Legend (Nouveau) */
 fieldset {
-    border: 1px solid #ddd;
+    border: 1px solid var(--color-grey-light);
     border-radius: 5px;
     margin-bottom: 1.5rem;
     padding: 1.5rem;
+    background: #fff;
 }
 
 legend {
@@ -241,285 +401,123 @@ legend {
     color: var(--color-primary);
     padding: 0 10px;
     font-size: 1.1rem;
+    font-family: var(--font-heading);
 }
 
-/* Groupes de champs (Label + Input) */
 .form-group {
-    margin-bottom: 1.2rem;
-    text-align: left;
+    margin-bottom: 20px;
 }
 
-label {
+.form-group label {
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--color-text);
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-family: var(--font-heading);
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-input[type="tel"] {
+.form-group input {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
+    padding: 12px;
+    border: 1px solid var(--color-grey-light);
     border-radius: var(--border-radius);
     font-size: 1rem;
-    box-sizing: border-box; /* Important pour que le padding ne casse pas la largeur */
+    box-sizing: border-box; /* Important */
+    font-family: var(--font-body);
 }
 
-input:focus {
-    border-color: var(--color-primary);
+.form-group input:focus {
     outline: none;
-    box-shadow: 0 0 5px rgba(211, 47, 47, 0.2);
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
 }
 
-/* Bouton pleine largeur */
-.full-width {
+.btn-submit {
     width: 100%;
+    padding: 15px;
+    background-color: var(--color-primary);
+    color: white;
     border: none;
-    cursor: pointer;
+    border-radius: var(--border-radius);
     font-size: 1.1rem;
-    margin-top: 1rem;
+    font-family: var(--font-heading);
+    cursor: pointer;
+    text-transform: uppercase;
     transition: background-color 0.3s;
 }
 
-.full-width:hover {
-    background-color: #b71c1c; /* Rouge un peu plus foncé */
+.btn-submit:hover {
+    background-color: var(--color-primary-dark);
 }
 
-/* Lien de basculement Inscription/Connexion */
-.switch-form {
-    margin-top: 1.5rem;
-    font-size: 0.9rem;
+.full-width {
+    width: 100%;
+    display: block;
     text-align: center;
+}
+
+.switch-form {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 0.9rem;
 }
 
 .switch-form a {
     color: var(--color-primary);
     font-weight: bold;
-    text-decoration: none;
-}
-
-.switch-form a:hover {
     text-decoration: underline;
 }
 
-/* --- STYLES PAGE MENTIONS LEGALES --- */
-
-.legal-page {
-    display: flex;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    gap: 2rem;
-}
-
-/* Menu latéral (Sommaire) */
-.legal-nav {
-    flex: 1; /* Prend 1 part de l'espace */
-    min-width: 250px;
-    background-color: var(--color-white);
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-soft);
-    height: fit-content; /* S'adapte au contenu */
-    position: sticky; /* Reste visible au scroll */
-    top: 2rem;
-}
-
-.legal-nav ul {
-    list-style: none;
-    padding: 0;
-}
-
-.legal-nav li {
-    margin-bottom: 10px;
-}
-
-.legal-nav a {
-    text-decoration: none;
-    color: var(--color-text);
-    font-weight: 500;
-}
-
-.legal-nav a:hover {
-    color: var(--color-primary);
-    text-decoration: underline;
-}
-
-/* Contenu principal texte */
-.legal-content {
-    flex: 3; /* Prend 3 parts de l'espace */
-    background-color: var(--color-white);
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-soft);
-    text-align: justify; /* Pour faire "pro" et juridique */
-}
-
-.legal-content h1 {
-    color: var(--color-primary);
-    border-bottom: 2px solid var(--color-secondary);
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-}
-
-.legal-content h2 {
-    color: var(--color-secondary);
-    margin-top: 0;
-}
-
-.legal-content h3 {
-    font-size: 1.1rem;
-    color: var(--color-text);
-    margin-top: 1.5rem;
-}
-
-.legal-content hr {
-    border: 0;
-    border-top: 1px solid #eee;
-    margin: 2rem 0;
-}
-
-/* Responsive : Sur mobile, le menu passe au dessus */
-@media (max-width: 768px) {
-    .legal-page {
-        flex-direction: column;
-    }
-
-    .legal-nav {
-        position: static; /* Ne flotte plus */
-        width: auto;
-    }
-}
-
-/* --- STYLES SPÉCIFIQUES À LA PAGE PROFIL (CHARTE LE GRAND MIAM) --- */
-
-:root {
-    --rouge-grill: #D32F2F;
-    --rouge-hover: #B71C1C;
-    --noir-charbon: #2D2D2D;
-    --creme-sauce: #FDFBF7;
-    --or-frites: #FFC107;
-    --gris-pierre: #BDBDBD;
-}
-
-body {
-    background-color: var(--creme-sauce); /* Fond "Sauce" */
-    color: var(--noir-charbon); /* Texte principal */
-    font-family: 'Lato', sans-serif; /* Police corps de texte */
-    margin: 0;
-}
-
-/* En-têtes et Titres en Oswald */
-h1, h2, h3, .ribbon-title, .nav-links a, .logo-text {
-    font-family: 'Oswald', sans-serif;
-    text-transform: uppercase;
-}
-
-/* --- HEADER (Selon Charte) --- */
-header {
-    background-color: var(--noir-charbon); /* Noir Charbon */
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.logo-text {
-    color: var(--creme-sauce);
-    font-size: 1.8rem;
-    text-decoration: none;
-    letter-spacing: 1px;
-}
-
-.logo-highlight { color: var(--rouge-grill); }
-
-.nav-links li a {
-    color: var(--creme-sauce);
-    text-decoration: none;
-    font-weight: 400;
-    transition: color 0.3s;
-}
-
-.nav-links li a:hover, .nav-links li a.active {
-    color: var(--rouge-grill);
-}
-
-/* --- CONTENEUR PRINCIPAL --- */
+/* --- PAGE PROFIL (FIDÉLITÉ) --- */
 .profile-container {
     max-width: 1000px;
     margin: 40px auto;
-    padding: 40px;
-    /* Fond blanc local pour détacher du fond crème, ou transparent selon préférence.
-       La charte dit "Champs: Fond blanc sur fond de page crème",
-       donc on garde le conteneur aéré. */
-    background-color: #fff;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-    position: relative;
-}
-
-.profile-header {
-    text-align: center;
-    margin-bottom: 40px;
-    border-bottom: 2px solid var(--rouge-grill);
-    padding-bottom: 20px;
+    padding: 20px;
 }
 
 .profile-header h1 {
-    color: var(--rouge-grill);
-    font-size: 3rem;
-    margin: 0;
-    letter-spacing: 2px;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 10px;
 }
 
-/* --- NAVIGATION ONGLETS --- */
+/* Onglets */
 .tabs {
     display: flex;
     justify-content: center;
     gap: 15px;
-    margin-bottom: 60px; /* Espace pour le ruban */
+    margin-bottom: 40px;
     flex-wrap: wrap;
 }
 
 .tab-btn {
-    background: #fff;
-    color: var(--noir-charbon);
-    border: 2px solid var(--noir-charbon);
-    padding: 12px 30px;
-    cursor: pointer;
-    border-radius: 4px; /* Charte: Border-radius 4px */
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
+    background: transparent;
+    border: 2px solid var(--color-secondary);
+    padding: 10px 25px;
+    font-family: var(--font-heading);
     text-transform: uppercase;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s;
 }
 
-.tab-btn:hover {
-    background: var(--noir-charbon);
-    color: var(--creme-sauce);
+.tab-btn.active, .tab-btn:hover {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
 }
 
-.tab-btn.active {
-    background-color: var(--rouge-grill);
-    color: var(--creme-sauce);
-    border-color: var(--rouge-grill);
-    box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
-}
-
-/* --- RUBAN (RIBBON) - ADAPTÉ CHARTE --- */
+/* Ruban Titre */
 .ribbon-title {
-    background: var(--rouge-grill); /* Rouge Grill #D32F2F */
-    color: var(--creme-sauce);
-    padding: 15px 35px;
-    font-size: 1.4rem;
-
+    background: var(--color-primary);
+    color: white;
+    padding: 10px 30px;
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
     position: relative;
-    margin-left: -50px; /* Sort du cadre */
-    margin-bottom: 40px;
     display: inline-block;
-    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    margin-left: -30px; /* Effet débordant */
+    box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
 }
 
 .ribbon-title::after {
@@ -527,139 +525,127 @@ header {
     position: absolute;
     top: 100%;
     left: 0;
-    width: 0;
-    height: 0;
-    border-top: 10px solid #B71C1C; /* Rouge plus sombre pour le pli */
+    border-top: 10px solid #8E1616; /* Rouge foncé pliure */
     border-left: 10px solid transparent;
 }
 
-/* --- FORMULAIRES (CHARTE) --- */
-fieldset {
-    border: 1px solid var(--gris-pierre); /* Gris Pierre */
-    border-radius: 8px;
-    padding: 40px;
-    margin-bottom: 20px;
-    background: #fff;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: var(--noir-charbon);
-    font-weight: 700;
-}
-
-.form-group input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid var(--gris-pierre); /* Bordure inactif */
-    background: #fff; /* Fond blanc */
-    color: var(--noir-charbon);
-    border-radius: 4px;
-    font-family: 'Lato', sans-serif;
-    font-size: 1rem;
-    transition: all 0.3s;
-}
-
-/* Focus : Bordure Or et lueur */
-.form-group input:focus {
-    outline: none;
-    border-color: var(--or-frites);
-    box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
-}
-
-/* Boutons d'action (CTA) */
-.btn-save {
-    background-color: var(--rouge-grill);
-    color: var(--creme-sauce);
-    border: none;
-    padding: 15px 40px;
-    border-radius: 4px; /* Charte */
-    cursor: pointer;
-    font-family: 'Oswald', sans-serif;
-    font-size: 1.1rem;
-    text-transform: uppercase;
-    float: right;
-    transition: all 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.btn-save:hover {
-    background-color: var(--rouge-hover);
-    transform: scale(1.02); /* Charte: légère élévation */
-}
-
-/* --- CARTE FIDÉLITÉ --- */
+/* Carte Fidélité */
 .loyalty-card {
-    background: linear-gradient(135deg, var(--rouge-grill), #B71C1C);
+    background: linear-gradient(135deg, var(--color-primary), #8E1616);
+    color: white;
     padding: 40px;
     border-radius: 12px;
     text-align: center;
-    max-width: 450px;
-    margin: 0 auto;
-    color: white;
+    max-width: 400px;
+    margin: 0 auto 40px;
+    border: 2px solid var(--color-accent);
     box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-    border: 2px solid var(--or-frites); /* Touche Gold */
 }
 
 .loyalty-points {
-    font-family: 'Oswald', sans-serif;
-    font-size: 5rem;
-    color: var(--or-frites); /* Or Frites pour les points */
+    font-size: 4rem;
+    font-family: var(--font-heading);
+    color: var(--color-accent);
     margin: 10px 0;
-    text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
 }
 
-/* --- TABLEAU --- */
+/* Tableau Historique */
 .history-table {
     width: 100%;
-    border-collapse: collapse; /* Plus propre sur fond clair */
-    margin-top: 10px;
-    font-family: 'Lato', sans-serif;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: var(--shadow-soft);
 }
 
 .history-table th {
+    background-color: var(--color-secondary);
+    color: white;
     padding: 15px;
     text-align: left;
-    background-color: var(--noir-charbon);
-    color: var(--creme-sauce);
-    font-family: 'Oswald', sans-serif;
+    font-family: var(--font-heading);
     font-weight: 400;
 }
 
 .history-table td {
-    background: #fff;
     padding: 15px;
-    border-bottom: 1px solid var(--gris-pierre);
-    color: var(--noir-charbon);
-}
-
-.history-table tr:hover td {
-    background-color: rgba(255, 193, 7, 0.1); /* Léger fond Or au survol */
+    border-bottom: 1px solid #eee;
 }
 
 .status-badge {
-    padding: 6px 12px;
+    padding: 5px 10px;
     border-radius: 4px;
+    font-size: 0.85rem;
     font-weight: bold;
-    font-size: 0.9rem;
 }
-.status-delivered { background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; }
-.status-pending { background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
 
-.tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
-.tab-content.active { display: block; }
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.status-delivered {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #A5D6A7;
+}
 
-/* Footer */
+/* --- MENTIONS LÉGALES --- */
+.legal-page {
+    display: flex;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.legal-nav {
+    flex: 1;
+    background: white;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    height: fit-content;
+    box-shadow: var(--shadow-soft);
+}
+
+.legal-nav a {
+    display: block;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.legal-nav a:hover {
+    color: var(--color-primary);
+    padding-left: 5px; /* Petit effet de mouvement */
+}
+
+.legal-content {
+    flex: 3;
+    background: white;
+    padding: 40px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-soft);
+    text-align: justify;
+}
+
+/* --- FOOTER --- */
 footer {
-    background-color: var(--noir-charbon);
-    color: var(--creme-sauce);
+    background-color: var(--color-secondary);
+    color: var(--color-bg);
     text-align: center;
     padding: 30px;
     margin-top: 60px;
-    font-family: 'Lato', sans-serif;
+    border-top: 5px solid var(--color-accent);
 }
 
-footer a { color: var(--gris-pierre); text-decoration: none; }
-footer a:hover { color: var(--rouge-grill); }
+/* Responsive général */
+@media (max-width: 768px) {
+    .legal-page {
+        flex-direction: column;
+    }
+    .flex-row {
+        flex-direction: column;
+    }
+    .menu-table {
+        display: block;
+        overflow-x: auto; /* Scroll horizontal sur mobile pour les gros tableaux */
+    }
+    .nav-links {
+        display: none; /* À remplacer par un menu burger plus tard */
+    }
+}
