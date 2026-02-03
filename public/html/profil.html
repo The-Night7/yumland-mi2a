@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil - Le Grand Miam</title>
+    <!-- Import des polices Google Fonts (Oswald & Lato) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Lien vers ton fichier CSS principal -->
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+
+
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+    <nav style="display: flex; justify-content: space-between; align-items: center;">
+        <div class="logo-container">
+            <a href="../../index.html" class="logo-text">
+                Le <span class="logo-highlight">Grand</span> Miam
+            </a>
+        </div>
+        <ul class="nav-links" style="list-style: none; display: flex; gap: 20px; margin:0;">
+            <li><a href="../../index.html">Accueil</a></li>
+            <li><a href="carte.html">La Carte</a></li>
+            <li><a href="profil.html" class="active">Mon Compte</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main>
+    <section class="profile-container">
+        <div class="profile-header">
+            <h1>Mon Profil</h1>
+        </div>
+
+        <!-- Navigation des onglets -->
+        <div class="tabs">
+            <button class="tab-btn active" onclick="openTab(event, 'infos')">Mes Infos</button>
+            <button class="tab-btn" onclick="openTab(event, 'fidelite')">Fidélité</button>
+            <button class="tab-btn" onclick="openTab(event, 'historique')">Commandes</button>
+        </div>
+
+        <!-- CONTENU 1: INFORMATIONS PERSONNELLES -->
+        <div id="infos" class="tab-content active">
+            <div class="ribbon-title">Les informations personnelles (RGPD)</div>
+
+            <form action="#" method="POST">
+                <fieldset>
+                    <div class="form-group">
+                        <label for="nom">Nom :</label>
+                        <input type="text" id="nom" name="nom" value="Bensaid" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom :</label>
+                        <input type="text" id="prenom" name="prenom" value="Myriam" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email :</label>
+                        <input type="email" id="email" name="email" value="myriam@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="tel">Téléphone :</label>
+                        <input type="tel" id="tel" name="tel" value="06 12 34 56 78">
+                    </div>
+                    <div style="clear:both; margin-top: 20px;">
+                        <button type="submit" class="btn-save">ENREGISTRER</button>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <!-- CONTENU 2: FIDÉLITÉ -->
+        <div id="fidelite" class="tab-content">
+            <div class="ribbon-title">Les informations de fidélité (pts)</div>
+
+            <div class="loyalty-card">
+                <h3 style="margin:0; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.9);">Solde Actuel</h3>
+                <div class="loyalty-points">1,250</div>
+                <p style="font-size:1.2rem;">YumPoints</p>
+                <hr style="border-color: rgba(255,255,255,0.2); margin: 20px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Statut : <strong style="color: var(--or-frites);">GOLD</strong></span>
+                    <span style="background:white; color:var(--rouge-grill); padding:5px 15px; border-radius:15px; font-weight:bold; font-size:0.9rem;">-20% ce mois-ci</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTENU 3: HISTORIQUE -->
+        <div id="historique" class="tab-content">
+            <div class="ribbon-title">Les dernières commandes (historique)</div>
+
+            <div style="overflow-x: auto;">
+                <table class="history-table">
+                    <thead>
+                    <tr>
+                        <th>Commande</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>#CMD-8854</strong></td>
+                        <td>02/02/2026</td>
+                        <td>45.50 €</td>
+                        <td><span class="status-badge status-pending">En cuisine</span></td>
+                        <td><a href="#" style="color:var(--rouge-grill); font-weight:bold; text-decoration:none;">Voir</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>#CMD-8801</strong></td>
+                        <td>28/01/2026</td>
+                        <td>32.00 €</td>
+                        <td><span class="status-badge status-delivered">Livrée</span></td>
+                        <td><a href="#" style="color:var(--rouge-grill); font-weight:bold; text-decoration:none;">Facture</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>#CMD-7500</strong></td>
+                        <td>15/01/2026</td>
+                        <td>68.90 €</td>
+                        <td><span class="status-badge status-delivered">Livrée</span></td>
+                        <td><a href="#" style="color:var(--rouge-grill); font-weight:bold; text-decoration:none;">Facture</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </section>
+</main>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2026 Le Grand Miam - Steakhouse Premium.</p>
+    <p>
+        <a href="mentions.html">Mentions Légales</a> |
+        <a href="#">Actus</a> |
+        <a href="#">Contact</a>
+    </p>
+</footer>
+
+<script>
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tab-content");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+            tabcontent[i].classList.remove("active");
+        }
+        tablinks = document.getElementsByClassName("tab-btn");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+    }
+</script>
+</body>
+</html>

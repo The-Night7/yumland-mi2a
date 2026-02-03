@@ -393,3 +393,273 @@ input:focus {
         width: auto;
     }
 }
+
+/* --- STYLES SPÉCIFIQUES À LA PAGE PROFIL (CHARTE LE GRAND MIAM) --- */
+
+:root {
+    --rouge-grill: #D32F2F;
+    --rouge-hover: #B71C1C;
+    --noir-charbon: #2D2D2D;
+    --creme-sauce: #FDFBF7;
+    --or-frites: #FFC107;
+    --gris-pierre: #BDBDBD;
+}
+
+body {
+    background-color: var(--creme-sauce); /* Fond "Sauce" */
+    color: var(--noir-charbon); /* Texte principal */
+    font-family: 'Lato', sans-serif; /* Police corps de texte */
+    margin: 0;
+}
+
+/* En-têtes et Titres en Oswald */
+h1, h2, h3, .ribbon-title, .nav-links a, .logo-text {
+    font-family: 'Oswald', sans-serif;
+    text-transform: uppercase;
+}
+
+/* --- HEADER (Selon Charte) --- */
+header {
+    background-color: var(--noir-charbon); /* Noir Charbon */
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.logo-text {
+    color: var(--creme-sauce);
+    font-size: 1.8rem;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.logo-highlight { color: var(--rouge-grill); }
+
+.nav-links li a {
+    color: var(--creme-sauce);
+    text-decoration: none;
+    font-weight: 400;
+    transition: color 0.3s;
+}
+
+.nav-links li a:hover, .nav-links li a.active {
+    color: var(--rouge-grill);
+}
+
+/* --- CONTENEUR PRINCIPAL --- */
+.profile-container {
+    max-width: 1000px;
+    margin: 40px auto;
+    padding: 40px;
+    /* Fond blanc local pour détacher du fond crème, ou transparent selon préférence.
+       La charte dit "Champs: Fond blanc sur fond de page crème",
+       donc on garde le conteneur aéré. */
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+    position: relative;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 2px solid var(--rouge-grill);
+    padding-bottom: 20px;
+}
+
+.profile-header h1 {
+    color: var(--rouge-grill);
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+/* --- NAVIGATION ONGLETS --- */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 60px; /* Espace pour le ruban */
+    flex-wrap: wrap;
+}
+
+.tab-btn {
+    background: #fff;
+    color: var(--noir-charbon);
+    border: 2px solid var(--noir-charbon);
+    padding: 12px 30px;
+    cursor: pointer;
+    border-radius: 4px; /* Charte: Border-radius 4px */
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+}
+
+.tab-btn:hover {
+    background: var(--noir-charbon);
+    color: var(--creme-sauce);
+}
+
+.tab-btn.active {
+    background-color: var(--rouge-grill);
+    color: var(--creme-sauce);
+    border-color: var(--rouge-grill);
+    box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+}
+
+/* --- RUBAN (RIBBON) - ADAPTÉ CHARTE --- */
+.ribbon-title {
+    background: var(--rouge-grill); /* Rouge Grill #D32F2F */
+    color: var(--creme-sauce);
+    padding: 15px 35px;
+    font-size: 1.4rem;
+
+    position: relative;
+    margin-left: -50px; /* Sort du cadre */
+    margin-bottom: 40px;
+    display: inline-block;
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+}
+
+.ribbon-title::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 10px solid #B71C1C; /* Rouge plus sombre pour le pli */
+    border-left: 10px solid transparent;
+}
+
+/* --- FORMULAIRES (CHARTE) --- */
+fieldset {
+    border: 1px solid var(--gris-pierre); /* Gris Pierre */
+    border-radius: 8px;
+    padding: 40px;
+    margin-bottom: 20px;
+    background: #fff;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--noir-charbon);
+    font-weight: 700;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--gris-pierre); /* Bordure inactif */
+    background: #fff; /* Fond blanc */
+    color: var(--noir-charbon);
+    border-radius: 4px;
+    font-family: 'Lato', sans-serif;
+    font-size: 1rem;
+    transition: all 0.3s;
+}
+
+/* Focus : Bordure Or et lueur */
+.form-group input:focus {
+    outline: none;
+    border-color: var(--or-frites);
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.4);
+}
+
+/* Boutons d'action (CTA) */
+.btn-save {
+    background-color: var(--rouge-grill);
+    color: var(--creme-sauce);
+    border: none;
+    padding: 15px 40px;
+    border-radius: 4px; /* Charte */
+    cursor: pointer;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    float: right;
+    transition: all 0.2s;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.btn-save:hover {
+    background-color: var(--rouge-hover);
+    transform: scale(1.02); /* Charte: légère élévation */
+}
+
+/* --- CARTE FIDÉLITÉ --- */
+.loyalty-card {
+    background: linear-gradient(135deg, var(--rouge-grill), #B71C1C);
+    padding: 40px;
+    border-radius: 12px;
+    text-align: center;
+    max-width: 450px;
+    margin: 0 auto;
+    color: white;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border: 2px solid var(--or-frites); /* Touche Gold */
+}
+
+.loyalty-points {
+    font-family: 'Oswald', sans-serif;
+    font-size: 5rem;
+    color: var(--or-frites); /* Or Frites pour les points */
+    margin: 10px 0;
+    text-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+}
+
+/* --- TABLEAU --- */
+.history-table {
+    width: 100%;
+    border-collapse: collapse; /* Plus propre sur fond clair */
+    margin-top: 10px;
+    font-family: 'Lato', sans-serif;
+}
+
+.history-table th {
+    padding: 15px;
+    text-align: left;
+    background-color: var(--noir-charbon);
+    color: var(--creme-sauce);
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+}
+
+.history-table td {
+    background: #fff;
+    padding: 15px;
+    border-bottom: 1px solid var(--gris-pierre);
+    color: var(--noir-charbon);
+}
+
+.history-table tr:hover td {
+    background-color: rgba(255, 193, 7, 0.1); /* Léger fond Or au survol */
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+.status-delivered { background: #E8F5E9; color: #2E7D32; border: 1px solid #C8E6C9; }
+.status-pending { background: #FFF8E1; color: #F57F17; border: 1px solid #FFE082; }
+
+.tab-content { display: none; animation: fadeIn 0.4s ease-in-out; }
+.tab-content.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Footer */
+footer {
+    background-color: var(--noir-charbon);
+    color: var(--creme-sauce);
+    text-align: center;
+    padding: 30px;
+    margin-top: 60px;
+    font-family: 'Lato', sans-serif;
+}
+
+footer a { color: var(--gris-pierre); text-decoration: none; }
+footer a:hover { color: var(--rouge-grill); }
