@@ -3,29 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion - Le Grand Miam</title>
-
-    <!-- Polices -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
-
-    <!-- Styles -->
+    <title>Connexion | Le Grand Miam</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body class="auth-page">
+<body>
 
-    <!-- Retour Accueil -->
-    <a href="../../index.html" class="back-link">← Retour au site</a>
+<header>
+    <nav>
+        <div class="logo-container">
+            <a href="../../index.html" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="../../index.html">Accueil</a></li>
+            <li><a href="carte.html">La Carte</a></li>
+            <li><a href="connexion.html" class="btn-login active">Mon Compte</a></li>
+        </ul>
+    </nav>
+</header>
 
-    <div class="auth-container">
-        <div class="auth-box">
-            <div class="auth-header">
-                <h2>Connexion</h2>
-                <p>Heureux de vous revoir !</p>
-            </div>
+<main class="form-page">
+    <section class="form-container narrow">
+        <h1>Connexion</h1>
+        <p>Heureux de vous revoir !</p>
 
-            <form id="login-form">
+        <form id="login-form">
+            <fieldset>
+                <legend>Vos Identifiants</legend>
                 <div class="form-group">
                     <label for="email">Adresse Email</label>
                     <input type="email" id="email" name="email" placeholder="exemple@email.com" required>
@@ -35,31 +38,29 @@
                     <label for="password">Mot de passe</label>
                     <input type="password" id="password" name="password" placeholder="••••••••" required>
                 </div>
+            </fieldset>
 
-                <div class="form-actions">
-                    <a href="#" class="forgot-pass">Mot de passe oublié ?</a>
-                </div>
+            <button type="submit" class="cta-button full-width">Se Connecter</button>
+        </form>
 
-                <button type="submit" class="btn-auth">SE CONNECTER</button>
-            </form>
+        <p class="switch-form">Pas encore de compte ? <a href="inscription.html">Créer un compte</a></p>
 
-            <div class="auth-footer">
-                <p>Pas encore de compte ? <a href="inscription.html">Créer un compte</a></p>
-            </div>
-
-            <!-- Aide pour le jury / testeur (A supprimer en prod) -->
-            <div style="margin-top: 20px; padding: 10px; background: #eee; font-size: 0.8rem; border-radius: 5px;">
-                <strong>Comptes de test (Phase 1) :</strong><br>
-                Client : client@yumland.com / 123<br>
-                Admin : admin@yumland.com / admin<br>
-                Cuisinier : chef@yumland.com / chef<br>
-                Livreur : livreur@yumland.com / go
-            </div>
+        <!-- Aide pour le jury / testeur (A supprimer en prod) -->
+        <div style="margin-top: 20px; padding: 10px; background: #eee; font-size: 0.8rem; border-radius: 5px;">
+            <strong>Comptes de test (Phase 1) :</strong><br>
+            Client : client@yumland.com / 123<br>
+            Admin : admin@yumland.com / admin<br>
+            Cuisinier : chef@yumland.com / chef<br>
+            Livreur : livreur@yumland.com / go
         </div>
-    </div>
+    </section>
+</main>
 
-    <!-- Le script est maintenant centralisé et gère le formulaire -->
-    <script src="../js/auth-client.js"></script>
+<footer>
+    <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
+</footer>
+
+<script src="../js/auth-client.js"></script>
 
 </body>
 </html>
