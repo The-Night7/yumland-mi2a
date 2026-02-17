@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuisine - Le Grand Miam</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header style="background: #222; padding: 1rem; color: white; text-align: center;">
+    <h1>👨‍🍳 CUISINE - LE GRAND MIAM</h1>
+    <a href="../../index.html" style="color: #ff6b00; font-size: 0.9rem;">Retour Accueil</a>
+</header>
+
+<main class="kitchen-board">
+    <!-- Colonne 1 : En attente -->
+    <section class="column col-waiting" id="col-waiting">
+        <h2>🔥 En Attente</h2>
+        <div id="list-waiting"></div>
+    </section>
+
+    <!-- Colonne 2 : En préparation -->
+    <section class="column col-prep" id="col-prep">
+        <h2>🔪 En Préparation</h2>
+        <div id="list-prep"></div>
+    </section>
+
+    <!-- Colonne 3 : Prêt -->
+    <section class="column col-ready" id="col-ready">
+        <h2>✅ Prêt à livrer</h2>
+        <div id="list-ready"></div>
+    </section>
+</main>
+
+<script>
+    // Simulation de commandes
+    const orders = [
+        { id: 'CMD-001', items: ['Burger Grand Miam', 'Frites XL'], status: 'waiting', time: '12:30' },
+        { id: 'CMD-002', items: ['Salade César', 'Coca Zéro'], status: 'prep', time: '12:32' },
+        { id: 'CMD-003', items: ['Entrecôte Saignante', 'Haricots'], status: 'waiting', time: '12:35' }
+    ];
+
+    function renderOrders() {
+        document.getElementById('list-waiting').innerHTML = '';
+        document.getElementById('list-prep').innerHTML = '';
+        document.getElementById('list-ready').innerHTML = '';
+
+        orders.forEach((order, index) => {
+            const card = document.createElement('div');
+            card.className = 'order-card';
+
+            let btnHtml = '';
+            if(order.status === 'waiting') {
+                btnHtml = `<button class="btn-move btn-start" onclick="updateStatus(${index}, 'prep')">Lancer Préparation</button>`;
+            } else if (order.status === 'prep') {
+                btnHtml = `<button class="btn-move btn-ready" onclick="updateStatus(${index}, 'ready')">Commande Prête</button>`;
+            } else {
+                btnHtml = `<div style="text-align:center; color:green; font-weight:bold;">En attente livreur</div>`;
+            }
+
+            card.innerHTML = `
+                    <div class="order-header">
+                        <span>#${order.id}</span>
+                        <span>${order.time}</span>
+                    </div>
+                    <ul class="order-items">
+                        ${order.items.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                    ${btnHtml}
+                `;
+
+            document.getElementById(`list-${order.status}`).appendChild(card);
+        });
+    }
+
+    function updateStatus(index, newStatus) {
+        orders[index].status = newStatus;
+        renderOrders();
+    }
+
+    // Init
+    document.addEventListener('DOMContentLoaded', renderOrders);
+</script>
+</body>
+</html>

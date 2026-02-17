@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Votre Avis - Le Grand Miam</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <nav style="padding: 1rem; text-align: center; background: #222;">
+        <a href="../../index.html" class="logo-text" style="color:white; text-decoration:none;">Le Grand Miam</a>
+    </nav>
+</header>
+
+<main>
+    <section class="rating-container">
+        <h2>Merci pour votre commande !</h2>
+        <p>Comment s'est passé votre expérience "Grand Miam" ?</p>
+
+        <form id="rating-form">
+            <!-- Système d'étoiles -->
+            <div class="stars" id="star-rating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <input type="hidden" id="rating-value" name="note" value="0">
+
+            <label for="comment" style="display:block; text-align:left; font-weight:bold;">Votre commentaire :</label>
+            <textarea id="comment" name="commentaire" placeholder="Le burger était-il assez chaud ? Le livreur sympa ?"></textarea>
+
+            <button type="submit" class="btn-submit">ENVOYER MON AVIS</button>
+        </form>
+    </section>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const stars = document.querySelectorAll('.star');
+        const ratingInput = document.getElementById('rating-value');
+
+        // Gestion du clic sur les étoiles
+        stars.forEach(star => {
+            star.addEventListener('click', () => {
+                const value = parseInt(star.getAttribute('data-value'));
+                ratingInput.value = value;
+
+                // Mise à jour visuelle
+                stars.forEach(s => {
+                    const sVal = parseInt(s.getAttribute('data-value'));
+                    if(sVal <= value) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // Gestion de l'envoi
+        document.getElementById('rating-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const note = ratingInput.value;
+            const comment = document.getElementById('comment').value;
+
+            if(note == 0) {
+                alert("Veuillez sélectionner au moins une étoile.");
+                return;
+            }
+
+            console.log(`Avis envoyé : ${note}/5 - ${comment}`);
+            alert("Merci pour votre avis ! À bientôt.");
+            window.location.href = '../../index.html';
+        });
+    });
+</script>
+</body>
+</html>

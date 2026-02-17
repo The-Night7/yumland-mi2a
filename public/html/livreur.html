@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Espace Livreur</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="delivery-app">
+    <header class="app-header">
+        <h2 style="margin:0;">LIVRAISON</h2>
+        <small>Zone : Cergy Centre</small>
+    </header>
+
+    <main class="order-list" id="deliveries-container">
+        <!-- Injection JS -->
+    </main>
+
+    <div style="height: 60px;"></div> <!-- Espace pour le menu bas -->
+
+    <nav class="nav-bottom">
+        <a href="#" class="nav-item active">Commandes</a>
+        <a href="profil.html" class="nav-item">Mon Profil</a>
+        <a href="../../index.html" class="nav-item">Quitter</a>
+    </nav>
+</div>
+
+<script>
+    const deliveries = [
+        { id: 'CMD-002', client: 'M. Martin', address: '12 Rue du Port, Cergy', code: 'A123', status: 'ready', total: '22.50€' },
+        { id: 'CMD-005', client: 'Mme. Durand', address: '5 Bd de l\'Oise, Cergy', code: 'Interphone B', status: 'ready', total: '15.00€' }
+    ];
+
+    function renderDeliveries() {
+        const container = document.getElementById('deliveries-container');
+        if(deliveries.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:20px;">Aucune commande à livrer.</p>';
+            return;
+        }
+
+        container.innerHTML = deliveries.map(d => `
+                <div class="delivery-card">
+                    <div class="delivery-header">
+                        <strong>${d.client}</strong>
+                        <span class="badge">${d.total}</span>
+                    </div>
+                    <div class="address-box">
+                        📍 ${d.address}<br>
+                        🔑 Code: <strong>${d.code}</strong>
+                    </div>
+                    <div style="margin-bottom:10px; color:#666;">
+                        📦 Commande #${d.id}
+                    </div>
+                    <button class="btn-deliver" onclick="confirmDelivery('${d.id}')">VALIDER LA LIVRAISON</button>
+                </div>
+            `).join('');
+    }
+
+    function confirmDelivery(id) {
+        if(confirm('Avez-vous bien livré la commande ' + id + ' ?')) {
+            // Simulation suppression
+            const index = deliveries.findIndex(d => d.id === id);
+            if(index > -1) {
+                deliveries.splice(index, 1);
+                renderDeliveries();
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderDeliveries);
+</script>
+</body>
+</html>

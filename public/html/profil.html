@@ -4,17 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mon Profil - Le Grand Miam</title>
-    <!-- Import des polices Google Fonts (Oswald & Lato) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
 
-    <!-- Lien vers ton fichier CSS principal -->
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
 
-<!-- HEADER -->
 <header>
     <nav style="display: flex; justify-content: space-between; align-items: center;">
         <div class="logo-container">
@@ -26,6 +23,7 @@
             <li><a href="../../index.html">Accueil</a></li>
             <li><a href="carte.html">La Carte</a></li>
             <li><a href="profil.html" class="active">Mon Compte</a></li>
+            <li><a href="#" id="btn-logout" style="color: var(--rouge-grill); font-weight: bold;">Déconnexion</a></li>
         </ul>
     </nav>
 </header>
@@ -33,65 +31,59 @@
 <main>
     <section class="profile-container">
         <div class="profile-header">
-            <h1>Mon Profil</h1>
+            <h1 id="welcome-title">Mon Profil</h1>
         </div>
 
-        <!-- Navigation des onglets -->
         <div class="tabs">
             <button class="tab-btn active" onclick="openTab(event, 'infos')">Mes Infos</button>
             <button class="tab-btn" onclick="openTab(event, 'fidelite')">Fidélité</button>
             <button class="tab-btn" onclick="openTab(event, 'historique')">Commandes</button>
         </div>
 
-        <!-- CONTENU 1: INFORMATIONS PERSONNELLES -->
         <div id="infos" class="tab-content active">
             <div class="ribbon-title">Les informations personnelles (RGPD)</div>
 
-            <form action="#" method="POST">
+            <form id="profile-form">
                 <fieldset>
                     <div class="form-group">
                         <label for="nom">Nom :</label>
-                        <input type="text" id="nom" name="nom" value="Bensaid" required>
+                        <input type="text" id="nom" name="nom" required>
                     </div>
                     <div class="form-group">
                         <label for="prenom">Prénom :</label>
-                        <input type="text" id="prenom" name="prenom" value="Myriam" required>
+                        <input type="text" id="prenom" name="prenom" required>
                     </div>
                     <div class="form-group">
                         <label for="email">Email :</label>
-                        <input type="email" id="email" name="email" value="myriam@example.com" required>
+                        <input type="email" id="email" name="email" required disabled style="background-color: #f0f0f0; cursor: not-allowed;" title="L'email sert d'identifiant et ne peut être modifié">
                     </div>
                     <div class="form-group">
                         <label for="tel">Téléphone :</label>
-                        <input type="tel" id="tel" name="tel" value="06 12 34 56 78">
+                        <input type="tel" id="tel" name="tel" placeholder="Ex: 06 12 34 56 78">
                     </div>
                     <div style="clear:both; margin-top: 20px;">
-                        <button type="submit" class="btn-save">ENREGISTRER</button>
+                        <button type="submit" class="btn-save">METTRE À JOUR</button>
                     </div>
                 </fieldset>
             </form>
         </div>
 
-        <!-- CONTENU 2: FIDÉLITÉ -->
         <div id="fidelite" class="tab-content">
             <div class="ribbon-title">Les informations de fidélité (pts)</div>
-
             <div class="loyalty-card">
                 <h3 style="margin:0; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.9);">Solde Actuel</h3>
-                <div class="loyalty-points">1,250</div>
+                <div class="loyalty-points" id="points-display">0</div>
                 <p style="font-size:1.2rem;">YumPoints</p>
                 <hr style="border-color: rgba(255,255,255,0.2); margin: 20px 0;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>Statut : <strong style="color: var(--or-frites);">GOLD</strong></span>
-                    <span style="background:white; color:var(--rouge-grill); padding:5px 15px; border-radius:15px; font-weight:bold; font-size:0.9rem;">-20% ce mois-ci</span>
+                    <span>Statut : <strong style="color: var(--or-frites);" id="status-display">BRONZE</strong></span>
                 </div>
             </div>
         </div>
 
-        <!-- CONTENU 3: HISTORIQUE -->
         <div id="historique" class="tab-content">
             <div class="ribbon-title">Les dernières commandes (historique)</div>
-
+            <p><em>Historique simulé pour la démonstration graphique.</em></p>
             <div style="overflow-x: auto;">
                 <table class="history-table">
                     <thead>
@@ -111,20 +103,6 @@
                         <td><span class="status-badge status-pending">En cuisine</span></td>
                         <td><a href="#" style="color:var(--rouge-grill); font-weight:bold; text-decoration:none;">Voir</a></td>
                     </tr>
-                    <tr>
-                        <td><strong>#CMD-8801</strong></td>
-                        <td>28/01/2026</td>
-                        <td>32.00 €</td>
-                        <td><span class="status-badge status-delivered">Livrée</span></td>
-                        <td><a href="#" style="color:var(--rouge-grill); font-weight:bold; text-decoration:none;">Facture</a></td>
-                    </tr>
-                    <tr>
-                        <td><strong>#CMD-7500</strong></td>
-                        <td>15/01/2026</td>
-                        <td>68.90 €</td>
-                        <td><span class="status-badge status-delivered">Livrée</span></td>
-                        <td><a href="#" style="color:var(--rouge-grill); font-weight:bold; text-decoration:none;">Facture</a></td>
-                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -133,51 +111,118 @@
     </section>
 </main>
 
-<!-- Footer -->
 <footer>
     <p>&copy; 2026 Le Grand Miam - Steakhouse Premium.</p>
     <p>
-        <a href="mentions.html">Mentions Légales</a> |
-        <a href="#">Actus</a> |
-        <a href="#">Contact</a>
+        <a href="mentions.html">Mentions Légales</a>
     </p>
 </footer>
 
 <script>
+    // 1. Fonction pour gérer les onglets (Graphique)
     function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tab-content");
-        for (i = 0; i < tabcontent.length; i++) {
+        // Masquer tout
+        const tabcontent = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
             tabcontent[i].classList.remove("active");
         }
-        tablinks = document.getElementsByClassName("tab-btn");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        // Désactiver les boutons
+        const tablinks = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active");
         }
+        // Activer la cible
         document.getElementById(tabName).style.display = "block";
         document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.className += " active";
+        evt.currentTarget.classList.add("active");
     }
 
-    // Récupérer l'utilisateur connecté depuis la session temporaire
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    // 2. Logique Métier (Au chargement de la page)
+    document.addEventListener('DOMContentLoaded', () => {
 
-    if (currentUser) {
-        // Manipulation DOM simple
-        const welcomeMsg = document.createElement('p');
-        welcomeMsg.style.color = 'var(--rouge-grill)';
-        welcomeMsg.style.fontWeight = 'bold';
-        welcomeMsg.textContent = `Bienvenue, ${currentUser.prenom} ${currentUser.nom}`;
+        // A. Vérification de sécurité : Est-on connecté ?
+        const currentUserJSON = sessionStorage.getItem('currentUser');
 
-        // Insérer après le titre h1
-        const title = document.querySelector('h1');
-        if(title) title.after(welcomeMsg);
-    } else {
-        // Si personne n'est connecté, on redirige (Sécurité Front-end basique)
-        alert("Vous devez vous connecter pour voir cette page.");
-        window.location.href = "connexion.html";
-    }
+        if (!currentUserJSON) {
+            alert("Accès refusé. Veuillez vous connecter.");
+            window.location.href = "connexion.html";
+            return; // Arrête le script ici
+        }
+
+        const user = JSON.parse(currentUserJSON);
+
+        // B. Injection des données dans le DOM
+
+        // Titre personnalisé
+        const titleElement = document.getElementById('welcome-title');
+        if(titleElement) titleElement.textContent = `Profil de ${user.prenom} ${user.nom}`;
+
+        // Remplissage du formulaire
+        // On utilise l'opérateur "|| ''" pour éviter d'afficher "undefined" si le champ est vide
+        document.getElementById('nom').value = user.nom || '';
+        document.getElementById('prenom').value = user.prenom || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('tel').value = user.tel || ''; // Ce champ n'existe pas encore dans ton auth-client.js de base
+
+        // Points (Simulation simple car pas encore en base de données)
+        // Si l'utilisateur n'a pas de points, on met 0 par défaut
+        const points = user.points || 0;
+        document.getElementById('points-display').textContent = points;
+
+        if(points > 500) {
+            document.getElementById('status-display').textContent = "GOLD";
+            document.getElementById('status-display').style.color = "gold";
+        }
+
+        // C. Gestion de la mise à jour (Update)
+        const form = document.getElementById('profile-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); // Empêche le rechargement de la page
+
+            // Mise à jour de l'objet user avec les nouvelles valeurs
+            user.nom = document.getElementById('nom').value;
+            user.prenom = document.getElementById('prenom').value;
+            user.tel = document.getElementById('tel').value;
+
+            // 1. Mise à jour de la session actuelle
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+
+            // 2. Mise à jour de la "Base de données" (LocalStorage)
+            // C'est nécessaire pour que la modif persiste à la prochaine connexion
+            const allUsers = JSON.parse(localStorage.getItem('yumland_users')) || [];
+
+            // On trouve l'index de l'utilisateur dans le tableau global via son email (qui est unique)
+            const userIndex = allUsers.findIndex(u => u.email === user.email);
+
+            if (userIndex !== -1) {
+                // On met à jour l'utilisateur dans le tableau, en gardant son mot de passe existant
+                // On utilise le spread operator (...) pour fusionner proprement
+                allUsers[userIndex] = { ...allUsers[userIndex], ...user };
+
+                localStorage.setItem('yumland_users', JSON.stringify(allUsers));
+                alert("Informations mises à jour avec succès !");
+
+                // Rafraîchir le titre
+                titleElement.textContent = `Profil de ${user.prenom} ${user.nom}`;
+            } else {
+                console.error("Erreur critique : Utilisateur introuvable en base.");
+            }
+        });
+
+        // D. Gestion de la Déconnexion
+        const btnLogout = document.getElementById('btn-logout');
+        if(btnLogout) {
+            btnLogout.addEventListener('click', (e) => {
+                e.preventDefault();
+                // 1. Vider la session
+                sessionStorage.removeItem('currentUser');
+                // 2. Rediriger
+                alert("Vous avez été déconnecté.");
+                window.location.href = "connexion.html";
+            });
+        }
+    });
 </script>
 </body>
 </html>

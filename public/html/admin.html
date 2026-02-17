@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - Le Grand Miam</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<header>
+    <nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #222;">
+        <div class="logo-container">
+            <a href="../../index.html" class="logo-text" style="color: white; text-decoration: none; font-weight: bold; font-size: 1.5rem;">
+                ADMIN<span style="color: #ff6b00;">PANEL</span>
+            </a>
+        </div>
+        <ul class="nav-links" style="list-style: none; display: flex; gap: 20px;">
+            <li><a href="../../index.html" style="color: white;">Retour Site</a></li>
+            <li><a href="#" onclick="logout()" style="color: #ff6b00;">Déconnexion</a></li>
+        </ul>
+    </nav>
+</header>
+
+<main class="admin-container">
+    <div class="admin-header">
+        <h1>Gestion des Utilisateurs</h1>
+        <div class="stats">Total inscrits : <span id="total-users">0</span></div>
+    </div>
+
+    <table class="user-table">
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nom</th>
+            <th>Email</th>
+            <th>Rôle</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody id="user-list">
+        <!-- Injection JS ici -->
+        </tbody>
+    </table>
+</main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Simulation de données si localStorage est vide
+        const mockUsers = [
+            { id: 1, nom: "Admin", prenom: "Super", email: "admin@yumland.com", role: "admin" },
+            { id: 2, nom: "Chef", prenom: "Gusteau", email: "chef@yumland.com", role: "restaurateur" },
+            { id: 3, nom: "Rapido", prenom: "Luigi", email: "livreur@yumland.com", role: "livreur" },
+            { id: 4, nom: "Dupont", prenom: "Jean", email: "jean@client.com", role: "client" }
+        ];
+
+        // Récupération ou initialisation
+        let users = JSON.parse(localStorage.getItem('yumland_users')) || mockUsers;
+
+        // Sauvegarde initiale si vide pour tester
+        if (!localStorage.getItem('yumland_users')) {
+            localStorage.setItem('yumland_users', JSON.stringify(users));
+        }
+
+        const tbody = document.getElementById('user-list');
+        document.getElementById('total-users').innerText = users.length;
+
+        tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>#${user.id || '?'}</td>
+                    <td>${user.nom.toUpperCase()} ${user.prenom}</td>
+                    <td>${user.email}</td>
+                    <td><span class="role-badge role-${user.role}">${user.role}</span></td>
+                    <td>
+                        <button class="action-btn" onclick="deleteUser('${user.email}')">Supprimer</button>
+                    </td>
+                </tr>
+            `).join('');
+    });
+
+    function deleteUser(email) {
+        if(confirm('Confirmer la suppression de cet utilisateur ?')) {
+            let users = JSON.parse(localStorage.getItem('yumland_users'));
+            users = users.filter(u => u.email !== email);
+            localStorage.setItem('yumland_users', JSON.stringify(users));
+            window.location.reload(); // Rechargement simple pour la phase 1
+        }
+    }
+
+    function logout() {
+        sessionStorage.removeItem('currentUser');
+        window.location.href = 'connexion.html';
+    }
+</script>
+</body>
+</html>

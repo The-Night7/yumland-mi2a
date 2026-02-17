@@ -649,3 +649,51 @@ footer {
         display: none; /* À remplacer par un menu burger plus tard */
     }
 }
+.admin-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.user-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+.user-table th, .user-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
+.user-table th { background-color: #333; color: var(--or-frites, #ff6b00); text-transform: uppercase; font-size: 0.9rem; }
+.user-table tr:hover { background-color: #f9f9f9; }
+.role-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
+.role-client { background: #e0f7fa; color: #006064; }
+.role-admin { background: #fce4ec; color: #880e4f; }
+.role-restaurateur { background: #fff3e0; color: #e65100; }
+.action-btn { padding: 5px 10px; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer; }
+
+.kitchen-board { display: flex; gap: 20px; padding: 20px; overflow-x: auto; min-height: 80vh; }
+.column { flex: 1; min-width: 300px; background: #f4f4f4; border-radius: 8px; padding: 15px; }
+.column h2 { text-align: center; color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+.order-card { background: white; border-left: 5px solid #ff6b00; padding: 15px; margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.order-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; }
+.order-items { list-style: disc; padding-left: 20px; color: #555; margin-bottom: 15px; }
+.btn-move { width: 100%; padding: 10px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+.btn-start { background-color: #2196F3; color: white; }
+.btn-ready { background-color: #4CAF50; color: white; }
+
+/* Couleurs des colonnes */
+.col-waiting { border-top: 5px solid #ff4444; }
+.col-prep { border-top: 5px solid #2196F3; }
+.col-ready { border-top: 5px solid #4CAF50; }
+
+/* Mobile First Design */
+body { background-color: #f0f2f5; }
+.delivery-app { max-width: 480px; margin: 0 auto; background: white; min-height: 100vh; }
+.app-header { background: #333; color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
+.order-list { padding: 10px; }
+.delivery-card { border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+.delivery-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
+.badge { background: #ff6b00; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
+.address-box { background: #f9f9f9; padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.9rem; }
+.btn-deliver { width: 100%; background: #4CAF50; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+.nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 15px 0; }
+.nav-item { text-decoration: none; color: #555; font-size: 0.8rem; text-align: center; }
+.nav-item.active { color: #ff6b00; font-weight: bold; }
+
+.rating-container { max-width: 600px; margin: 50px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+.stars { font-size: 2.5rem; color: #ccc; cursor: pointer; margin: 20px 0; }
+.star.active { color: #ffcc00; }
+.star:hover { color: #ffdd44; }
+textarea { width: 100%; height: 100px; padding: 10px; margin: 20px 0; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; }
+.btn-submit { background: var(--or-frites, #ff6b00); color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
+.btn-submit:hover { transform: scale(1.05); }
