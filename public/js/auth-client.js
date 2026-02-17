@@ -91,15 +91,22 @@ async function loginUser(email, password) {
     if (user) {
         console.log(`✅ Succès ! Rôle détecté : ${user.role}`);
 
-        // Sauvegarde session
-        const { password, ...safeUser } = user;
-        try {
-            sessionStorage.setItem('currentUser', JSON.stringify(safeUser));
-        } catch (e) {
-            console.error("Erreur SessionStorage:", e);
-        }
+        // 1. On prépare les données à sauvegarder (pas de mot de passe !)
+        const userSession = {
+            id: user.id,
+            nom: user.nom,
+            email: user.email,
+            role: user.role // important pour l'admin/restaurateur
+        };
 
-        return { success: true, user: safeUser };
+        // 2. On sauvegarde dans le localStorage (ça reste même si on ferme le navigateur)
+        // On doit transformer l'objet en texte (JSON) car localStorage ne stocke que du texte.
+        localStorage.setItem('yumland_user', JSON.stringify(userSession));
+
+        // 3. Redirection vers la carte
+        window.location.href = 'carte.html';
+
+        return { success: true, user: userSession };
     } else {
         console.warn("❌ Échec : Identifiants invalides.");
         return { success: false, message: "Email ou mot de passe incorrect." };
@@ -135,6 +142,70 @@ function redirectBasedOnRole(role) {
     // Utilisation de location.assign pour être sûr que le navigateur traite la demande
     window.location.assign(targetPage);
 }
+
+/**
+ * Vérifie si l'utilisateur est connecté et retourne ses infos
+ * @returns {Object|null} L'objet utilisateur ou null
+ */
+const getConnectedUser = () => {
+    const userString = localStorage.getItem('yumland_user');
+    if (userString) {
+        return JSON.parse(userString);
+    }
+    return null;
+};
+
+const updateMenuForUser = (user) => {
+    // Cibler les éléments du DOM
+    const btnLogin = document.querySelector('.btn-login'); // Ton bouton de connexion actuel
+    
+    if (btnLogin) {
+        // Changer le texte et le lien
+        btnLogin.textContent = 'Mon Profil';
+        btnLogin.href = 'profil.html';
+        
+        // Optionnel : Ajouter un bouton de déconnexion
+        const navUl = document.querySelector('.nav-links'); // Ta liste <ul>
+        const liLogout = document.createElement('li');
+        
+        const btnLogout = document.createElement('a');
+        btnLogout.textContent = 'Déconnexion';
+        btnLogout.href = '#';
+        btnLogout.style.cursor = 'pointer';
+        
+        // Gérer la déconnexion
+        btnLogout.addEventListener('click', (e) => {
+            e.preventDefault();
+            logout();
+        });
+        
+        liLogout.appendChild(btnLogout);
+        navUl.appendChild(liLogout);
+    }
+};
+
+const logout = () => {
+    // 1. Supprimer la sauvegarde
+    localStorage.removeItem('yumland_user');
+    // 2. Recharger la page ou aller à l'accueil
+    window.location.href = '../../index.html';
+};
+
+// Exécution au chargement de la page
+document.addEventListener('DOMContentLoaded', () => {
+    const user = getConnectedUser();
+
+    if (user) {
+        console.log(`Bon retour, ${user.nom} !`);
+        updateMenuForUser(user);
+    } else {
+        console.log("Utilisateur non connecté");
+        // Optionnel : Rediriger vers connexion si la page est privée (ex: profil.html)
+        // if (window.location.pathname.includes('profil.html')) {
+        //    window.location.href = 'connexion.html';
+        // }
+    }
+});
 
 // Auto-init au chargement du fichier
 initDatabase();
