@@ -32,18 +32,6 @@
         </div>
     </section>
 
-    <section id="popular-dishes" style="padding:2rem;">
-        <div class="container flex-row">
-            <h2>Plats populaires</h2>
-            <ul id="popular-list">
-                <li>L'Entrecôte XXL</li>
-                <li>Le Grand Miam Burger</li>
-                <li>Le Pavé du Chef</li>
-                <li>Le Cheesy Tower</li>
-            </ul>
-        </div>
-    </section>
-
     <section id="presentation">
         <div class="container flex-row">
 
@@ -66,11 +54,19 @@
             <div class="gallery-grid">
                 <figure>
                     <img src="public/images/nourriture/entrecote.png" alt="Entrecôte grillée 300g">
-                    <figcaption>L'Entrecôte Royale</figcaption>
+                    <figcaption>L'Entrecôte XXL</figcaption>
                 </figure>
                 <figure>
                     <img src="public/images/nourriture/burger.png" alt="Burger Double Steak">
                     <figcaption>Le Grand Miam Burger</figcaption>
+                </figure>
+                <figure>
+                    <img src="public/images/nourriture/pave.png" alt="Pavé du Chef">
+                    <figcaption>Le Pavé du Chef</figcaption>
+                </figure>
+                <figure>
+                    <img src="public/images/nourriture/cheesytower.png" alt="Cheesy Tower">
+                    <figcaption>Le Cheesy Tower</figcaption>
                 </figure>
                 <figure>
                     <img src="public/images/nourriture/profiteroles.png" alt="Profiteroles géantes">
@@ -91,15 +87,6 @@
     </div>
 </footer>
 
-<script>
-    function filterPopular() {
-        const q = document.getElementById('homeSearchInput').value.toLowerCase();
-        const items = document.querySelectorAll('#popular-list li');
-        items.forEach(item => {
-            item.style.display = item.textContent.toLowerCase().includes(q) ? '' : 'none';
-        });
-    }
-</script>
 <script src="public/js/script.js"></script>
 </body>
 </html>

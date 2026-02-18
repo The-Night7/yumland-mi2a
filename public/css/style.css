@@ -657,23 +657,26 @@ footer {
 @media (max-width: 600px) {
     /* Navigation : empiler logo et liens, et rendre les liens visibles */
     nav {
-        flex-direction: column;
-        align-items: flex-start;
+        /* Sur mobile, la navigation s'empile verticalement. L'attribut !important
+           est utilisé pour passer devant les styles inline présents sur certaines pages. */
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
     }
     .nav-links {
         display: flex !important;
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
-        margin-top: 10px;
+        flex-direction: column !important;
+        width: 100% !important;
+        gap: 10px !important;
+        margin-top: 10px !important;
     }
     .nav-links li a {
-        padding: 10px 0;
-        border-bottom: 1px solid var(--color-grey-light);
-        width: 100%;
+        padding: 10px 0 !important;
+        border-bottom: 1px solid var(--color-grey-light) !important;
+        width: 100% !important;
     }
     .nav-links li:last-child a {
-        border-bottom: none;
+        border-bottom: none !important;
     }
 
     /* Conteneurs génériques */
@@ -735,6 +738,19 @@ footer {
     footer {
         padding: 20px;
         font-size: 0.8rem;
+    }
+
+    /* Table utilisateur pour l'admin : scroll horizontal */
+    .user-table {
+        display: block;
+        overflow-x: auto;
+    }
+
+    /* Entête d'administration : empiler les éléments */
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
     }
 }
 .admin-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
