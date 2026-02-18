@@ -645,8 +645,96 @@ footer {
         display: block;
         overflow-x: auto; /* Scroll horizontal sur mobile pour les gros tableaux */
     }
+    /* Afficher les liens de navigation en colonne avec un espacement accru */
     .nav-links {
-        display: none; /* À remplacer par un menu burger plus tard */
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 10px;
+    }
+}
+
+/* --- MOBILE APPEARANCE (Smartphones) --- */
+@media (max-width: 600px) {
+    /* Navigation : empiler logo et liens, et rendre les liens visibles */
+    nav {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .nav-links {
+        display: flex !important;
+        flex-direction: column;
+        width: 100%;
+        gap: 10px;
+        margin-top: 10px;
+    }
+    .nav-links li a {
+        padding: 10px 0;
+        border-bottom: 1px solid var(--color-grey-light);
+        width: 100%;
+    }
+    .nav-links li:last-child a {
+        border-bottom: none;
+    }
+
+    /* Conteneurs génériques */
+    .flex-row {
+        flex-direction: column;
+        padding: 1rem;
+    }
+    .menu-container {
+        padding: 0 10px;
+    }
+    /* Recherche & filtres sur la carte */
+    .search-filter {
+        display: flex;
+        flex-direction: column;
+    }
+    .search-filter input,
+    .search-filter select {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    /* Galerie d'images : adapter la taille des images et la disposition */
+    .gallery-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    .gallery-grid figure img {
+        width: 100%;
+        height: auto;
+    }
+    /* Liste des plats populaires */
+    #popular-list {
+        padding-left: 0;
+    }
+    #popular-list li {
+        padding: 0.5rem 0;
+    }
+    /* Profil : réduire les marges et adapter les sections */
+    .profile-container {
+        padding: 10px;
+        margin: 20px auto;
+    }
+    .loyalty-card {
+        max-width: 100%;
+        padding: 20px;
+    }
+    .tabs {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .history-table {
+        display: block;
+        overflow-x: auto;
+    }
+    /* Formulaires : réduire les paddings */
+    .form-container {
+        padding: 20px;
+    }
+    /* Pied de page */
+    footer {
+        padding: 20px;
+        font-size: 0.8rem;
     }
 }
 .admin-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
