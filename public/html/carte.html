@@ -25,16 +25,26 @@
     <h1>Notre Carte</h1>
     <p class="intro-text">Steakhouse, Grillades & Burgers XXL - Une expérience culinaire unique</p>
 
-    <!-- Barre de recherche et filtre (Phase 1) -->
-    <div class="search-filter" style="margin-bottom:1.5rem;">
-        <input type="text" id="searchInput" placeholder="Rechercher un plat…" onkeyup="filterMenu()"
-               style="padding:0.5rem; border:1px solid var(--color-grey-light); border-radius:4px; margin-right:0.5rem;">
-        <select id="categoryFilter" onchange="filterCategory()"
+    <!-- Barre de recherche et filtre -->
+    <div class="search-filter" style="margin-bottom:1.5rem; display: flex; gap: 0.5rem;">
+        <input type="text" id="searchInput" placeholder="Rechercher un plat…" onkeyup="applyFilters()"
+               style="padding:0.5rem; border:1px solid var(--color-grey-light); border-radius:4px; flex-grow: 1;">
+        <select id="categoryFilter" onchange="applyFilters()"
                 style="padding:0.5rem; border:1px solid var(--color-grey-light); border-radius:4px;">
             <option value="all">Toutes catégories</option>
             <option value="entrees">Entrées</option>
             <option value="viandes">Viandes & Poissons</option>
             <option value="burgers">Burgers</option>
+            <option value="desserts">Desserts</option>
+            <option value="boissons">Boissons</option>
+        </select>
+        <select id="specFilter" onchange="applyFilters()"
+                style="padding:0.5rem; border:1px solid var(--color-grey-light); border-radius:4px;">
+            <option value="all">Toutes spécificités</option>
+            <option value="halal">Halal</option>
+            <option value="porc">Contient du porc</option>
+            <option value="vege">Végétarien</option>
+            <option value="poisson">Poisson</option>
         </select>
     </div>
 
@@ -54,19 +64,19 @@
             <td>Onion Rings "Tower"</td>
             <td>8 à 10 beignets d'oignons servis sur pique verticale. Sauce BBQ.</td>
             <td>6.50 €</td>
-            <td>🌱 Végétarien</td>
+            <td data-spec="vege">🌱 Végétarien</td>
         </tr>
         <tr>
             <td>Os à Moelle Rôti</td>
             <td>Coupe longitudinale, fleur de sel, pain de campagne grillé.</td>
             <td>9.00 €</td>
-            <td>☪️ Halal possible</td>
+            <td data-spec="halal">☪️ Halal possible</td>
         </tr>
         <tr>
             <td>Planche Mixte</td>
             <td>Charcuterie (Rosette, Terrine) + Fromages (Cantal, Chèvre).</td>
             <td>14.00 €</td>
-            <td>🐷 Contient Porc</td>
+            <td data-spec="porc">🐷 Contient Porc</td>
         </tr>
         </tbody>
     </table>
@@ -87,25 +97,25 @@
             <td>L'Entrecôte XXL</td>
             <td>350g - Charolais/Limousin. Persillée.</td>
             <td>24.90 €</td>
-            <td>☪️ Option Halal</td>
+            <td data-spec="halal">☪️ Option Halal</td>
         </tr>
         <tr>
             <td>Le Pavé du Chef</td>
             <td>200g - Cœur de Rumsteak. Tendre et maigre.</td>
             <td>18.50 €</td>
-            <td>☪️ Option Halal</td>
+            <td data-spec="halal">☪️ Option Halal</td>
         </tr>
         <tr>
             <td>La Côte de Bœuf</td>
             <td>1 kg (pour 2 pers). Maturation min. 21 jours.</td>
             <td>59.00 €</td>
-            <td>☪️ Option Halal</td>
+            <td data-spec="halal">☪️ Option Halal</td>
         </tr>
         <tr>
             <td>BBQ Ribs</td>
             <td>Travers de porc marinés 24h, cuisson lente 12h.</td>
             <td>19.50 €</td>
-            <td>🐷 100% Porc</td>
+            <td data-spec="porc">🐷 100% Porc</td>
         </tr>
         <tr>
             <td>Magret de Canard</td>
@@ -117,13 +127,13 @@
             <td>Pavé de Saumon</td>
             <td>180g, grillé unilatéral, citron vert.</td>
             <td>17.50 €</td>
-            <td>Option Poisson</td>
+            <td data-spec="poisson">Option Poisson</td>
         </tr>
         <tr>
             <td>L'Andouillette</td>
             <td>AAAAA, grillée forte à la moutarde.</td>
             <td>16.00 €</td>
-            <td>🐷 100% Porc</td>
+            <td data-spec="porc">🐷 100% Porc</td>
         </tr>
         </tbody>
         <tfoot>
@@ -150,37 +160,37 @@
             <td>Le Grand Miam</td>
             <td>Double Steak 150g, Cheddar, Sauce Maison.</td>
             <td>16.90 €</td>
-            <td>☪️ Option Halal</td>
+            <td data-spec="halal">☪️ Option Halal</td>
         </tr>
         <tr>
             <td>Le Cheesy Tower</td>
             <td>Steak 180g, Sauce Fromagère, Cheddar fondu.</td>
             <td>15.50 €</td>
-            <td>☪️ Option Halal</td>
+            <td data-spec="halal">☪️ Option Halal</td>
         </tr>
         <tr>
             <td>Le Montagnard</td>
             <td>Steak 150g, Reblochon, Lardons, Galette PdeT.</td>
             <td>17.90 €</td>
-            <td>🐷 (Lardons)</td>
+            <td data-spec="porc">🐷 (Lardons)</td>
         </tr>
         <tr>
             <td>Le Frenchy</td>
             <td>Steak 150g, Cantal jeune, Oignons confits.</td>
             <td>16.50 €</td>
-            <td>☪️ Option Halal</td>
+            <td data-spec="halal">☪️ Option Halal</td>
         </tr>
         <tr>
             <td>Veggie Grill</td>
             <td>Galette Haricots Rouges/Maïs ou Simili-carné.</td>
             <td>14.50 €</td>
-            <td>🌱 Végétarien</td>
+            <td data-spec="vege">🌱 Végétarien</td>
         </tr>
         </tbody>
     </table>
 
     <!-- DESSERTS -->
-    <table class="menu-table">
+    <table class="menu-table" data-category="desserts">
         <caption>🍰 Desserts (Sweet Ending)</caption>
         <thead>
         <tr>
@@ -219,7 +229,7 @@
     </table>
 
     <!-- BOISSONS -->
-    <table class="menu-table">
+    <table class="menu-table" data-category="boissons">
         <caption>🍺 Les Boissons</caption>
         <thead>
         <tr>
@@ -429,22 +439,53 @@
     <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
 </footer>
 <script>
-    // Filtrer les lignes en fonction de la recherche :
-    function filterMenu() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        document.querySelectorAll('.menu-table tbody tr').forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(query) ? '' : 'none';
-        });
-    }
-    // Afficher ou masquer les tableaux selon la catégorie sélectionnée :
-    function filterCategory() {
-        const category = document.getElementById('categoryFilter').value;
+    function applyFilters() {
+        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+        const selectedCategory = document.getElementById('categoryFilter').value;
+        const selectedSpec = document.getElementById('specFilter').value;
+
         document.querySelectorAll('.menu-table').forEach(table => {
-            const cat = table.getAttribute('data-category');
-            table.style.display = (category === 'all' || cat === category) ? '' : 'none';
+            const tableCategory = table.getAttribute('data-category');
+            let tableHasVisibleRows = false;
+
+            // 1. Filter rows within the table
+            table.querySelectorAll('tbody tr').forEach(row => {
+                // Ignore separator rows
+                if (row.classList.contains('separator')) {
+                    return;
+                }
+
+                const text = row.textContent.toLowerCase();
+                const specCell = row.querySelector('td[data-spec]');
+                const spec = specCell ? specCell.getAttribute('data-spec') : null;
+
+                const searchMatch = text.includes(searchQuery);
+                const specMatch = (selectedSpec === 'all' || spec === selectedSpec);
+
+                if (searchMatch && specMatch) {
+                    row.style.display = '';
+                    // If the category filter is active, this row might make the table visible
+                    if (selectedCategory === 'all' || selectedCategory === tableCategory) {
+                        tableHasVisibleRows = true;
+                    }
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // 2. Filter the entire table based on category
+            if (selectedCategory === 'all') {
+                // If showing all categories, visibility depends on whether it has rows that match other filters
+                table.style.display = tableHasVisibleRows ? '' : 'none';
+            } else {
+                // If a specific category is chosen, hide or show the whole table
+                table.style.display = (selectedCategory === tableCategory && tableHasVisibleRows) ? '' : 'none';
+            }
         });
     }
+
+    // Initial filter application on page load
+    document.addEventListener('DOMContentLoaded', applyFilters);
 </script>
 
 </body>
