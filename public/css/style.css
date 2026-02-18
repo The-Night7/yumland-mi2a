@@ -653,7 +653,7 @@ footer {
 .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .user-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
 .user-table th, .user-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-.user-table th { background-color: #333; color: var(--or-frites, #ff6b00); text-transform: uppercase; font-size: 0.9rem; }
+.user-table th { background-color: #333; color: var(--color-accent, #ff6b00); text-transform: uppercase; font-size: 0.9rem; }
 .user-table tr:hover { background-color: #f9f9f9; }
 .role-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 .role-client { background: #e0f7fa; color: #006064; }
@@ -695,5 +695,13 @@ body { background-color: #f0f2f5; }
 .star.active { color: #ffcc00; }
 .star:hover { color: #ffdd44; }
 textarea { width: 100%; height: 100px; padding: 10px; margin: 20px 0; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; }
-.btn-submit { background: var(--or-frites, #ff6b00); color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
+.btn-submit { background: var(--color-accent, #ff6b00); color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
 .btn-submit:hover { transform: scale(1.05); }
+
+/* Icône d’édition (crayon) pour le profil */
+.edit-icon {
+    color: var(--color-primary);
+    cursor: pointer;
+    font-size: 1rem;
+    vertical-align: middle;
+}

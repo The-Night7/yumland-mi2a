@@ -23,7 +23,7 @@
             <li><a href="../../index.html">Accueil</a></li>
             <li><a href="carte.html">La Carte</a></li>
             <li><a href="profil.html" class="active">Mon Compte</a></li>
-            <li><a href="#" id="btn-logout" style="color: var(--rouge-grill); font-weight: bold;">Déconnexion</a></li>
+            <li><a href="#" id="btn-logout" style="color: var(--color-primary); font-weight: bold;">Déconnexion</a></li>
         </ul>
     </nav>
 </header>
@@ -48,10 +48,12 @@
                     <div class="form-group">
                         <label for="nom">Nom :</label>
                         <input type="text" id="nom" name="nom" required>
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
                     </div>
                     <div class="form-group">
                         <label for="prenom">Prénom :</label>
                         <input type="text" id="prenom" name="prenom" required>
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
                     </div>
                     <div class="form-group">
                         <label for="email">Email :</label>
@@ -60,6 +62,7 @@
                     <div class="form-group">
                         <label for="tel">Téléphone :</label>
                         <input type="tel" id="tel" name="tel" placeholder="Ex: 06 12 34 56 78">
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
                     </div>
                     <div style="clear:both; margin-top: 20px;">
                         <button type="submit" class="btn-save">METTRE À JOUR</button>
@@ -76,7 +79,7 @@
                 <p style="font-size:1.2rem;">YumPoints</p>
                 <hr style="border-color: rgba(255,255,255,0.2); margin: 20px 0;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>Statut : <strong style="color: var(--or-frites);" id="status-display">BRONZE</strong></span>
+                    <span>Statut : <strong style="color: var(--color-primary);" id="status-display">BRONZE</strong></span>
                 </div>
             </div>
         </div>
@@ -101,7 +104,7 @@
                         <td>02/02/2026</td>
                         <td>45.50 €</td>
                         <td><span class="status-badge status-pending">En cuisine</span></td>
-                        <td><a href="#" style="color:var(--rouge-grill); font-weight:bold; text-decoration:none;">Voir</a></td>
+                        <td><a href="#" style="color:var(--color-primary); font-weight:bold; text-decoration:none;">Voir</a></td>
                     </tr>
                     </tbody>
                 </table>

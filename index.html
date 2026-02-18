@@ -32,6 +32,18 @@
         </div>
     </section>
 
+    <section id="popular-dishes" style="padding:2rem;">
+        <div class="container flex-row">
+            <h2>Plats populaires</h2>
+            <ul id="popular-list">
+                <li>L'Entrecôte XXL</li>
+                <li>Le Grand Miam Burger</li>
+                <li>Le Pavé du Chef</li>
+                <li>Le Cheesy Tower</li>
+            </ul>
+        </div>
+    </section>
+
     <section id="presentation">
         <div class="container flex-row">
 
@@ -79,6 +91,15 @@
     </div>
 </footer>
 
+<script>
+    function filterPopular() {
+        const q = document.getElementById('homeSearchInput').value.toLowerCase();
+        const items = document.querySelectorAll('#popular-list li');
+        items.forEach(item => {
+            item.style.display = item.textContent.toLowerCase().includes(q) ? '' : 'none';
+        });
+    }
+</script>
 <script src="public/js/script.js"></script>
 </body>
 </html>

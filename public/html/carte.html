@@ -25,8 +25,21 @@
     <h1>Notre Carte</h1>
     <p class="intro-text">Steakhouse, Grillades & Burgers XXL - Une expérience culinaire unique</p>
 
+    <!-- Barre de recherche et filtre (Phase 1) -->
+    <div class="search-filter" style="margin-bottom:1.5rem;">
+        <input type="text" id="searchInput" placeholder="Rechercher un plat…" onkeyup="filterMenu()"
+               style="padding:0.5rem; border:1px solid var(--color-grey-light); border-radius:4px; margin-right:0.5rem;">
+        <select id="categoryFilter" onchange="filterCategory()"
+                style="padding:0.5rem; border:1px solid var(--color-grey-light); border-radius:4px;">
+            <option value="all">Toutes catégories</option>
+            <option value="entrees">Entrées</option>
+            <option value="viandes">Viandes & Poissons</option>
+            <option value="burgers">Burgers</option>
+        </select>
+    </div>
+
     <!-- ENTRÉES -->
-    <table class="menu-table">
+    <table class="menu-table" data-category="entrees">
         <caption>🥗 Les Entrées & Partage</caption>
         <thead>
         <tr>
@@ -59,7 +72,7 @@
     </table>
 
     <!-- VIANDES -->
-    <table class="menu-table">
+    <table class="menu-table" data-category="viandes">
         <caption>🍖 Le Grill (Viandes & Poissons)</caption>
         <thead>
         <tr>
@@ -122,7 +135,7 @@
     </table>
 
     <!-- BURGERS -->
-    <table class="menu-table">
+    <table class="menu-table" data-category="burgers">
         <caption>🍔 Les Burgers</caption>
         <thead>
         <tr>
@@ -415,6 +428,24 @@
 <footer>
     <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
 </footer>
+<script>
+    // Filtrer les lignes en fonction de la recherche :
+    function filterMenu() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.menu-table tbody tr').forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(query) ? '' : 'none';
+        });
+    }
+    // Afficher ou masquer les tableaux selon la catégorie sélectionnée :
+    function filterCategory() {
+        const category = document.getElementById('categoryFilter').value;
+        document.querySelectorAll('.menu-table').forEach(table => {
+            const cat = table.getAttribute('data-category');
+            table.style.display = (category === 'all' || cat === category) ? '' : 'none';
+        });
+    }
+</script>
 
 </body>
 </html>
