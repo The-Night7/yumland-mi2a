@@ -95,13 +95,16 @@ async function loginUser(email, password) {
         const userSession = {
             id: user.id,
             nom: user.nom,
+            prenom: user.prenom,
             email: user.email,
-            role: user.role // important pour l'admin/restaurateur
+            tel: user.tel,
+            points: user.points || 0,
+            role: user.role
         };
 
-        // 2. On sauvegarde dans le localStorage (ça reste même si on ferme le navigateur)
-        // On doit transformer l'objet en texte (JSON) car localStorage ne stocke que du texte.
+        // 2. On sauvegarde dans le localStorage et le sessionStorage
         localStorage.setItem('yumland_user', JSON.stringify(userSession));
+        sessionStorage.setItem('currentUser', JSON.stringify(userSession));
 
         return { success: true, user: userSession };
     } else {
@@ -184,6 +187,7 @@ const updateMenuForUser = (user) => {
 const logout = () => {
     // 1. Supprimer la sauvegarde
     localStorage.removeItem('yumland_user');
+    sessionStorage.removeItem('currentUser');
     // 2. Recharger la page ou aller à l'accueil
     window.location.href = '../../index.html';
 };
