@@ -157,7 +157,7 @@ nav {
     gap: 2rem;
     align-items: flex-start;
     padding: 2rem;
-    max-width: 1200px;
+    max-width: 1500px;
     margin: 0 auto;
 }
 
@@ -789,9 +789,44 @@ body { background-color: #f0f2f5; }
 .delivery-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
 .badge { background: #ff6b00; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
 .address-box { background: #f9f9f9; padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.9rem; }
-.btn-deliver { width: 100%; background: #4CAF50; color: white; border: none; padding: 15px; border-radius: 8px; font-size: 1rem; font-weight: bold; cursor: pointer; }
+.btn-deliver {
+    width: 100%;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    min-height: 60px; /* Hauteur minimale pour utilisation avec des gants */
+}
+
+/* Bouton pour ouvrir une adresse dans une application de carte */
+.btn-map {
+    width: 100%;
+    background: var(--color-primary, #D32F2F);
+    color: var(--color-white, #FFFFFF);
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 8px;
+    min-height: 60px; /* Large clic pour les gants */
+}
 .nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 15px 0; }
-.nav-item { text-decoration: none; color: #555; font-size: 0.8rem; text-align: center; }
+    .nav-item { text-decoration: none; color: #555; font-size: 0.8rem; text-align: center; }
+
+    /* Augmente la surface tactile dans la barre de navigation du livreur */
+    .nav-bottom .nav-item {
+        padding: 20px 0;
+        min-height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 .nav-item.active { color: #ff6b00; font-weight: bold; }
 
 .rating-container { max-width: 600px; margin: 50px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }

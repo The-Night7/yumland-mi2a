@@ -48,22 +48,35 @@
                     <div class="form-group">
                         <label for="nom">Nom :</label>
                         <input type="text" id="nom" name="nom" required>
-                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
                     </div>
                     <div class="form-group">
                         <label for="prenom">Prénom :</label>
                         <input type="text" id="prenom" name="prenom" required>
-                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
                     </div>
                     <div class="form-group">
                         <label for="email">Email :</label>
                         <input type="email" id="email" name="email" required disabled style="background-color: #f0f0f0; cursor: not-allowed;" title="L'email sert d'identifiant et ne peut être modifié">
                     </div>
                     <div class="form-group">
-                        <label for="tel">Téléphone :</label>
-                        <input type="tel" id="tel" name="tel" placeholder="Ex: 06 12 34 56 78">
+                        <label for="tel">Téléphone :</label>
+                        <input type="tel" id="tel" name="tel" placeholder="Ex: 06 12 34 56 78">
                         <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
                     </div>
+
+                    <!-- Champ Adresse ajouté pour la phase 1 -->
+                    <div class="form-group">
+                        <label for="adresse">Adresse :</label>
+                        <input type="text" id="adresse" name="adresse" placeholder="12 rue de Paris, 95000 Cergy">
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
+                    </div>
+
+                    <!-- Champ Informations complémentaires (code interphone, étage, etc.) -->
+                    <div class="form-group">
+                        <label for="complement">Infos Complémentaires :</label>
+                        <input type="text" id="complement" name="complement" placeholder="Code interphone, étage, etc.">
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
+                    </div>
+
                     <div style="clear:both; margin-top: 20px;">
                         <button type="submit" class="btn-save">METTRE À JOUR</button>
                     </div>
@@ -168,6 +181,12 @@
         document.getElementById('email').value = user.email || '';
         document.getElementById('tel').value = user.tel || ''; // Ce champ n'existe pas encore dans ton auth-client.js de base
 
+        // Remplir les champs adresse et complément si disponibles
+        const inputAdresse = document.getElementById('adresse');
+        if (inputAdresse) inputAdresse.value = user.adresse || '';
+        const inputComplement = document.getElementById('complement');
+        if (inputComplement) inputComplement.value = user.complement || '';
+
         // Points (Simulation simple car pas encore en base de données)
         // Si l'utilisateur n'a pas de points, on met 0 par défaut
         const points = user.points || 0;
@@ -187,6 +206,9 @@
             user.nom = document.getElementById('nom').value;
             user.prenom = document.getElementById('prenom').value;
             user.tel = document.getElementById('tel').value;
+            // Ajouter la mise à jour de l'adresse et du complément
+            user.adresse = document.getElementById('adresse') ? document.getElementById('adresse').value : '';
+            user.complement = document.getElementById('complement') ? document.getElementById('complement').value : '';
 
             // 1. Mise à jour de la session actuelle
             sessionStorage.setItem('currentUser', JSON.stringify(user));

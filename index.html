@@ -32,6 +32,14 @@
         </div>
     </section>
 
+    <!-- Zone de recherche et plats populaires (ajout Phase 1) -->
+    <section id="home-search" class="container" style="padding: 2rem 1rem;">
+        <div class="container flex-row">
+            <h2>Rechercher un plat</h2>
+            <input type="text" id="homeSearchInput" placeholder="Rechercher un plat..." onkeyup="filterPopular()" style="width: 100%; padding: 0.5rem; border: 1px solid var(--color-grey-light); border-radius: 4px;">
+        </div>
+    </section>
+
     <section id="presentation">
         <div class="container flex-row">
 
@@ -54,7 +62,7 @@
             <div class="gallery-grid">
                 <figure>
                     <img src="public/images/nourriture/entrecote.png" alt="Entrecôte grillée 300g">
-                    <figcaption>L'Entrecôte XXL</figcaption>
+                    <figcaption>L'Entrecôte Royale</figcaption>
                 </figure>
                 <figure>
                     <img src="public/images/nourriture/burger.png" alt="Burger Double Steak">
@@ -88,5 +96,15 @@
 </footer>
 
 <script src="public/js/script.js"></script>
+<!-- Script pour filtrer la liste des plats populaires -->
+<script>
+    function filterPopular() {
+        const query = document.getElementById('homeSearchInput').value.toLowerCase();
+        document.querySelectorAll('#popular-list li').forEach(item => {
+            const text = item.textContent.toLowerCase();
+            item.style.display = text.includes(query) ? '' : 'none';
+        });
+    }
+</script>
 </body>
 </html>
