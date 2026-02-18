@@ -103,9 +103,6 @@ async function loginUser(email, password) {
         // On doit transformer l'objet en texte (JSON) car localStorage ne stocke que du texte.
         localStorage.setItem('yumland_user', JSON.stringify(userSession));
 
-        // 3. Redirection vers la carte
-        window.location.href = 'carte.html';
-
         return { success: true, user: userSession };
     } else {
         console.warn("❌ Échec : Identifiants invalides.");
@@ -204,6 +201,30 @@ document.addEventListener('DOMContentLoaded', () => {
         // if (window.location.pathname.includes('profil.html')) {
         //    window.location.href = 'connexion.html';
         // }
+    }
+    
+    const loginForm = document.getElementById('login-form');
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', async (event) => {
+            // 1. Empêcher le rechargement de la page (comportement par défaut)
+            event.preventDefault();
+
+            // 2. Récupération des données du formulaire (Syntaxe ES6+)
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // 3. Appel de votre fonction de connexion
+            const result = await loginUser(email, password);
+
+            // 4. Gestion du résultat
+            if (result.success) {
+                // Utilisation de votre fonction de redirection déjà existante
+                redirectBasedOnRole(result.user.role);
+            } else {
+                alert(result.message); // Simple alert pour le moment
+            }
+        });
     }
 });
 
