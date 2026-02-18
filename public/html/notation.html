@@ -19,15 +19,35 @@
         <p>Comment s'est passé votre expérience "Grand Miam" ?</p>
 
         <form id="rating-form">
-            <!-- Système d'étoiles -->
-            <div class="stars" id="star-rating">
+            <div class="form-group">
+                <label for="order-id" style="display:block; text-align:left; font-weight:bold;">Identifiant de la commande :</label>
+                <input type="text" id="order-id" name="order_id" readonly>
+            </div>
+
+            <div class="form-group">
+                <label for="order-content" style="display:block; text-align:left; font-weight:bold;">Contenu de la commande :</label>
+                <textarea id="order-content" name="order_content" readonly></textarea>
+            </div>
+
+            <h3>Note du livreur :</h3>
+            <div class="stars" id="delivery-star-rating">
                 <span class="star" data-value="1">★</span>
                 <span class="star" data-value="2">★</span>
                 <span class="star" data-value="3">★</span>
                 <span class="star" data-value="4">★</span>
                 <span class="star" data-value="5">★</span>
             </div>
-            <input type="hidden" id="rating-value" name="note" value="0">
+            <input type="hidden" id="delivery-rating-value" name="delivery_note" value="0">
+
+            <h3>Note de la nourriture :</h3>
+            <div class="stars" id="food-star-rating">
+                <span class="star" data-value="1">★</span>
+                <span class="star" data-value="2">★</span>
+                <span class="star" data-value="3">★</span>
+                <span class="star" data-value="4">★</span>
+                <span class="star" data-value="5">★</span>
+            </div>
+            <input type="hidden" id="food-rating-value" name="food_note" value="0">
 
             <label for="comment" style="display:block; text-align:left; font-weight:bold;">Votre commentaire :</label>
             <textarea id="comment" name="commentaire" placeholder="Le burger était-il assez chaud ? Le livreur sympa ?"></textarea>
@@ -39,39 +59,56 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        const stars = document.querySelectorAll('.star');
-        const ratingInput = document.getElementById('rating-value');
+        // Simulate pre-filling order data
+        document.getElementById('order-id').value = '#CMD-8854';
+        document.getElementById('order-content').textContent = '2 Menus Burger, 1 Salade César, 2 Boissons';
 
-        // Gestion du clic sur les étoiles
-        stars.forEach(star => {
-            star.addEventListener('click', () => {
-                const value = parseInt(star.getAttribute('data-value'));
-                ratingInput.value = value;
+        const setupStarRating = (containerId, hiddenInputId) => {
+            const stars = document.querySelectorAll(`#${containerId} .star`);
+            const ratingInput = document.getElementById(hiddenInputId);
 
-                // Mise à jour visuelle
-                stars.forEach(s => {
-                    const sVal = parseInt(s.getAttribute('data-value'));
-                    if(sVal <= value) {
-                        s.classList.add('active');
-                    } else {
-                        s.classList.remove('active');
-                    }
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.getAttribute('data-value'));
+                    ratingInput.value = value;
+
+                    stars.forEach(s => {
+                        const sVal = parseInt(s.getAttribute('data-value'));
+                        if(sVal <= value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
                 });
             });
-        });
+        };
 
-        // Gestion de l'envoi
+        setupStarRating('delivery-star-rating', 'delivery-rating-value');
+        setupStarRating('food-star-rating', 'food-rating-value');
+
         document.getElementById('rating-form').addEventListener('submit', (e) => {
             e.preventDefault();
-            const note = ratingInput.value;
+
+            const orderId = document.getElementById('order-id').value;
+            const orderContent = document.getElementById('order-content').value;
+            const deliveryNote = document.getElementById('delivery-rating-value').value;
+            const foodNote = document.getElementById('food-rating-value').value;
             const comment = document.getElementById('comment').value;
 
-            if(note == 0) {
-                alert("Veuillez sélectionner au moins une étoile.");
+            if (deliveryNote == 0 || foodNote == 0) {
+                alert("Veuillez sélectionner au moins une étoile pour chaque catégorie.");
                 return;
             }
 
-            console.log(`Avis envoyé : ${note}/5 - ${comment}`);
+            console.log(`
+                Avis envoyé:
+                Order ID: ${orderId}
+                Order Content: ${orderContent}
+                Note Livreur: ${deliveryNote}/5
+                Note Nourriture: ${foodNote}/5
+                Commentaire: ${comment}
+            `);
             alert("Merci pour votre avis ! À bientôt.");
             window.location.href = '../../index.html';
         });
