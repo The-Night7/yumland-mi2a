@@ -28,8 +28,28 @@
 
 <script>
     const deliveries = [
-        { id: 'CMD-002', client: 'M. Martin', address: '12 Rue du Port, Cergy', code: 'A123', status: 'ready', total: '22.50€' },
-        { id: 'CMD-005', client: 'Mme. Durand', address: '5 Bd de l\'Oise, Cergy', code: 'Interphone B', status: 'ready', total: '15.00€' }
+        {
+            id: 'CMD-002',
+            client: 'M. Martin',
+            address: '12 Rue du Port, Cergy',
+            code: 'A123',
+            floor: '3ème étage',
+            tel: '06 01 02 03 04',
+            comment: 'Sonner fort',
+            status: 'ready',
+            total: '22.50€'
+        },
+        {
+            id: 'CMD-005',
+            client: 'Mme. Durand',
+            address: "5 Bd de l'Oise, Cergy",
+            code: 'Interphone B',
+            floor: '1er étage',
+            tel: '06 05 06 07 08',
+            comment: '',
+            status: 'ready',
+            total: '15.00€'
+        }
     ];
 
     function renderDeliveries() {
@@ -47,11 +67,15 @@
                     </div>
                     <div class="address-box">
                         📍 ${d.address}<br>
-                        🔑 Code: <strong>${d.code}</strong>
+                        🏢 Étage : ${d.floor || ''}<br>
+                        🔑 Code : <strong>${d.code}</strong><br>
+                        📞 Tél : ${d.tel || ''}<br>
+                        ${d.comment ? `💬 Commentaire : ${d.comment}` : ''}
                     </div>
                     <div style="margin-bottom:10px; color:#666;">
-                        📦 Commande #${d.id}
+                        📦 Commande #${d.id}
                     </div>
+                    <button class="btn-map" onclick="openMap('${d.address}')">🗺️ Ouvrir dans Maps</button>
                     <button class="btn-deliver" onclick="confirmDelivery('${d.id}')">VALIDER LA LIVRAISON</button>
                 </div>
             `).join('');
@@ -66,6 +90,12 @@
                 renderDeliveries();
             }
         }
+    }
+
+    // Fonction pour ouvrir l'adresse dans une application de cartographie (Google Maps)
+    function openMap(address) {
+        const url = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(address);
+        window.open(url, '_blank');
     }
 
     document.addEventListener('DOMContentLoaded', renderDeliveries);

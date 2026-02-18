@@ -4,6 +4,14 @@
  */
 
 // 1. DONNÉES PAR DÉFAUT (MOCK DATA)
+/**
+ * TRADUCTION DE LA CHARTE "LE GRAND MIAM CLUB"
+ */
+function getStatutFidelite(miams) {
+    if (miams >= 3000) return { nom: "Légende du Steak 👑", couleur: "#FFC107", avantage: "-10% à vie + Priorité livraison" };
+    if (miams >= 1000) return { nom: "Sauce Chef 🔥", couleur: "#D32F2F", avantage: "Frites 'Sweet Potato' offertes" };
+    return { nom: "Petit Grilleur 🥩", couleur: "#BDBDBD", avantage: "Accès au shop de base" };
+}
 // Ces données servent de référence absolue.
 const DEFAULT_USERS = [
     {
@@ -13,7 +21,7 @@ const DEFAULT_USERS = [
         email: "client@yumland.com",
         password: "123",
         role: "client",
-        points: 150,
+        miams: 150,
         tel: "0601020304"
     },
     {
@@ -23,7 +31,7 @@ const DEFAULT_USERS = [
         email: "admin@yumland.com",
         password: "admin",
         role: "admin",
-        points: 0
+        miams: 0
     },
     {
         id: 3,
@@ -32,7 +40,7 @@ const DEFAULT_USERS = [
         email: "chef@yumland.com",
         password: "chef",
         role: "restaurateur",
-        points: 0
+        miams: 0
     },
     {
         id: 4,
@@ -41,7 +49,7 @@ const DEFAULT_USERS = [
         email: "livreur@yumland.com",
         password: "go",
         role: "livreur",
-        points: 0,
+        miams: 0,
         secteur: "Cergy Préfecture"
     }
 ];
@@ -98,7 +106,8 @@ async function loginUser(email, password) {
             prenom: user.prenom,
             email: user.email,
             tel: user.tel,
-            points: user.points || 0,
+            miams: user.miams || 0, // <-- Changé ici !
+            statutFidelite: getStatutFidelite(user.miams || 0), // <-- Ajout du statut
             role: user.role
         };
 
