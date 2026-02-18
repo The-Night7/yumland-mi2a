@@ -1,0 +1,159 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- Packages de base ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{margin=2cm, left=3cm} 
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{array}
+\usepackage{colortbl}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{graphicx}
+\usepackage{tcolorbox}
+
+% --- Couleurs Officielles ---
+\definecolor{GrillRed}{HTML}{D32F2F}
+\definecolor{CoalBlack}{HTML}{2D2D2D}
+\definecolor{SauceCream}{HTML}{FDFBF7}
+\definecolor{FryGold}{HTML}{FFC107}
+\definecolor{StoneGray}{HTML}{BDBDBD}
+\definecolor{DarkRed}{HTML}{B71C1C} % Pour le hover
+\definecolor{BrownVisited}{HTML}{5D4037} % Pour les liens visités
+
+% --- Configuration de la page ---
+\pagecolor{white}
+\setlength{\parindent}{0pt}
+
+% Style des titres
+\titleformat{\section}{\color{GrillRed}\normalfont\Large\bfseries\uppercase}{}{0em}{}[\titlerule]
+\titleformat{\subsection}{\color{CoalBlack}\normalfont\large\bfseries}{}{0em}{\faCaretRight\quad}
+
+% Bandeau latéral décoratif
+\usepackage{background}
+\backgroundsetup{
+scale=1, angle=0, opacity=1, contents={
+    \begin{tikzpicture}[remember picture, overlay]
+        \path [fill=CoalBlack] (current page.north west) rectangle ([xshift=1cm]current page.south west);
+        \path [fill=GrillRed] (current page.north west) rectangle ([xshift=0.2cm]current page.south west);
+    \end{tikzpicture}}
+}
+
+\begin{document}
+
+% --- HEADER ---
+\begin{center}
+    \includegraphics[width=5cm]{logo-le-grand-miam-removebg-preview.png} \\
+    \vspace{0.4cm}
+    {\Huge \textbf{\color{CoalBlack}DOCUMENT DE \color{GrillRed}CONCEPTION}} \\
+    \vspace{0.2cm}
+    \texttt{\small PROJET YUMLAND - PHASE 1 | LE GRAND MIAM} \\
+    \vspace{0.2cm}
+    \textit{\small Thème : Steakhouse \& Grillades Premium} \\
+    \vspace{0.4cm}
+    \textbf{Groupe MI2A} \\
+    {\normalsize Myriam BENSAÏD \quad Sheryne OUARGHI-MHIRI \quad Kylian VANDEL} \\
+    
+\end{center}
+
+\section{1. Identité Visuelle et Concept}
+
+Le Grand Miam est un restaurant convivial spécialisé dans les viandes grillées et les portions généreuses. L'identité visuelle repose sur l'univers du "Grill" : chaleureux, robuste et appétissant.
+
+\begin{tcolorbox}[colback=SauceCream, colframe=CoalBlack, arc=2mm, boxrule=1pt]
+    \textbf{La Stratégie :} "Le Terroir pour Tous" \\
+    \textbf{La Gestion des Viandes :}
+    \begin{itemize}[label=\textcolor{GrillRed}{\faCheck}, leftmargin=*]
+        \item \textbf{Bœuf :} Mise en avant de l'origine France (Charolais/Limousin). Il est indiqué clairement : \textit{"Toutes nos pièces de bœuf sont disponibles en version Halal sur demande."}
+        \item \textbf{Porc :} Présent dans une section isolée "Spécialités Charcutières" pour bien séparer les produits.
+    \end{itemize}
+    \textbf{L'interface est conçue pour être :}
+    \begin{itemize}[label=\textcolor{GrillRed}{\faCheck}, leftmargin=*]
+        \item \textbf{Gourmande :} Mise en avant de visuels de haute qualité.
+        \item \textbf{Accessible :} Contrastes forts pour une lisibilité parfaite (client et livreur).
+        \item \textbf{Efficace :} Parcours utilisateur simplifié pour la commande rapide.
+    \end{itemize}
+\end{tcolorbox}
+
+\section{2. Palette de Couleurs}
+L'ambiance chromatique joue sur le contraste entre la chaleur du grill et la sobriété du charbon.
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|m{3.5cm}|c|>{\centering\arraybackslash}m{2cm}|m{7cm}|}
+    \hline
+    \rowcolor{CoalBlack} \textcolor{white}{\textbf{Nom}} & \textcolor{white}{\textbf{HEX}} & \textcolor{white}{\textbf{Aperçu}} & \textcolor{white}{\textbf{Usage Principal}} \\
+    \hline
+    \textbf{Rouge "Grill"} & \#D32F2F & \cellcolor{GrillRed} & Couleur Primaire. Boutons (CTA), prix, titres, icônes. \\
+    \hline
+    \textbf{Noir "Charbon"} & \#2D2D2D & \cellcolor{CoalBlack} & Couleur Secondaire. Header, Footer, navigation, textes. \\
+    \hline
+    \textbf{Crème "Sauce"} & \#FDFBF7 & \cellcolor{SauceCream} & Arrière-plan (Body). Réduit la fatigue visuelle. \\
+    \hline
+    \textbf{Or "Frites"} & \#FFC107 & \cellcolor{FryGold} & Accent. Étoiles, promotions, focus formulaires. \\
+    \hline
+    \textbf{Gris "Pierre"} & \#BDBDBD & \cellcolor{StoneGray} & Éléments passifs. Bordures, placeholders, textes II. \\
+    \hline
+\end{tabular}
+\end{center}
+
+\section{3. Typographie (Google Fonts)}
+Combinaison de polices libres de droits pour allier caractère et lisibilité.
+
+\begin{tcolorbox}[colback=SauceCream, colframe=CoalBlack!20, arc=2mm, title=\color{CoalBlack}\textbf{Titres (H1, H2, H3) : OSWALD}, fonttitle=\small]
+    {\Large Grand par le goût, géant par l'appétit.} \\
+    \vspace{0.1cm}
+    \small \textbf{Style :} Sans-serif, Condensé, Épais (Bold / 700). \\
+    \textbf{Usage :} Titres de pages, noms des plats, slogans. Donne un aspect "enseigne" et "industriel" propre aux steakhouses.
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=white, colframe=CoalBlack!20, arc=2mm, title=\color{CoalBlack}\textbf{Corps de Texte : LATO} (Fallback : Roboto), fonttitle=\small]
+    {\large Toutes nos viandes sont sélectionnées avec soin auprès d'éleveurs locaux.} \\
+    \vspace{0.1cm}
+    \small \textbf{Style :} Sans-serif, Rond, Régulier (Regular / 400). \\
+    \textbf{Usage :} Paragraphes, liens, inputs, mentions légales. \\
+    \textbf{Taille de base :} 16px (Desktop) / 18px (Mobile \& Livreur).
+\end{tcolorbox}
+
+\section{4. Éléments d'Interface (UI Kit)}
+
+\subsection{Boutons (CTA)}
+\begin{center}
+    \begin{tcolorbox}[hbox, colback=GrillRed, colframe=DarkRed, arc=4px, boxrule=1.5pt, left=20pt, right=20pt]
+        \textcolor{SauceCream}{\textbf{\faPlusCircle \quad COMMANDER}}
+    \end{tcolorbox}
+\end{center}
+\begin{itemize}[label=\textcolor{CoalBlack}{\tiny\faCircle}, itemsep=0pt]
+    \item \textbf{Forme :} Légèrement arrondis (\texttt{border-radius: 4px}). Ni trop ronds, ni trop carrés.
+    \item \textbf{État Normal :} Fond \#D32F2F, Texte \#FDFBF7. Ombre légère (\texttt{box-shadow}).
+    \item \textbf{État Survol (Hover) :} Fond \#B71C1C, élévation (\texttt{transform: scale(1.02)}).
+\end{itemize}
+
+\subsection{Formulaires \& Liens}
+\begin{itemize}[label=\textcolor{CoalBlack}{\tiny\faCircle}, itemsep=0pt]
+    \item \textbf{Champs :} Fond blanc sur fond de page crème. Bordures \#BDBDBD au repos.
+    \item \textbf{Focus Saisie :} Bordure \#FFC107 (Or) et lueur externe (\texttt{box-shadow}).
+    \item \textbf{Liens :} \textbf{Défaut} (Souligné/gras \#2D2D2D) | \textbf{Visité} (Brun \#5D4037) | \textbf{Survol} (\#D32F2F sans soulignement).
+\end{itemize}
+
+\section{5. Ergonomie Spécifique : Profil Livreur \faMotorcycle}
+Pour répondre aux contraintes du livreur (smartphone, gants, extérieur) :
+\begin{tcolorbox}[colback=white, colframe=GrillRed, arc=0mm, boxrule=1pt]
+    \begin{itemize}[label=\textcolor{GrillRed}{\faHandPointer}]
+        \item \textbf{Zone de Toucher (Touch Target) :} Hauteur minimale de \textbf{60px} pour tous les éléments interactifs.
+        \item \textbf{Espacement :} Marges de \textbf{20px} minimum pour éviter les erreurs ("Fat finger").
+        \item \textbf{Contraste :} Texte noir sur fond blanc ou bouton rouge vif pour une lisibilité maximale en plein soleil.
+    \end{itemize}
+\end{tcolorbox}
+
+\section{6. Maquettes et Structure (Wireframes)}
+\begin{itemize}[label=\textcolor{CoalBlack}{\faLayerGroup}]
+    \item \textbf{Header :} Logo à gauche, Navigation centrée, Bouton "Connexion/Panier" à droite.
+    \item \textbf{Cartes Produits :} Visuel du plat en haut, Nom et description au centre, Prix et bouton d'ajout en bas. Effet d'ombre portée (\texttt{box-shadow}) pour simuler une assiette posée sur une table.
+    \item \textbf{Navigation Mobile :} Menu "Burger" simplifié pour les petits écrans.
+\end{itemize}
+
+\end{document}
