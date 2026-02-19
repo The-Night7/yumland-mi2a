@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@700&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -18,13 +19,7 @@
                 Le <span class="logo-highlight">Grand</span> Miam
             </a>
         </div>
-        
-        <div class="search-bar-nav" style="flex-grow: 1; margin: 0 30px; max-width: 400px;">
-            <input type="text" placeholder="Rechercher un plat..." style="width: 100%; padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
-        </div>
-
-        <ul class="nav-links" style="list-style: none; display: flex; gap: 20px; margin:0; align-items: center;">
-            <li><button id="toggle-dark-mode" style="cursor:pointer; background:none; border:none; font-size:1.5rem;" title="Changer de mode">🌙</button></li>
+        <ul class="nav-links" style="list-style: none; display: flex; gap: 20px; margin:0;">
             <li><a href="../../index.html">Accueil</a></li>
             <li><a href="carte.html">La Carte</a></li>
             <li><a href="profil.html" class="active">Mon Compte</a></li>
@@ -35,11 +30,8 @@
 
 <main>
     <section class="profile-container">
-        <div class="profile-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div class="profile-header">
             <h1 id="welcome-title">Mon Profil</h1>
-            <a id="link-maps" href="#" target="_blank" class="btn-maps" style="background-color: #4285F4; color: white; padding: 10px 15px; border-radius: 5px; text-decoration: none; font-weight: bold; font-size: 0.9rem;">
-                📍 VOIR MON ADRESSE SUR MAPS
-            </a>
         </div>
 
         <div class="tabs">
@@ -49,46 +41,23 @@
         </div>
 
         <div id="infos" class="tab-content active">
-            <div class="ribbon-title">Informations Personnelles</div>
+            <div class="ribbon-title">Les informations personnelles (RGPD)</div>
+
             <form id="profile-form">
-                <fieldset style="border:none; padding:0;">
+                <fieldset>
                     <div class="form-group">
-<<<<<<< HEAD
-                        <label>Nom :</label>
-                        <input type="text" id="nom" required>
-                    </div>
-                    <div class="form-group">
-                        <label>Prénom :</label>
-                        <input type="text" id="prenom" required>
-=======
                         <label for="nom">Nom :</label>
                         <input type="text" id="nom" name="nom" required>
                     </div>
                     <div class="form-group">
                         <label for="prenom">Prénom :</label>
                         <input type="text" id="prenom" name="prenom" required>
->>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
                     </div>
                     <div class="form-group">
-                        <label>Email :</label>
-                        <input type="email" id="email" disabled style="opacity: 0.7; background-color: #eee;">
+                        <label for="email">Email :</label>
+                        <input type="email" id="email" name="email" required disabled style="background-color: #f0f0f0; cursor: not-allowed;" title="L'email sert d'identifiant et ne peut être modifié">
                     </div>
                     <div class="form-group">
-<<<<<<< HEAD
-                        <label>Téléphone :</label>
-                        <input type="tel" id="tel" placeholder="06 XX XX XX XX">
-                    </div>
-                    <div class="form-group">
-                        <label>Adresse de livraison :</label>
-                        <input type="text" id="adresse" placeholder="12 rue de Paris, 95000 Cergy">
-                    </div>
-                    <div class="form-group">
-                        <label>Infos Complémentaires :</label>
-                        <input type="text" id="complement" placeholder="Code, étage...">
-                    </div>
-                    <div style="margin-top: 25px;">
-                        <button type="submit" class="btn-save" style="width: 100%; padding: 15px; font-weight: bold; cursor: pointer;">METTRE À JOUR MES INFORMATIONS</button>
-=======
                         <label for="tel">Téléphone :</label>
                         <input type="tel" id="tel" name="tel" placeholder="Ex: 06 12 34 56 78">
                         <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
@@ -110,91 +79,108 @@
 
                     <div style="clear:both; margin-top: 20px;">
                         <button type="submit" class="btn-save">METTRE À JOUR</button>
->>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
                     </div>
                 </fieldset>
             </form>
         </div>
 
         <div id="fidelite" class="tab-content">
-            <div class="ribbon-title">Le Grand Miam Club</div>
-            <div class="loyalty-card" style="text-align: center; padding: 40px; border-radius: 15px;">
-                <h3 style="margin:0; text-transform:uppercase;">Mon Solde Actuel</h3>
-                <div class="loyalty-points" id="points-display" style="font-size: 4.5rem; font-weight: bold; color: var(--color-primary); margin: 10px 0;">0</div>
-                <p style="font-size: 1.5rem;">MIAMS</p>
-                <hr style="border: 0; border-top: 1px solid rgba(0,0,0,0.1); margin: 20px 0;">
-                <div style="font-size: 1.3rem;">
-                    Statut : <strong id="status-display" style="text-transform: uppercase;">Petit Grilleur</strong>
+            <div class="ribbon-title">Les informations de fidélité (pts)</div>
+            <div class="loyalty-card">
+                <h3 style="margin:0; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.9);">Solde Actuel</h3>
+                <div class="loyalty-points" id="points-display">0</div>
+                <p style="font-size:1.2rem;">MIAMS</p>
+                <hr style="border-color: rgba(255,255,255,0.2); margin: 20px 0;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <span>Statut : <strong style="color: var(--color-primary);" id="status-display">BRONZE</strong></span>
                 </div>
             </div>
         </div>
 
         <div id="historique" class="tab-content">
-            <div class="ribbon-title">Dernières Commandes</div>
-            <table class="history-table" style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="border-bottom: 2px solid #ddd;">
-                        <th style="padding: 10px; text-align: left;">Commande</th>
-                        <th style="padding: 10px; text-align: left;">Date</th>
-                        <th style="padding: 10px; text-align: left;">Note</th>
-                        <th style="padding: 10px; text-align: left;">Statut</th>
-                    </tr>
-                </thead>
-                <tbody>
+            <div class="ribbon-title">Les dernières commandes (historique)</div>
+            <p><em>Historique simulé pour la démonstration graphique.</em></p>
+            <div style="overflow-x: auto;">
+                <table class="history-table">
+                    <thead>
                     <tr>
-                        <td style="padding: 10px;"><strong>#CMD-8854</strong></td>
-                        <td style="padding: 10px;">02/02/2026</td>
-                        <td style="padding: 10px; color: #FFC107; font-size: 1.2rem;">⭐⭐⭐⭐⭐</td>
-                        <td style="padding: 10px;"><span class="status-badge status-pending">En cuisine</span></td>
+                        <th>Commande</th>
+                        <th>Date</th>
+                        <th>Total</th>
+                        <th>Statut</th>
+                        <th>Action</th>
                     </tr>
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><strong>#CMD-8854</strong></td>
+                        <td>02/02/2026</td>
+                        <td>45.50 €</td>
+                        <td><span class="status-badge status-pending">En cuisine</span></td>
+                        <td><a href="#" style="color:var(--color-primary); font-weight:bold; text-decoration:none;">Voir</a></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </section>
 </main>
 
 <footer>
     <p>&copy; 2026 Le Grand Miam - Steakhouse Premium.</p>
+    <p>
+        <a href="mentions.html">Mentions Légales</a>
+    </p>
 </footer>
 
-<script src="../js/auth-client.js"></script>
 <script>
-    // GESTION DES ONGLETS
+    // 1. Fonction pour gérer les onglets (Graphique)
     function openTab(evt, tabName) {
+        // Masquer tout
         const tabcontent = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
             tabcontent[i].classList.remove("active");
         }
+        // Désactiver les boutons
         const tablinks = document.getElementsByClassName("tab-btn");
         for (let i = 0; i < tablinks.length; i++) {
             tablinks[i].classList.remove("active");
         }
+        // Activer la cible
         document.getElementById(tabName).style.display = "block";
         document.getElementById(tabName).classList.add("active");
         evt.currentTarget.classList.add("active");
     }
 
+    // 2. Logique Métier (Au chargement de la page)
     document.addEventListener('DOMContentLoaded', () => {
-        const user = JSON.parse(sessionStorage.getItem('currentUser'));
-        if (!user) {
+
+        // A. Vérification de sécurité : Est-on connecté ?
+        const currentUserJSON = sessionStorage.getItem('currentUser');
+
+        if (!currentUserJSON) {
+            alert("Accès refusé. Veuillez vous connecter.");
             window.location.href = "connexion.html";
-            return;
+            return; // Arrête le script ici
         }
 
-        // REMPLISSAGE INFOS
-        document.getElementById('welcome-title').textContent = `Profil de ${user.prenom}`;
+        const user = JSON.parse(currentUserJSON);
+
+        // B. Injection des données dans le DOM
+
+        // Titre personnalisé
+        const titleElement = document.getElementById('welcome-title');
+        if(titleElement) titleElement.textContent = `Profil de ${user.prenom} ${user.nom}`;
+
+        // Remplissage du formulaire
+        // On utilise l'opérateur "|| ''" pour éviter d'afficher "undefined" si le champ est vide
         document.getElementById('nom').value = user.nom || '';
         document.getElementById('prenom').value = user.prenom || '';
         document.getElementById('email').value = user.email || '';
-        document.getElementById('tel').value = user.tel || '';
-        document.getElementById('adresse').value = user.adresse || '';
-        document.getElementById('complement').value = user.complement || '';
+        document.getElementById('tel').value = user.tel || ''; // Ce champ n'existe pas encore dans ton auth-client.js de base
 
-<<<<<<< HEAD
-        if(user.adresse) {
-            document.getElementById('link-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(user.adresse)}`;
-=======
         // Remplir les champs adresse et complément si disponibles
         const inputAdresse = document.getElementById('adresse');
         if (inputAdresse) inputAdresse.value = user.adresse || '';
@@ -209,59 +195,58 @@
         if(points > 500) {
             document.getElementById('status-display').textContent = "GOLD";
             document.getElementById('status-display').style.color = "gold";
->>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
         }
 
-        // FIDELITE
-        const miams = user.miams || 0;
-        document.getElementById('points-display').textContent = miams;
-        if (typeof getStatutFidelite === "function") {
-            const statut = getStatutFidelite(miams);
-            const statusDisplay = document.getElementById('status-display');
-            statusDisplay.textContent = statut.nom;
-            statusDisplay.style.color = statut.couleur;
-        }
+        // C. Gestion de la mise à jour (Update)
+        const form = document.getElementById('profile-form');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); // Empêche le rechargement de la page
 
-        // MODE NUIT HAUTE VISIBILITÉ
-        const toggleBtn = document.getElementById('toggle-dark-mode');
-        toggleBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            toggleBtn.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        });
-
-        // MISE À JOUR
-        document.getElementById('profile-form').addEventListener('submit', (e) => {
-            e.preventDefault();
+            // Mise à jour de l'objet user avec les nouvelles valeurs
             user.nom = document.getElementById('nom').value;
             user.prenom = document.getElementById('prenom').value;
             user.tel = document.getElementById('tel').value;
-<<<<<<< HEAD
-            user.adresse = document.getElementById('adresse').value;
-            user.complement = document.getElementById('complement').value;
-=======
             // Ajouter la mise à jour de l'adresse et du complément
             user.adresse = document.getElementById('adresse') ? document.getElementById('adresse').value : '';
             user.complement = document.getElementById('complement') ? document.getElementById('complement').value : '';
->>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
 
+            // 1. Mise à jour de la session actuelle
             sessionStorage.setItem('currentUser', JSON.stringify(user));
 
+            // 2. Mise à jour de la "Base de données" (LocalStorage)
+            // C'est nécessaire pour que la modif persiste à la prochaine connexion
             const allUsers = JSON.parse(localStorage.getItem('yumland_users')) || [];
-            const idx = allUsers.findIndex(u => u.email === user.email);
-            if(idx !== -1) {
-                allUsers[idx] = {...allUsers[idx], ...user};
+
+            // On trouve l'index de l'utilisateur dans le tableau global via son email (qui est unique)
+            const userIndex = allUsers.findIndex(u => u.email === user.email);
+
+            if (userIndex !== -1) {
+                // On met à jour l'utilisateur dans le tableau, en gardant son mot de passe existant
+                // On utilise le spread operator (...) pour fusionner proprement
+                allUsers[userIndex] = { ...allUsers[userIndex], ...user };
+
                 localStorage.setItem('yumland_users', JSON.stringify(allUsers));
-                alert("Données enregistrées !");
-                location.reload();
+                alert("Informations mises à jour avec succès !");
+
+                // Rafraîchir le titre
+                titleElement.textContent = `Profil de ${user.prenom} ${user.nom}`;
+            } else {
+                console.error("Erreur critique : Utilisateur introuvable en base.");
             }
         });
 
-        // DECONNEXION
-        document.getElementById('btn-logout').addEventListener('click', (e) => {
-            e.preventDefault();
-            sessionStorage.removeItem('currentUser');
-            window.location.href = "connexion.html";
-        });
+        // D. Gestion de la Déconnexion
+        const btnLogout = document.getElementById('btn-logout');
+        if(btnLogout) {
+            btnLogout.addEventListener('click', (e) => {
+                e.preventDefault();
+                // 1. Vider la session
+                sessionStorage.removeItem('currentUser');
+                // 2. Rediriger
+                alert("Vous avez été déconnecté.");
+                window.location.href = "connexion.html";
+            });
+        }
     });
 </script>
 </body>

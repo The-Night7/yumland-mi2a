@@ -4,14 +4,6 @@
  */
 
 // 1. DONNÉES PAR DÉFAUT (MOCK DATA)
-/**
- * TRADUCTION DE LA CHARTE "LE GRAND MIAM CLUB"
- */
-function getStatutFidelite(miams) {
-    if (miams >= 3000) return { nom: "Légende du Steak 👑", couleur: "#FFC107", avantage: "-10% à vie + Priorité livraison" };
-    if (miams >= 1000) return { nom: "Sauce Chef 🔥", couleur: "#D32F2F", avantage: "Frites 'Sweet Potato' offertes" };
-    return { nom: "Petit Grilleur 🥩", couleur: "#BDBDBD", avantage: "Accès au shop de base" };
-}
 // Ces données servent de référence absolue.
 const DEFAULT_USERS = [
     {
@@ -21,16 +13,11 @@ const DEFAULT_USERS = [
         email: "client@yumland.com",
         password: "123",
         role: "client",
-<<<<<<< HEAD
-        miams: 150,
-        tel: "0601020304"
-=======
         points: 150,
         tel: "0601020304",
         // Champs d'adresse ajoutés
         adresse: "12 Rue du Port, Cergy",
         complement: "Interphone A123, 3ème étage"
->>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     },
     {
         id: 2,
@@ -39,13 +26,9 @@ const DEFAULT_USERS = [
         email: "admin@yumland.com",
         password: "admin",
         role: "admin",
-<<<<<<< HEAD
-        miams: 0
-=======
         points: 0,
         adresse: "",
         complement: ""
->>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     },
     {
         id: 3,
@@ -54,13 +37,9 @@ const DEFAULT_USERS = [
         email: "chef@yumland.com",
         password: "chef",
         role: "restaurateur",
-<<<<<<< HEAD
-        miams: 0
-=======
         points: 0,
         adresse: "",
         complement: ""
->>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     },
     {
         id: 4,
@@ -69,15 +48,10 @@ const DEFAULT_USERS = [
         email: "livreur@yumland.com",
         password: "go",
         role: "livreur",
-<<<<<<< HEAD
-        miams: 0,
-        secteur: "Cergy Préfecture"
-=======
         points: 0,
         secteur: "Cergy Préfecture",
         adresse: "",
         complement: ""
->>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     }
 ];
 
@@ -133,16 +107,10 @@ async function loginUser(email, password) {
             prenom: user.prenom,
             email: user.email,
             tel: user.tel,
-<<<<<<< HEAD
-            miams: user.miams || 0, // <-- Changé ici !
-            statutFidelite: getStatutFidelite(user.miams || 0), // <-- Ajout du statut
-            role: user.role
-=======
             points: user.points || 0,
             role: user.role,
             adresse: user.adresse || '',
             complement: user.complement || ''
->>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
         };
 
         // 2. Sauvegarde dans le stockage local pour la persistance
