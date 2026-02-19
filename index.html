@@ -23,7 +23,7 @@
 
 <main>
     <section id="hero">
-        <div class="container flex-row">
+        <div class="container flex-row" style="align-items: center; justify-content: center; text-align: center;">
             <div class="hero-content">
                 <h1>Grand par le goût, géant par l'appétit.</h1>
                 <p>Le spécialiste de la viande grillée et des burgers XXL.</p>
@@ -36,11 +36,10 @@
         </div>
     </section>
 
-    <!-- Zone de recherche et plats populaires (ajout Phase 1) -->
-    <section id="home-search" class="container" style="padding: 2rem 1rem;">
-        <div class="container flex-row">
-            <h2>Rechercher un plat</h2>
-            <input type="text" id="homeSearchInput" placeholder="Rechercher un plat..." onkeyup="filterPopular()" style="width: 100%; padding: 0.5rem; border: 1px solid var(--color-grey-light); border-radius: 4px;">
+    <!-- Zone de recherche (Style App Mobile) -->
+    <section id="home-search" class="container" style="margin-top: -30px; position: relative; z-index: 10;">
+        <div class="search-wrapper">
+            <input type="text" id="homeSearchInput" class="search-input" placeholder="🔍 Rechercher un plat (ex: Burger, Entrecôte...)" onkeyup="filterDishes()">
         </div>
     </section>
 
@@ -53,7 +52,7 @@
                 <p>Que vous soyez en famille ou entre amis, venez partager un moment convivial autour d'une planche généreuse.</p>
             </article>
 
-            <aside class="info-box">
+            <aside class="info-box card-style">
                 <h3>📢 L'Info du Chef</h3>
                 <p>Ce mois-ci, découvrez notre nouvelle sauce <em>"Fumée du Texas"</em> offerte avec tous les burgers !</p>
             </aside>
@@ -61,26 +60,32 @@
     </section>
 
     <section id="galerie">
-        <div class="container flex-row">
-            <h2>Nos Incontournables</h2>
-            <div class="gallery-grid">
-                <figure>
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 20px;">Nos Incontournables</h2>
+
+            <!-- Message si aucun résultat -->
+            <div id="no-results" style="display: none; text-align: center; padding: 20px; color: #666;">
+                <p>Aucun plat ne correspond à votre recherche. 😔</p>
+            </div>
+
+            <div class="gallery-grid" id="dish-gallery">
+                <figure class="card-style">
                     <img src="public/images/nourriture/entrecote.png" alt="Entrecôte grillée 300g">
                     <figcaption>L'Entrecôte Royale</figcaption>
                 </figure>
-                <figure>
+                <figure class="card-style">
                     <img src="public/images/nourriture/burger.png" alt="Burger Double Steak">
                     <figcaption>Le Grand Miam Burger</figcaption>
                 </figure>
-                <figure>
+                <figure class="card-style">
                     <img src="public/images/nourriture/pave.png" alt="Pavé du Chef">
                     <figcaption>Le Pavé du Chef</figcaption>
                 </figure>
-                <figure>
+                <figure class="card-style">
                     <img src="public/images/nourriture/cheesytower.png" alt="Cheesy Tower">
                     <figcaption>Le Cheesy Tower</figcaption>
                 </figure>
-                <figure>
+                <figure class="card-style">
                     <img src="public/images/nourriture/profiteroles.png" alt="Profiteroles géantes">
                     <figcaption>Profiteroles XXL</figcaption>
                 </figure>
@@ -100,14 +105,36 @@
 </footer>
 
 <script src="public/js/script.js"></script>
-<!-- Script pour filtrer la liste des plats populaires -->
+<!-- Script de recherche fonctionnel -->
 <script>
-    function filterPopular() {
+    function filterDishes() {
+        // 1. Récupérer le texte saisi
         const query = document.getElementById('homeSearchInput').value.toLowerCase();
-        document.querySelectorAll('#popular-list li').forEach(item => {
-            const text = item.textContent.toLowerCase();
-            item.style.display = text.includes(query) ? '' : 'none';
+
+        // 2. Récupérer toutes les cartes de plats
+        const dishes = document.querySelectorAll('.gallery-grid figure');
+        let hasResults = false;
+
+        // 3. Boucler sur chaque plat
+        dishes.forEach(dish => {
+            const title = dish.querySelector('figcaption').textContent.toLowerCase();
+
+            // 4. Vérifier si le titre contient la recherche
+            if (title.includes(query)) {
+                dish.style.display = ""; // Afficher (reset CSS)
+                hasResults = true;
+            } else {
+                dish.style.display = "none"; // Masquer
+            }
         });
+
+        // 5. Gérer le message "Aucun résultat"
+        const noResultsMsg = document.getElementById('no-results');
+        if (hasResults) {
+            noResultsMsg.style.display = 'none';
+        } else {
+            noResultsMsg.style.display = 'block';
+        }
     }
 </script>
 </body>

@@ -24,6 +24,16 @@
 <main class="admin-container">
     <div class="admin-header">
         <h1>Gestion des Utilisateurs</h1>
+        <div class="filter-container">
+            <label for="role-filter">Filtrer par rôle :</label>
+            <select id="role-filter" class="form-input">
+                <option value="all">Tous</option>
+                <option value="client">Client</option>
+                <option value="restaurateur">Restaurateur</option>
+                <option value="livreur">Livreur</option>
+                <option value="admin">Admin</option>
+            </select>
+        </div>
         <div class="stats">Total inscrits : <span id="total-users">0</span></div>
     </div>
 
@@ -45,7 +55,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // Simulation de données si localStorage est vide
         const mockUsers = [
             { id: 1, nom: "Admin", prenom: "Super", email: "admin@yumland.com", role: "admin" },
             { id: 2, nom: "Chef", prenom: "Gusteau", email: "chef@yumland.com", role: "restaurateur" },
@@ -53,29 +62,48 @@
             { id: 4, nom: "Dupont", prenom: "Jean", email: "jean@client.com", role: "client" }
         ];
 
-        // Récupération ou initialisation
         let users = JSON.parse(localStorage.getItem('yumland_users')) || mockUsers;
 
-        // Sauvegarde initiale si vide pour tester
         if (!localStorage.getItem('yumland_users')) {
             localStorage.setItem('yumland_users', JSON.stringify(users));
         }
 
         const tbody = document.getElementById('user-list');
+        const roleFilter = document.getElementById('role-filter');
         document.getElementById('total-users').innerText = users.length;
 
-        tbody.innerHTML = users.map(user => `
+        const renderUsers = (role = 'all') => {
+            const filteredUsers = (role === 'all')
+                ? users
+                : users.filter(user => user.role === role);
+
+            tbody.innerHTML = filteredUsers.map(user => `
                 <tr>
                     <td>#${user.id || '?'}</td>
-                    <td>${user.nom.toUpperCase()} ${user.prenom}</td>
+                    <td>${user.nom.toUpperCase()} ${user.prenom || ''}</td>
                     <td>${user.email}</td>
                     <td><span class="role-badge role-${user.role}">${user.role}</span></td>
-                    <td>
-                        <button class="action-btn" onclick="deleteUser('${user.email}')">Supprimer</button>
+                    <td class="actions-cell">
+                        <button class="action-btn edit-btn" onclick="editUser('${user.email}')">Modifier</button>
+                        <button class="action-btn delete-btn" onclick="deleteUser('${user.email}')">Supprimer</button>
+                        <button class="action-btn hide-btn" onclick="hideUser('${user.email}')">Masquer</button>
                     </td>
                 </tr>
             `).join('');
+        };
+
+        roleFilter.addEventListener('change', (e) => renderUsers(e.target.value));
+
+        renderUsers(); // Premier rendu
     });
+
+    function editUser(email) {
+        alert('Action "Modifier" non implémentée pour la phase 1.');
+    }
+
+    function hideUser(email) {
+        alert('Action "Masquer" non implémentée pour la phase 1.');
+    }
 
     function deleteUser(email) {
         if(confirm('Confirmer la suppression de cet utilisateur ?')) {

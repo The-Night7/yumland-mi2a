@@ -21,8 +21,16 @@ const DEFAULT_USERS = [
         email: "client@yumland.com",
         password: "123",
         role: "client",
+<<<<<<< HEAD
         miams: 150,
         tel: "0601020304"
+=======
+        points: 150,
+        tel: "0601020304",
+        // Champs d'adresse ajoutés
+        adresse: "12 Rue du Port, Cergy",
+        complement: "Interphone A123, 3ème étage"
+>>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     },
     {
         id: 2,
@@ -31,7 +39,13 @@ const DEFAULT_USERS = [
         email: "admin@yumland.com",
         password: "admin",
         role: "admin",
+<<<<<<< HEAD
         miams: 0
+=======
+        points: 0,
+        adresse: "",
+        complement: ""
+>>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     },
     {
         id: 3,
@@ -40,7 +54,13 @@ const DEFAULT_USERS = [
         email: "chef@yumland.com",
         password: "chef",
         role: "restaurateur",
+<<<<<<< HEAD
         miams: 0
+=======
+        points: 0,
+        adresse: "",
+        complement: ""
+>>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     },
     {
         id: 4,
@@ -49,8 +69,15 @@ const DEFAULT_USERS = [
         email: "livreur@yumland.com",
         password: "go",
         role: "livreur",
+<<<<<<< HEAD
         miams: 0,
         secteur: "Cergy Préfecture"
+=======
+        points: 0,
+        secteur: "Cergy Préfecture",
+        adresse: "",
+        complement: ""
+>>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
     }
 ];
 
@@ -99,21 +126,32 @@ async function loginUser(email, password) {
     if (user) {
         console.log(`✅ Succès ! Rôle détecté : ${user.role}`);
 
-        // 1. On prépare les données à sauvegarder (pas de mot de passe !)
+        // 1. Préparer toutes les données nécessaires à la session (sans le mot de passe)
         const userSession = {
             id: user.id,
             nom: user.nom,
             prenom: user.prenom,
             email: user.email,
             tel: user.tel,
+<<<<<<< HEAD
             miams: user.miams || 0, // <-- Changé ici !
             statutFidelite: getStatutFidelite(user.miams || 0), // <-- Ajout du statut
             role: user.role
+=======
+            points: user.points || 0,
+            role: user.role,
+            adresse: user.adresse || '',
+            complement: user.complement || ''
+>>>>>>> e266dbea57fc105d6f9fcc6d1b6b05cb44db5229
         };
 
-        // 2. On sauvegarde dans le localStorage et le sessionStorage
+        // 2. Sauvegarde dans le stockage local pour la persistance
         localStorage.setItem('yumland_user', JSON.stringify(userSession));
+        // 3. Sauvegarde également dans le stockage de session pour l'utilisation immédiate
         sessionStorage.setItem('currentUser', JSON.stringify(userSession));
+
+        // 4. Redirection basée sur le rôle de l'utilisateur
+        redirectBasedOnRole(userSession.role);
 
         return { success: true, user: userSession };
     } else {
@@ -196,7 +234,6 @@ const updateMenuForUser = (user) => {
 const logout = () => {
     // 1. Supprimer la sauvegarde
     localStorage.removeItem('yumland_user');
-    sessionStorage.removeItem('currentUser');
     // 2. Recharger la page ou aller à l'accueil
     window.location.href = '../../index.html';
 };
