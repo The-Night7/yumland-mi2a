@@ -14,7 +14,10 @@ const DEFAULT_USERS = [
         password: "123",
         role: "client",
         points: 150,
-        tel: "0601020304"
+        tel: "0601020304",
+        // Champs d'adresse ajoutés
+        adresse: "12 Rue du Port, Cergy",
+        complement: "Interphone A123, 3ème étage"
     },
     {
         id: 2,
@@ -23,7 +26,9 @@ const DEFAULT_USERS = [
         email: "admin@yumland.com",
         password: "admin",
         role: "admin",
-        points: 0
+        points: 0,
+        adresse: "",
+        complement: ""
     },
     {
         id: 3,
@@ -32,7 +37,9 @@ const DEFAULT_USERS = [
         email: "chef@yumland.com",
         password: "chef",
         role: "restaurateur",
-        points: 0
+        points: 0,
+        adresse: "",
+        complement: ""
     },
     {
         id: 4,
@@ -42,7 +49,9 @@ const DEFAULT_USERS = [
         password: "go",
         role: "livreur",
         points: 0,
-        secteur: "Cergy Préfecture"
+        secteur: "Cergy Préfecture",
+        adresse: "",
+        complement: ""
     }
 ];
 
@@ -91,7 +100,7 @@ async function loginUser(email, password) {
     if (user) {
         console.log(`✅ Succès ! Rôle détecté : ${user.role}`);
 
-        // 1. On prépare les données à sauvegarder (pas de mot de passe !)
+        // 1. Préparer toutes les données nécessaires à la session (sans le mot de passe)
         const userSession = {
             id: user.id,
             nom: user.nom,
@@ -99,12 +108,18 @@ async function loginUser(email, password) {
             email: user.email,
             tel: user.tel,
             points: user.points || 0,
-            role: user.role
+            role: user.role,
+            adresse: user.adresse || '',
+            complement: user.complement || ''
         };
 
-        // 2. On sauvegarde dans le localStorage et le sessionStorage
+        // 2. Sauvegarde dans le stockage local pour la persistance
         localStorage.setItem('yumland_user', JSON.stringify(userSession));
+        // 3. Sauvegarde également dans le stockage de session pour l'utilisation immédiate
         sessionStorage.setItem('currentUser', JSON.stringify(userSession));
+
+        // 4. Redirection basée sur le rôle de l'utilisateur
+        redirectBasedOnRole(userSession.role);
 
         return { success: true, user: userSession };
     } else {
@@ -187,7 +202,6 @@ const updateMenuForUser = (user) => {
 const logout = () => {
     // 1. Supprimer la sauvegarde
     localStorage.removeItem('yumland_user');
-    sessionStorage.removeItem('currentUser');
     // 2. Recharger la page ou aller à l'accueil
     window.location.href = '../../index.html';
 };
