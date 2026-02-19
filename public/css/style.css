@@ -796,3 +796,32 @@ footer {
     margin-top: 60px;
     border-top: 5px solid var(--color-accent);
 }
+/* Mode Nuit Spécial Livreur */
+body.dark-mode {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .app-header, 
+body.dark-mode header {
+    background-color: #1a1a1a !important;
+    border-bottom: 2px solid var(--color-accent) !important;
+}
+
+body.dark-mode .delivery-card {
+    background-color: #1a1a1a !important;
+    border: 2px solid var(--color-accent) !important;
+    color: white !important;
+}
+
+body.dark-mode .btn-livreur {
+    background-color: var(--color-accent) !important; /* Jaune or */
+    color: #000 !important;
+    border: none !important;
+}
+
+/* On s'assure que le texte dans les cartes reste lisible */
+body.dark-mode .delivery-card h3, 
+body.dark-mode .delivery-card p {
+    color: white !important;
+}

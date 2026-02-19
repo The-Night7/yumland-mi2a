@@ -5,6 +5,13 @@
 
 // 1. DONNÉES PAR DÉFAUT (MOCK DATA)
 // Ces données servent de référence absolue.
+
+function getStatutFidelite(miams) {
+    if (miams >= 3000) return { nom: "Légende du Steak 👑", couleur: "#FFC107", avantage: "-10% à vie + Priorité" };
+    if (miams >= 1000) return { nom: "Sauce Chef 🔥", couleur: "#D32F2F", avantage: "Frites 'Sweet Potato' offertes" };
+    return { nom: "Petit Grilleur 🥩", couleur: "#BDBDBD", avantage: "Accès au shop de base" };
+}
+
 const DEFAULT_USERS = [
     {
         id: 1,

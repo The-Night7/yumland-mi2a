@@ -92,7 +92,7 @@
                 <p style="font-size:1.2rem;">MIAMS</p>
                 <hr style="border-color: rgba(255,255,255,0.2); margin: 20px 0;">
                 <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <span>Statut : <strong style="color: var(--color-primary);" id="status-display">BRONZE</strong></span>
+                    <span>Statut : <strong style="color: var(--color-primary);" id="status-display"></strong></span>
                 </div>
             </div>
         </div>
@@ -134,119 +134,95 @@
     </p>
 </footer>
 
+<script src="../js/auth-client.js"></script>
 <script>
-    // 1. Fonction pour gérer les onglets (Graphique)
     function openTab(evt, tabName) {
-        // Masquer tout
         const tabcontent = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabcontent.length; i++) {
             tabcontent[i].style.display = "none";
             tabcontent[i].classList.remove("active");
         }
-        // Désactiver les boutons
         const tablinks = document.getElementsByClassName("tab-btn");
         for (let i = 0; i < tablinks.length; i++) {
             tablinks[i].classList.remove("active");
         }
-        // Activer la cible
         document.getElementById(tabName).style.display = "block";
         document.getElementById(tabName).classList.add("active");
         evt.currentTarget.classList.add("active");
     }
 
-    // 2. Logique Métier (Au chargement de la page)
     document.addEventListener('DOMContentLoaded', () => {
-
-        // A. Vérification de sécurité : Est-on connecté ?
         const currentUserJSON = sessionStorage.getItem('currentUser');
-
         if (!currentUserJSON) {
-            alert("Accès refusé. Veuillez vous connecter.");
             window.location.href = "connexion.html";
-            return; // Arrête le script ici
+            return;
         }
 
-        const user = JSON.parse(currentUserJSON);
-
-        // B. Injection des données dans le DOM
-
-        // Titre personnalisé
-        const titleElement = document.getElementById('welcome-title');
-        if(titleElement) titleElement.textContent = `Profil de ${user.prenom} ${user.nom}`;
-
-        // Remplissage du formulaire
-        // On utilise l'opérateur "|| ''" pour éviter d'afficher "undefined" si le champ est vide
-        document.getElementById('nom').value = user.nom || '';
-        document.getElementById('prenom').value = user.prenom || '';
-        document.getElementById('email').value = user.email || '';
-        document.getElementById('tel').value = user.tel || ''; // Ce champ n'existe pas encore dans ton auth-client.js de base
-
-        // Remplir les champs adresse et complément si disponibles
-        const inputAdresse = document.getElementById('adresse');
-        if (inputAdresse) inputAdresse.value = user.adresse || '';
-        const inputComplement = document.getElementById('complement');
-        if (inputComplement) inputComplement.value = user.complement || '';
-
-        // Points (Simulation simple car pas encore en base de données)
-        // Si l'utilisateur n'a pas de points, on met 0 par défaut
-        const points = user.points || 0;
-        document.getElementById('points-display').textContent = points;
-
-        if(points > 500) {
-            document.getElementById('status-display').textContent = "GOLD";
-            document.getElementById('status-display').style.color = "gold";
-        }
-
-        // C. Gestion de la mise à jour (Update)
-        const form = document.getElementById('profile-form');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault(); // Empêche le rechargement de la page
-
-            // Mise à jour de l'objet user avec les nouvelles valeurs
-            user.nom = document.getElementById('nom').value;
-            user.prenom = document.getElementById('prenom').value;
-            user.tel = document.getElementById('tel').value;
-            // Ajouter la mise à jour de l'adresse et du complément
-            user.adresse = document.getElementById('adresse') ? document.getElementById('adresse').value : '';
-            user.complement = document.getElementById('complement') ? document.getElementById('complement').value : '';
-
-            // 1. Mise à jour de la session actuelle
-            sessionStorage.setItem('currentUser', JSON.stringify(user));
-
-            // 2. Mise à jour de la "Base de données" (LocalStorage)
-            // C'est nécessaire pour que la modif persiste à la prochaine connexion
-            const allUsers = JSON.parse(localStorage.getItem('yumland_users')) || [];
-
-            // On trouve l'index de l'utilisateur dans le tableau global via son email (qui est unique)
-            const userIndex = allUsers.findIndex(u => u.email === user.email);
-
-            if (userIndex !== -1) {
-                // On met à jour l'utilisateur dans le tableau, en gardant son mot de passe existant
-                // On utilise le spread operator (...) pour fusionner proprement
-                allUsers[userIndex] = { ...allUsers[userIndex], ...user };
-
-                localStorage.setItem('yumland_users', JSON.stringify(allUsers));
-                alert("Informations mises à jour avec succès !");
-
-                // Rafraîchir le titre
-                titleElement.textContent = `Profil de ${user.prenom} ${user.nom}`;
-            } else {
-                console.error("Erreur critique : Utilisateur introuvable en base.");
-            }
-        });
-
-        // D. Gestion de la Déconnexion
         const btnLogout = document.getElementById('btn-logout');
-        if(btnLogout) {
+        if (btnLogout) {
             btnLogout.addEventListener('click', (e) => {
-                e.preventDefault();
-                // 1. Vider la session
+                e.preventDefault(); // Empêche le lien de recharger la page
+                
+                // 1. On vide les données de session (sécurité)
                 sessionStorage.removeItem('currentUser');
-                // 2. Rediriger
-                alert("Vous avez été déconnecté.");
+                localStorage.removeItem('currentUser'); // Pour être sûr selon ta méthode de stockage
+                
+                // 2. Message de confirmation
+                alert("Vous avez été déconnecté avec succès. À bientôt chez Le Grand Miam !");
+                
+                // 3. Redirection vers la page de connexion
                 window.location.href = "connexion.html";
             });
         }
+        const user = JSON.parse(currentUserJSON);
+
+        // --- REMPLACEMENT DU STATUT BRONZE ---
+        const miams = user.miams || user.points || 0;
+        const pointsDisplay = document.getElementById('points-display');
+        const statusDisplay = document.getElementById('status-display');
+
+        if(pointsDisplay) pointsDisplay.textContent = miams;
+
+        if (typeof getStatutFidelite === "function") {
+            const statut = getStatutFidelite(miams);
+            if(statusDisplay) {
+                statusDisplay.textContent = statut.nom; // Remplace "BRONZE" par le vrai nom
+                statusDisplay.style.color = statut.couleur; // Applique la couleur Or, Rouge ou Gris
+            }
+        }
+
+        // --- INJECTION DES INFOS ---
+        document.getElementById('welcome-title').textContent = `Profil de ${user.prenom}`;
+        document.getElementById('nom').value = user.nom || '';
+        document.getElementById('prenom').value = user.prenom || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('tel').value = user.tel || '';
+        document.getElementById('adresse').value = user.adresse || '';
+        document.getElementById('complement').value = user.complement || '';
+
+        // --- MODE NUIT HAUTE VISIBILITÉ ---
+        const nightBtn = document.createElement('button');
+        nightBtn.innerHTML = "🌙";
+        nightBtn.style = "position:fixed; bottom:20px; right:20px; z-index:1000; padding:15px; border-radius:50%; border:none; cursor:pointer; font-size:1.5rem; background:var(--color-secondary); color:var(--color-accent);";
+        document.body.appendChild(nightBtn);
+
+        nightBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            nightBtn.innerHTML = document.body.classList.contains('dark-mode') ? "☀️" : "🌙";
+        });
+
+        // --- MISE À JOUR ---
+        document.getElementById('profile-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            user.nom = document.getElementById('nom').value;
+            user.prenom = document.getElementById('prenom').value;
+            user.tel = document.getElementById('tel').value;
+            user.adresse = document.getElementById('adresse').value;
+            user.complement = document.getElementById('complement').value;
+
+            sessionStorage.setItem('currentUser', JSON.stringify(user));
+            alert("Modifications enregistrées !");
+        });
     });
 </script>
 </body>
