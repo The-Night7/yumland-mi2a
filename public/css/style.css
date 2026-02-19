@@ -3,27 +3,18 @@
 
 :root {
     /* --- PALETTE DE COULEURS (Charte Le Grand Miam) --- */
-    /* Couleur Primaire : Rouge Grill (Boutons, prix, titres forts) */
     --color-primary: #D32F2F;
-    --color-primary-dark: #B71C1C; /* Pour les hovers */
-
-    /* Couleur Secondaire : Noir Charbon (Header, footer, contrastes) */
+    --color-primary-dark: #B71C1C;
     --color-secondary: #2D2D2D;
-
-    /* Couleur d'Accent : Or Frites (Étoiles, focus, promos, points fidélité) */
     --color-accent: #FFC107;
-
-    /* Couleur de Fond : Crème (Plus doux que le blanc pur) */
     --color-bg: #FDFBF7;
     --color-white: #FFFFFF;
-
-    /* Couleur de Texte : Gris foncé (Lecture) */
     --color-text: #333333;
-    --color-grey-light: #BDBDBD; /* Gris Pierre */
+    --color-grey-light: #BDBDBD;
 
     /* --- TYPOGRAPHIE --- */
-    --font-heading: 'Oswald', sans-serif; /* Titres (Impact) */
-    --font-body: 'Lato', sans-serif;      /* Texte (Lisibilité) */
+    --font-heading: 'Oswald', sans-serif;
+    --font-body: 'Lato', sans-serif;
 
     /* --- UI ELEMENTS --- */
     --border-radius: 6px;
@@ -32,12 +23,17 @@
 }
 
 /* --- RESET & BASES --- */
+* {
+    box-sizing: border-box; /* Crucial pour le responsive */
+}
+
 body {
     background-color: var(--color-bg);
     color: var(--color-text);
     font-family: var(--font-body);
     margin: 0;
     line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4 {
@@ -54,16 +50,21 @@ a {
 }
 
 ul {
-    list-style: none; /* Reset par défaut, on réactive si besoin */
+    list-style: none;
     padding-left: 0;
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
 /* Boutons génériques */
-.btn {
+.btn, .cta-button {
     display: inline-block;
     background-color: var(--color-primary);
     color: var(--color-white);
-    padding: 10px 20px;
+    padding: 12px 25px;
     text-decoration: none;
     border-radius: var(--border-radius);
     font-family: var(--font-heading);
@@ -71,22 +72,11 @@ ul {
     transition: background-color 0.3s;
     border: none;
     cursor: pointer;
-}
-
-.btn:hover {
-    background-color: var(--color-primary-dark);
-}
-
-.cta-button {
-    background-color: var(--color-primary);
-    color: var(--color-white);
-    border-radius: var(--border-radius);
-    padding: 12px 25px;
     font-weight: bold;
-    display: inline-block;
+    text-align: center;
 }
 
-.cta-button:hover {
+.btn:hover, .cta-button:hover {
     background-color: var(--color-primary-dark);
 }
 
@@ -124,6 +114,7 @@ nav {
 .nav-links {
     display: flex;
     gap: 20px;
+    align-items: center;
 }
 
 .nav-links li a {
@@ -138,7 +129,6 @@ nav {
     color: var(--color-primary);
 }
 
-/* Bouton spécifique dans le menu */
 .btn-login {
     border: 2px solid var(--color-primary);
     border-radius: var(--border-radius);
@@ -151,7 +141,13 @@ nav {
     color: var(--color-white) !important;
 }
 
-/* --- PAGE ACCUEIL & PRESENTATION (Nouveau) --- */
+/* --- LAYOUT GÉNÉRAL --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
 .flex-row {
     display: flex;
     gap: 2rem;
@@ -161,28 +157,23 @@ nav {
     margin: 0 auto;
 }
 
-.concept-text {
-    flex: 2; /* Prend 2/3 de l'espace */
-}
-
+.concept-text { flex: 2; }
 .info-box {
-    flex: 1; /* Prend 1/3 de l'espace */
-    background-color: #ffebee; /* Rouge très pâle */
+    flex: 1;
+    background-color: #ffebee;
     padding: 1.5rem;
     border-radius: 8px;
     border-left: 5px solid var(--color-primary);
     box-shadow: var(--shadow-soft);
 }
 
-/* Galerie d'images */
+/* Galerie */
 .gallery-grid {
     display: flex;
     justify-content: center;
     gap: 20px;
     flex-wrap: wrap;
-    padding: 2rem;
-    max-width: 1200px;
-    margin: 0 auto;
+    padding: 2rem 0;
 }
 
 figure {
@@ -195,9 +186,7 @@ figure {
     transition: transform 0.3s;
 }
 
-figure:hover {
-    transform: scale(1.02);
-}
+figure:hover { transform: scale(1.02); }
 
 figure img {
     width: 300px;
@@ -213,8 +202,7 @@ figure figcaption {
     font-family: var(--font-heading);
 }
 
-
-/* --- PAGE CARTE & MENUS (STYLES SPÉCIFIQUES) --- */
+/* --- PAGE CARTE & MENUS --- */
 .menu-container {
     max-width: 1000px;
     margin: 2rem auto;
@@ -228,7 +216,6 @@ figure figcaption {
     color: var(--color-secondary);
 }
 
-/* TABLEAUX DE LA CARTE */
 .menu-table {
     width: 100%;
     border-collapse: collapse;
@@ -236,7 +223,7 @@ figure figcaption {
     background-color: var(--color-white);
     box-shadow: var(--shadow-soft);
     border-radius: var(--border-radius);
-    overflow: hidden; /* Pour garder les coins arrondis */
+    overflow: hidden;
 }
 
 .menu-table caption {
@@ -251,35 +238,27 @@ figure figcaption {
     font-family: var(--font-heading);
 }
 
-.menu-table thead {
-    background-color: var(--color-secondary);
-    color: var(--color-white);
+.menu-table th, .menu-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
 }
 
 .menu-table th {
-    padding: 15px;
-    text-align: left;
+    background-color: var(--color-secondary);
+    color: var(--color-white);
     text-transform: uppercase;
     font-family: var(--font-heading);
-    letter-spacing: 1px;
     font-weight: 400;
 }
 
-.menu-table td {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-    vertical-align: middle;
-}
-
-/* Colonne Prix */
-.menu-table td:nth-child(3) { /* Cible souvent le prix selon ta structure */
+.menu-table td:nth-child(3) {
     font-weight: bold;
     color: var(--color-primary);
     font-size: 1.1rem;
     white-space: nowrap;
 }
 
-/* Colonne Catégorie (fusionnée avec rowspan) */
 .category-cell {
     background-color: var(--color-primary);
     color: var(--color-white);
@@ -287,10 +266,8 @@ figure figcaption {
     text-align: center;
     font-family: var(--font-heading);
     font-size: 1.2rem;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
 }
 
-/* Ligne de séparation dans le tableau */
 .separator td {
     background-color: var(--color-bg);
     height: 10px;
@@ -298,17 +275,7 @@ figure figcaption {
     border: none;
 }
 
-/* Pied de tableau (infos supp) */
-.menu-table tfoot td {
-    background-color: #f9f9f9;
-    font-style: italic;
-    color: #666;
-    font-size: 0.9rem;
-    padding: 10px 15px;
-    border-top: 2px solid var(--color-primary);
-}
-
-/* BLOCS FORMULES (MENUS) */
+/* Menus Formules */
 .menu-formule {
     background-color: var(--color-white);
     border: 2px solid var(--color-secondary);
@@ -316,7 +283,6 @@ figure figcaption {
     padding: 25px;
     margin-bottom: 30px;
     box-shadow: var(--shadow-soft);
-    position: relative;
     transition: transform 0.2s ease;
 }
 
@@ -328,42 +294,13 @@ figure figcaption {
 
 .menu-formule h3 {
     margin-top: 0;
-    border-bottom: 2px solid var(--color-accent); /* Ligne Or */
+    border-bottom: 2px solid var(--color-accent);
     padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
-    align-items: center;
 }
 
-.menu-formule ul {
-    list-style-type: disc; /* Remet les puces pour les menus */
-    padding-left: 20px;
-    margin-top: 10px;
-}
-
-.menu-formule ul ul {
-    list-style-type: circle;
-    margin-bottom: 10px;
-}
-
-.formule-details {
-    color: #666;
-    font-style: italic;
-    margin-bottom: 15px;
-}
-
-/* Highlight spécifique pour le menu enfant */
-.menu-formule:nth-of-type(2) {
-    border-color: var(--color-accent);
-}
-
-/* Highlight spécifique pour le menu Grill Master */
-.menu-formule:nth-of-type(3) {
-    border-color: var(--color-primary);
-    border-width: 3px;
-}
-
-/* --- FORMULAIRES (LOGIN/INSCRIPTION) --- */
+/* --- FORMULAIRES --- */
 .form-page {
     background-color: var(--color-bg);
     min-height: 80vh;
@@ -376,18 +313,13 @@ figure figcaption {
 .form-container {
     background-color: var(--color-white);
     padding: 40px;
-    border-radius: 8px; /* Un peu plus rond */
+    border-radius: 8px;
     box-shadow: var(--shadow-soft);
     width: 100%;
     max-width: 600px;
     border-top: 5px solid var(--color-primary);
 }
 
-.form-container.narrow {
-    max-width: 400px;
-}
-
-/* Fieldset & Legend (Nouveau) */
 fieldset {
     border: 1px solid var(--color-grey-light);
     border-radius: 5px;
@@ -400,35 +332,17 @@ legend {
     font-weight: bold;
     color: var(--color-primary);
     padding: 0 10px;
-    font-size: 1.1rem;
     font-family: var(--font-heading);
 }
 
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 700;
-    font-family: var(--font-heading);
-}
-
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-family: var(--font-heading); }
 .form-group input {
     width: 100%;
     padding: 12px;
     border: 1px solid var(--color-grey-light);
     border-radius: var(--border-radius);
     font-size: 1rem;
-    box-sizing: border-box; /* Important */
-    font-family: var(--font-body);
-}
-
-.form-group input:focus {
-    outline: none;
-    border-color: var(--color-accent);
-    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.2);
 }
 
 .btn-submit {
@@ -442,53 +356,11 @@ legend {
     font-family: var(--font-heading);
     cursor: pointer;
     text-transform: uppercase;
-    transition: background-color 0.3s;
 }
 
-.btn-submit:hover {
-    background-color: var(--color-primary-dark);
-}
-
-.full-width {
-    width: 100%;
-    display: block;
-    text-align: center;
-}
-
-.switch-form {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 0.9rem;
-}
-
-.switch-form a {
-    color: var(--color-primary);
-    font-weight: bold;
-    text-decoration: underline;
-}
-
-/* --- PAGE PROFIL (FIDÉLITÉ) --- */
-.profile-container {
-    max-width: 1000px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.profile-header h1 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-}
-
-/* Onglets */
-.tabs {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-}
-
+/* --- PAGE PROFIL --- */
+.profile-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+.tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
 .tab-btn {
     background: transparent;
     border: 2px solid var(--color-secondary);
@@ -497,39 +369,9 @@ legend {
     text-transform: uppercase;
     cursor: pointer;
     font-size: 1rem;
-    transition: all 0.3s;
 }
+.tab-btn.active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
 
-.tab-btn.active, .tab-btn:hover {
-    background-color: var(--color-primary);
-    color: white;
-    border-color: var(--color-primary);
-}
-
-/* Ruban Titre */
-.ribbon-title {
-    background: var(--color-primary);
-    color: white;
-    padding: 10px 30px;
-    font-family: var(--font-heading);
-    font-size: 1.3rem;
-    position: relative;
-    display: inline-block;
-    margin-bottom: 30px;
-    margin-left: -30px; /* Effet débordant */
-    box-shadow: 3px 3px 0 rgba(0,0,0,0.2);
-}
-
-.ribbon-title::after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    left: 0;
-    border-top: 10px solid #8E1616; /* Rouge foncé pliure */
-    border-left: 10px solid transparent;
-}
-
-/* Carte Fidélité */
 .loyalty-card {
     background: linear-gradient(135deg, var(--color-primary), #8E1616);
     color: white;
@@ -539,246 +381,56 @@ legend {
     max-width: 400px;
     margin: 0 auto 40px;
     border: 2px solid var(--color-accent);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
 }
+.loyalty-points { font-size: 4rem; font-family: var(--font-heading); color: var(--color-accent); margin: 10px 0; }
 
-.loyalty-points {
-    font-size: 4rem;
-    font-family: var(--font-heading);
-    color: var(--color-accent);
-    margin: 10px 0;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+/* --- ADMIN --- */
+.admin-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 20px;
 }
+.filter-container { display: flex; align-items: center; gap: 0.5rem; }
 
-/* Tableau Historique */
-.history-table {
+.user-table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: #fff;
     box-shadow: var(--shadow-soft);
+    border-radius: 8px;
+    overflow: hidden;
 }
-
-.history-table th {
-    background-color: var(--color-secondary);
-    color: white;
-    padding: 15px;
-    text-align: left;
-    font-family: var(--font-heading);
-    font-weight: 400;
-}
-
-.history-table td {
-    padding: 15px;
-    border-bottom: 1px solid #eee;
-}
-
-.status-badge {
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    font-weight: bold;
-}
-
-.status-delivered {
-    background-color: #E8F5E9;
-    color: #2E7D32;
-    border: 1px solid #A5D6A7;
-}
-
-/* --- MENTIONS LÉGALES --- */
-.legal-page {
-    display: flex;
-    gap: 40px;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.legal-nav {
-    flex: 1;
-    background: white;
-    padding: 20px;
-    border-radius: var(--border-radius);
-    height: fit-content;
-    box-shadow: var(--shadow-soft);
-}
-
-.legal-nav a {
-    display: block;
-    padding: 10px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.legal-nav a:hover {
-    color: var(--color-primary);
-    padding-left: 5px; /* Petit effet de mouvement */
-}
-
-.legal-content {
-    flex: 3;
-    background: white;
-    padding: 40px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-soft);
-    text-align: justify;
-}
-
-/* --- FOOTER --- */
-footer {
-    background-color: var(--color-secondary);
-    color: var(--color-bg);
-    text-align: center;
-    padding: 30px;
-    margin-top: 60px;
-    border-top: 5px solid var(--color-accent);
-}
-
-/* Responsive général */
-@media (max-width: 768px) {
-    .legal-page {
-        flex-direction: column;
-    }
-    .flex-row {
-        flex-direction: column;
-    }
-    .menu-table {
-        display: block;
-        overflow-x: auto; /* Scroll horizontal sur mobile pour les gros tableaux */
-    }
-    /* Afficher les liens de navigation en colonne avec un espacement accru */
-    .nav-links {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
-    }
-}
-
-/* --- MOBILE APPEARANCE (Smartphones) --- */
-@media (max-width: 600px) {
-    /* Navigation : empiler logo et liens, et rendre les liens visibles */
-    nav {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    .nav-links {
-        display: flex !important;
-        flex-direction: column;
-        width: 100%;
-        gap: 10px;
-        margin-top: 10px;
-    }
-    .nav-links li a {
-        padding: 10px 0;
-        border-bottom: 1px solid var(--color-grey-light);
-        width: 100%;
-    }
-    .nav-links li:last-child a {
-        border-bottom: none;
-    }
-
-    /* Conteneurs génériques */
-    .flex-row {
-        flex-direction: column;
-        padding: 1rem;
-    }
-    .menu-container {
-        padding: 0 10px;
-    }
-    /* Recherche & filtres sur la carte */
-    .search-filter {
-        display: flex;
-        flex-direction: column;
-    }
-    .search-filter input,
-    .search-filter select {
-        width: 100%;
-        margin-bottom: 0.5rem;
-    }
-    /* Galerie d'images : adapter la taille des images et la disposition */
-    .gallery-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-    .gallery-grid figure img {
-        width: 100%;
-        height: auto;
-    }
-    /* Liste des plats populaires */
-    #popular-list {
-        padding-left: 0;
-    }
-    #popular-list li {
-        padding: 0.5rem 0;
-    }
-    /* Profil : réduire les marges et adapter les sections */
-    .profile-container {
-        padding: 10px;
-        margin: 20px auto;
-    }
-    .loyalty-card {
-        max-width: 100%;
-        padding: 20px;
-    }
-    .tabs {
-        flex-direction: column;
-        gap: 10px;
-    }
-    .history-table {
-        display: block;
-        overflow-x: auto;
-    }
-    /* Formulaires : réduire les paddings */
-    .form-container {
-        padding: 20px;
-    }
-    /* Pied de page */
-    footer {
-        padding: 20px;
-        font-size: 0.8rem;
-    }
-
-    /* Table utilisateur pour l'admin : scroll horizontal */
-    .user-table {
-        display: block;
-        overflow-x: auto;
-    }
-
-    /* Entête d'administration : empiler les éléments */
-    .admin-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-}
-.admin-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
-.admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.user-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
 .user-table th, .user-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-.user-table th { background-color: #333; color: var(--color-accent, #ff6b00); text-transform: uppercase; font-size: 0.9rem; }
-.user-table tr:hover { background-color: #f9f9f9; }
+.user-table th { background-color: #333; color: var(--color-accent); }
+
 .role-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
 .role-client { background: #e0f7fa; color: #006064; }
 .role-admin { background: #fce4ec; color: #880e4f; }
 .role-restaurateur { background: #fff3e0; color: #e65100; }
-.action-btn { padding: 5px 10px; background: #ff4444; color: white; border: none; border-radius: 4px; cursor: pointer; }
+.role-livreur { background: #e8f5e9; color: #2e7d32; }
 
+.actions-cell .action-btn { margin: 0 2px; padding: 5px 8px; font-size: 0.8rem; color: white; border: none; border-radius: 4px; cursor: pointer; }
+.action-btn.edit-btn { background-color: #3498db; }
+.action-btn.hide-btn { background-color: #f39c12; }
+.action-btn.delete-btn { background-color: #e74c3c; }
+
+/* --- RESTAURATEUR (CUISINE) --- */
 .kitchen-board { display: flex; gap: 20px; padding: 20px; overflow-x: auto; min-height: 80vh; }
 .column { flex: 1; min-width: 300px; background: #f4f4f4; border-radius: 8px; padding: 15px; }
-.column h2 { text-align: center; color: #333; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+.column h2 { text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
 .order-card { background: white; border-left: 5px solid #ff6b00; padding: 15px; margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.order-header { display: flex; justify-content: space-between; font-weight: bold; margin-bottom: 10px; }
-.order-items { list-style: disc; padding-left: 20px; color: #555; margin-bottom: 15px; }
-.btn-move { width: 100%; padding: 10px; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
-.btn-start { background-color: #2196F3; color: white; }
-.btn-ready { background-color: #4CAF50; color: white; }
-
-/* Couleurs des colonnes */
 .col-waiting { border-top: 5px solid #ff4444; }
 .col-prep { border-top: 5px solid #2196F3; }
 .col-ready { border-top: 5px solid #4CAF50; }
+.btn-move { width: 100%; padding: 10px; border: none; cursor: pointer; font-weight: bold; margin-top: 5px; color: white; border-radius: 4px; }
+.btn-start { background-color: #2196F3; }
+.btn-ready { background-color: #4CAF50; }
 
-/* Mobile First Design */
-body { background-color: #f0f2f5; }
+/* --- LIVREUR --- */
 .delivery-app { max-width: 480px; margin: 0 auto; background: white; min-height: 100vh; }
 .app-header { background: #333; color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
 .order-list { padding: 10px; }
@@ -789,7 +441,7 @@ body { background-color: #f0f2f5; }
 
 .btn-map {
     width: 100%;
-    background: #2196F3; /* Blue color for maps */
+    background: #2196F3;
     color: white;
     border: none;
     padding: 15px;
@@ -797,7 +449,7 @@ body { background-color: #f0f2f5; }
     font-size: 1rem;
     font-weight: bold;
     cursor: pointer;
-    margin-bottom: 10px; /* Space between buttons */
+    margin-bottom: 10px;
 }
 
 .btn-deliver {
@@ -812,52 +464,167 @@ body { background-color: #f0f2f5; }
     cursor: pointer;
 }
 
-.nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 15px 0; }
-.nav-item { text-decoration: none; color: #555; font-size: 0.8rem; text-align: center; }
+.nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 0; z-index: 999; }
+.nav-bottom .nav-item { padding: 15px 0; flex: 1; text-align: center; color: #555; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
+.nav-item.active { color: #ff6b00; font-weight: bold; background: #fff3e0; }
 
-/* Augmente la surface tactile dans la barre de navigation du livreur */
-.nav-bottom .nav-item {
-    padding: 20px 0;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-.nav-item.active { color: #ff6b00; font-weight: bold; }
-
+/* --- NOTATION --- */
 .rating-container { max-width: 600px; margin: 50px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
 .stars { font-size: 2.5rem; color: #ccc; cursor: pointer; margin: 20px 0; }
 .star.active { color: #ffcc00; }
-.star:hover { color: #ffdd44; }
 textarea { width: 100%; height: 100px; padding: 10px; margin: 20px 0; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; }
-.btn-submit { background: var(--color-accent, #ff6b00); color: white; padding: 12px 30px; border: none; border-radius: 25px; font-size: 1.1rem; cursor: pointer; transition: transform 0.2s; }
-.btn-submit:hover { transform: scale(1.05); }
 
-/* Icône d’édition (crayon) pour le profil */
-.edit-icon {
-    color: var(--color-primary);
-    cursor: pointer;
-    font-size: 1rem;
-    vertical-align: middle;
+/* --- MENTIONS LÉGALES --- */
+.legal-page { display: flex; gap: 40px; max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+.legal-nav { flex: 1; background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); }
+.legal-nav a { display: block; padding: 10px 0; border-bottom: 1px solid #eee; }
+.legal-content { flex: 3; background: white; padding: 40px; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); text-align: justify; }
+
+/* --- FOOTER --- */
+footer {
+    background-color: var(--color-secondary);
+    color: var(--color-bg);
+    text-align: center;
+    padding: 30px;
+    margin-top: 60px;
+    border-top: 5px solid var(--color-accent);
 }
 
-.admin-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
+/* =========================================
+   VERSION MOBILE COMPLÈTE (Responsive)
+   ========================================= */
+@media screen and (max-width: 768px) {
+
+    /* --- Navigation --- */
+    nav {
+        flex-direction: column;
+        padding: 15px;
+    }
+
+    .logo-container {
+        margin-bottom: 15px;
+    }
+
+    .nav-links {
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+    }
+
+    .nav-links li {
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-links li a {
+        display: block;
+        padding: 15px 0;
+        border-bottom: 1px solid #eee;
+        width: 100%;
+    }
+
+    .nav-links li:last-child a {
+        border-bottom: none;
+    }
+
+    .btn-login {
+        margin-top: 10px;
+        display: inline-block;
+        width: auto;
+    }
+
+    /* --- Layouts Généraux --- */
+    .flex-row {
+        flex-direction: column;
+        padding: 1rem;
+        gap: 1rem;
+    }
+
+    .container, .menu-container, .admin-container, .profile-container {
+        padding: 10px;
+        width: 100%;
+    }
+
+    /* --- Accueil --- */
+    .gallery-grid {
+        flex-direction: column;
+        align-items: center;
+    }
+    figure { width: 100%; }
+    figure img { width: 100%; height: auto; }
+
+    /* --- Tableaux (Scroll Horizontal) --- */
+    .menu-table, .user-table, .history-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* --- Admin --- */
+    .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .filter-container {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .filter-container select {
+        flex-grow: 1;
+        margin-left: 10px;
+    }
+
+    /* --- Restaurateur (Cuisine) --- */
+    .kitchen-board {
+        flex-direction: column;
+        padding: 10px;
+        min-height: auto;
+    }
+    .column {
+        min-width: 100%;
+        margin-bottom: 20px;
+    }
+
+    /* --- Formulaires --- */
+    .form-container {
+        padding: 20px;
+        margin: 10px;
+    }
+    fieldset {
+        padding: 10px;
+    }
+
+    /* --- Mentions Légales --- */
+    .legal-page {
+        flex-direction: column;
+        gap: 20px;
+    }
+    .legal-content {
+        padding: 20px;
+    }
+
+    /* --- Profil --- */
+    .loyalty-card {
+        width: 100%;
+        padding: 20px;
+    }
+    .loyalty-points {
+        font-size: 3rem;
+    }
+    .tabs {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .tab-btn {
+        width: 100%;
+    }
+
+    /* --- Notation --- */
+    .rating-container {
+        margin: 20px 10px;
+        padding: 20px;
+    }
+    .stars {
+        font-size: 2rem;
+    }
 }
-.filter-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-.actions-cell .action-btn {
-    margin: 0 2px;
-    padding: 5px 8px;
-    font-size: 0.8rem;
-}
-.action-btn.edit-btn { background-color: #3498db; }
-.action-btn.hide-btn { background-color: #f39c12; }
-.action-btn.delete-btn { background-color: #e74c3c; }
