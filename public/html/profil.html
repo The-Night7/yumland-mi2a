@@ -53,18 +53,28 @@
             <form id="profile-form">
                 <fieldset style="border:none; padding:0;">
                     <div class="form-group">
+<<<<<<< HEAD
                         <label>Nom :</label>
                         <input type="text" id="nom" required>
                     </div>
                     <div class="form-group">
                         <label>Prénom :</label>
                         <input type="text" id="prenom" required>
+=======
+                        <label for="nom">Nom :</label>
+                        <input type="text" id="nom" name="nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="prenom">Prénom :</label>
+                        <input type="text" id="prenom" name="prenom" required>
+>>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
                     </div>
                     <div class="form-group">
                         <label>Email :</label>
                         <input type="email" id="email" disabled style="opacity: 0.7; background-color: #eee;">
                     </div>
                     <div class="form-group">
+<<<<<<< HEAD
                         <label>Téléphone :</label>
                         <input type="tel" id="tel" placeholder="06 XX XX XX XX">
                     </div>
@@ -78,6 +88,29 @@
                     </div>
                     <div style="margin-top: 25px;">
                         <button type="submit" class="btn-save" style="width: 100%; padding: 15px; font-weight: bold; cursor: pointer;">METTRE À JOUR MES INFORMATIONS</button>
+=======
+                        <label for="tel">Téléphone :</label>
+                        <input type="tel" id="tel" name="tel" placeholder="Ex: 06 12 34 56 78">
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
+                    </div>
+
+                    <!-- Champ Adresse ajouté pour la phase 1 -->
+                    <div class="form-group">
+                        <label for="adresse">Adresse :</label>
+                        <input type="text" id="adresse" name="adresse" placeholder="12 rue de Paris, 95000 Cergy">
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
+                    </div>
+
+                    <!-- Champ Informations complémentaires (code interphone, étage, etc.) -->
+                    <div class="form-group">
+                        <label for="complement">Infos Complémentaires :</label>
+                        <input type="text" id="complement" name="complement" placeholder="Code interphone, étage, etc.">
+                        <span class="edit-icon" style="margin-left:8px; cursor:pointer;">✏️</span>
+                    </div>
+
+                    <div style="clear:both; margin-top: 20px;">
+                        <button type="submit" class="btn-save">METTRE À JOUR</button>
+>>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
                     </div>
                 </fieldset>
             </form>
@@ -158,8 +191,25 @@
         document.getElementById('adresse').value = user.adresse || '';
         document.getElementById('complement').value = user.complement || '';
 
+<<<<<<< HEAD
         if(user.adresse) {
             document.getElementById('link-maps').href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(user.adresse)}`;
+=======
+        // Remplir les champs adresse et complément si disponibles
+        const inputAdresse = document.getElementById('adresse');
+        if (inputAdresse) inputAdresse.value = user.adresse || '';
+        const inputComplement = document.getElementById('complement');
+        if (inputComplement) inputComplement.value = user.complement || '';
+
+        // Points (Simulation simple car pas encore en base de données)
+        // Si l'utilisateur n'a pas de points, on met 0 par défaut
+        const points = user.points || 0;
+        document.getElementById('points-display').textContent = points;
+
+        if(points > 500) {
+            document.getElementById('status-display').textContent = "GOLD";
+            document.getElementById('status-display').style.color = "gold";
+>>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
         }
 
         // FIDELITE
@@ -185,8 +235,14 @@
             user.nom = document.getElementById('nom').value;
             user.prenom = document.getElementById('prenom').value;
             user.tel = document.getElementById('tel').value;
+<<<<<<< HEAD
             user.adresse = document.getElementById('adresse').value;
             user.complement = document.getElementById('complement').value;
+=======
+            // Ajouter la mise à jour de l'adresse et du complément
+            user.adresse = document.getElementById('adresse') ? document.getElementById('adresse').value : '';
+            user.complement = document.getElementById('complement') ? document.getElementById('complement').value : '';
+>>>>>>> d2ce705624331e975c19e4b62570d12c9d48d6c2
 
             sessionStorage.setItem('currentUser', JSON.stringify(user));
 
