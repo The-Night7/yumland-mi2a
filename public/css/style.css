@@ -10,21 +10,25 @@
     --color-bg: #FDFBF7;
     --color-white: #FFFFFF;
     --color-text: #333333;
-    --color-grey-light: #BDBDBD;
+    --color-grey-light: #E0E0E0;
+    --color-success: #4CAF50;
+    --color-info: #2196F3;
 
     /* --- TYPOGRAPHIE --- */
     --font-heading: 'Oswald', sans-serif;
     --font-body: 'Lato', sans-serif;
 
-    /* --- UI ELEMENTS --- */
-    --border-radius: 6px;
-    --shadow-soft: 0 4px 6px rgba(0, 0, 0, 0.1);
-    --shadow-hover: 0 8px 15px rgba(0,0,0,0.15);
+    /* --- UI ELEMENTS (Modern Mobile) --- */
+    --border-radius: 12px; /* Arrondi plus moderne */
+    --shadow-card: 0 4px 12px rgba(0, 0, 0, 0.08); /* Ombre douce */
+    --shadow-floating: 0 8px 24px rgba(0, 0, 0, 0.15); /* Pour les éléments flottants */
+    --transition-speed: 0.3s;
 }
 
 /* --- RESET & BASES --- */
 * {
-    box-sizing: border-box; /* Crucial pour le responsive */
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent; /* Enlève le flash bleu sur mobile */
 }
 
 body {
@@ -33,7 +37,7 @@ body {
     font-family: var(--font-body);
     margin: 0;
     line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
+    font-size: 16px; /* Base lisible */
 }
 
 h1, h2, h3, h4 {
@@ -41,53 +45,60 @@ h1, h2, h3, h4 {
     font-family: var(--font-heading);
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: 0;
 }
 
 a {
     text-decoration: none;
     color: inherit;
-    transition: color 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 ul {
     list-style: none;
     padding-left: 0;
+    margin: 0;
 }
 
 img {
     max-width: 100%;
     height: auto;
+    display: block;
 }
 
-/* Boutons génériques */
-.btn, .cta-button {
-    display: inline-block;
+/* --- BOUTONS (Style "App") --- */
+.btn, .cta-button, .btn-submit, .btn-deliver, .btn-map {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
     background-color: var(--color-primary);
     color: var(--color-white);
-    padding: 12px 25px;
-    text-decoration: none;
-    border-radius: var(--border-radius);
+    padding: 14px 24px;
+    border-radius: 50px; /* Pill shape */
     font-family: var(--font-heading);
     text-transform: uppercase;
-    transition: background-color 0.3s;
+    font-weight: bold;
     border: none;
     cursor: pointer;
-    font-weight: bold;
-    text-align: center;
+    box-shadow: 0 4px 6px rgba(211, 47, 47, 0.3);
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: auto;
+    font-size: 1rem;
 }
 
-.btn:hover, .cta-button:hover {
-    background-color: var(--color-primary-dark);
+.btn:active, .cta-button:active, .btn-submit:active {
+    transform: scale(0.96);
+    box-shadow: none;
 }
 
-/* --- HEADER & NAVIGATION --- */
+/* --- HEADER & NAVIGATION (Sticky & Clean) --- */
 header {
     background-color: var(--color-white);
-    border-bottom: 4px solid var(--color-primary);
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    padding: 0.5rem 0;
 }
 
 nav {
@@ -96,20 +107,17 @@ nav {
     align-items: center;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 10px 20px;
+    padding: 0 20px;
 }
 
 .logo-text {
     font-family: var(--font-heading);
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--color-secondary);
 }
 
-.text-highlight {
-    color: var(--color-primary);
-    font-weight: 800;
-}
+.text-highlight { color: var(--color-primary); }
 
 .nav-links {
     display: flex;
@@ -121,510 +129,430 @@ nav {
     font-weight: 700;
     color: var(--color-secondary);
     font-family: var(--font-heading);
-    padding: 5px 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
 }
 
-.nav-links li a:hover,
 .nav-links li a.active {
     color: var(--color-primary);
+    background-color: rgba(211, 47, 47, 0.05);
 }
 
 .btn-login {
     border: 2px solid var(--color-primary);
-    border-radius: var(--border-radius);
-    padding: 5px 15px !important;
+    background: transparent;
     color: var(--color-primary) !important;
+    padding: 6px 16px !important;
+    border-radius: 50px;
+    box-shadow: none;
 }
 
-.btn-login:hover {
-    background-color: var(--color-primary);
-    color: var(--color-white) !important;
-}
-
-/* --- LAYOUT GÉNÉRAL --- */
+/* --- LAYOUT & CARDS --- */
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 20px;
 }
 
+/* Concept de "Carte" générique pour unifier le design */
+.card-style, .menu-formule, .delivery-card, .order-card, .form-container, .legal-nav, .legal-content, .info-box, figure {
+    background: var(--color-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
+    padding: 20px;
+    margin-bottom: 20px;
+    border: none; /* On enlève les bordures classiques pour le shadow */
+}
+
+/* --- ACCUEIL --- */
 .flex-row {
     display: flex;
     gap: 2rem;
     align-items: flex-start;
-    padding: 2rem;
-    max-width: 1500px;
-    margin: 0 auto;
+    padding: 2rem 0;
 }
 
 .concept-text { flex: 2; }
 .info-box {
     flex: 1;
-    background-color: #ffebee;
-    padding: 1.5rem;
-    border-radius: 8px;
     border-left: 5px solid var(--color-primary);
-    box-shadow: var(--shadow-soft);
+    background-color: #fff; /* White card style */
 }
 
-/* Galerie */
 .gallery-grid {
-    display: flex;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 20px;
-    flex-wrap: wrap;
-    padding: 2rem 0;
+    padding: 20px 0;
 }
 
 figure {
-    margin: 0;
-    text-align: center;
-    background: white;
     padding: 10px;
-    border-radius: var(--border-radius);
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.3s;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
-figure:hover { transform: scale(1.02); }
 
 figure img {
-    width: 300px;
+    border-radius: 8px;
+    width: 100%;
     height: 200px;
     object-fit: cover;
-    border-radius: 4px;
 }
 
-figure figcaption {
-    margin-top: 0.5rem;
-    font-weight: bold;
-    color: var(--color-text);
-    font-family: var(--font-heading);
-}
-
-/* --- PAGE CARTE & MENUS --- */
-.menu-container {
-    max-width: 1000px;
-    margin: 2rem auto;
-    padding: 0 20px;
-}
-
-.intro-text {
-    text-align: center;
-    font-size: 1.2rem;
-    margin-bottom: 40px;
-    color: var(--color-secondary);
-}
-
-.menu-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 40px;
-    background-color: var(--color-white);
-    box-shadow: var(--shadow-soft);
-    border-radius: var(--border-radius);
+/* --- PAGE CARTE (Menu) --- */
+.menu-formule {
+    position: relative;
     overflow: hidden;
 }
 
-.menu-table caption {
-    caption-side: top;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--color-secondary);
-    margin-bottom: 10px;
-    text-align: left;
-    border-left: 5px solid var(--color-primary);
-    padding-left: 15px;
-    font-family: var(--font-heading);
+.menu-formule h3 {
+    border-bottom: 2px solid var(--color-bg);
+    padding-bottom: 10px;
+}
+
+/* Tableaux Desktop (par défaut) */
+.menu-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: var(--color-white);
+    box-shadow: var(--shadow-card);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    margin-bottom: 30px;
 }
 
 .menu-table th, .menu-table td {
     padding: 15px;
     text-align: left;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #f0f0f0;
 }
 
 .menu-table th {
     background-color: var(--color-secondary);
     color: var(--color-white);
-    text-transform: uppercase;
-    font-family: var(--font-heading);
-    font-weight: 400;
-}
-
-.menu-table td:nth-child(3) {
-    font-weight: bold;
-    color: var(--color-primary);
-    font-size: 1.1rem;
-    white-space: nowrap;
-}
-
-.category-cell {
-    background-color: var(--color-primary);
-    color: var(--color-white);
-    font-weight: bold;
-    text-align: center;
-    font-family: var(--font-heading);
-    font-size: 1.2rem;
-}
-
-.separator td {
-    background-color: var(--color-bg);
-    height: 10px;
-    padding: 0;
-    border: none;
-}
-
-/* Menus Formules */
-.menu-formule {
-    background-color: var(--color-white);
-    border: 2px solid var(--color-secondary);
-    border-radius: var(--border-radius);
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: var(--shadow-soft);
-    transition: transform 0.2s ease;
-}
-
-.menu-formule:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-hover);
-    border-color: var(--color-primary);
-}
-
-.menu-formule h3 {
-    margin-top: 0;
-    border-bottom: 2px solid var(--color-accent);
-    padding-bottom: 10px;
-    display: flex;
-    justify-content: space-between;
 }
 
 /* --- FORMULAIRES --- */
 .form-page {
-    background-color: var(--color-bg);
-    min-height: 80vh;
+    min-height: 85vh;
     display: flex;
-    justify-content: center;
     align-items: center;
-    padding: 40px 20px;
+    justify-content: center;
+    padding: 20px;
 }
 
 .form-container {
-    background-color: var(--color-white);
-    padding: 40px;
-    border-radius: 8px;
-    box-shadow: var(--shadow-soft);
-    width: 100%;
-    max-width: 600px;
     border-top: 5px solid var(--color-primary);
-}
-
-fieldset {
-    border: 1px solid var(--color-grey-light);
-    border-radius: 5px;
-    margin-bottom: 1.5rem;
-    padding: 1.5rem;
-    background: #fff;
-}
-
-legend {
-    font-weight: bold;
-    color: var(--color-primary);
-    padding: 0 10px;
-    font-family: var(--font-heading);
-}
-
-.form-group { margin-bottom: 20px; }
-.form-group label { display: block; margin-bottom: 8px; font-weight: 700; font-family: var(--font-heading); }
-.form-group input {
+    max-width: 500px;
     width: 100%;
-    padding: 12px;
-    border: 1px solid var(--color-grey-light);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
 }
 
-.btn-submit {
+.form-group input, .form-group select, textarea {
     width: 100%;
-    padding: 15px;
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 1.1rem;
-    font-family: var(--font-heading);
-    cursor: pointer;
-    text-transform: uppercase;
-}
-
-/* --- PAGE PROFIL --- */
-.profile-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
-.tabs { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
-.tab-btn {
-    background: transparent;
-    border: 2px solid var(--color-secondary);
-    padding: 10px 25px;
-    font-family: var(--font-heading);
-    text-transform: uppercase;
-    cursor: pointer;
+    padding: 14px;
+    border: 1px solid var(--color-grey-light);
+    border-radius: 8px;
     font-size: 1rem;
+    background-color: #FAFAFA;
+    transition: border-color 0.3s;
 }
-.tab-btn.active { background-color: var(--color-primary); color: white; border-color: var(--color-primary); }
 
-.loyalty-card {
-    background: linear-gradient(135deg, var(--color-primary), #8E1616);
-    color: white;
-    padding: 40px;
-    border-radius: 12px;
-    text-align: center;
-    max-width: 400px;
-    margin: 0 auto 40px;
-    border: 2px solid var(--color-accent);
+.form-group input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    background-color: #fff;
 }
-.loyalty-points { font-size: 4rem; font-family: var(--font-heading); color: var(--color-accent); margin: 10px 0; }
 
-/* --- ADMIN --- */
-.admin-container { max-width: 1000px; margin: 40px auto; padding: 20px; }
+.btn-submit { width: 100%; margin-top: 10px; }
+
+/* --- ADMIN & TABLEAUX --- */
 .admin-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
     margin-bottom: 20px;
+    background: white;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-card);
 }
-.filter-container { display: flex; align-items: center; gap: 0.5rem; }
 
 .user-table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    box-shadow: var(--shadow-soft);
-    border-radius: 8px;
+    background: white;
+    border-radius: var(--border-radius);
     overflow: hidden;
+    box-shadow: var(--shadow-card);
 }
-.user-table th, .user-table td { padding: 15px; text-align: left; border-bottom: 1px solid #eee; }
-.user-table th { background-color: #333; color: var(--color-accent); }
 
-.role-badge { padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; }
-.role-client { background: #e0f7fa; color: #006064; }
-.role-admin { background: #fce4ec; color: #880e4f; }
-.role-restaurateur { background: #fff3e0; color: #e65100; }
-.role-livreur { background: #e8f5e9; color: #2e7d32; }
+/* --- LIVREUR (Mobile First Design) --- */
+.delivery-app {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--color-bg);
+    min-height: 100vh;
+    padding-bottom: 80px; /* Espace pour la nav du bas */
+}
 
-.actions-cell .action-btn { margin: 0 2px; padding: 5px 8px; font-size: 0.8rem; color: white; border: none; border-radius: 4px; cursor: pointer; }
-.action-btn.edit-btn { background-color: #3498db; }
-.action-btn.hide-btn { background-color: #f39c12; }
-.action-btn.delete-btn { background-color: #e74c3c; }
-
-/* --- RESTAURATEUR (CUISINE) --- */
-.kitchen-board { display: flex; gap: 20px; padding: 20px; overflow-x: auto; min-height: 80vh; }
-.column { flex: 1; min-width: 300px; background: #f4f4f4; border-radius: 8px; padding: 15px; }
-.column h2 { text-align: center; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
-.order-card { background: white; border-left: 5px solid #ff6b00; padding: 15px; margin-bottom: 15px; border-radius: 4px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-.col-waiting { border-top: 5px solid #ff4444; }
-.col-prep { border-top: 5px solid #2196F3; }
-.col-ready { border-top: 5px solid #4CAF50; }
-.btn-move { width: 100%; padding: 10px; border: none; cursor: pointer; font-weight: bold; margin-top: 5px; color: white; border-radius: 4px; }
-.btn-start { background-color: #2196F3; }
-.btn-ready { background-color: #4CAF50; }
-
-/* --- LIVREUR --- */
-.delivery-app { max-width: 480px; margin: 0 auto; background: white; min-height: 100vh; }
-.app-header { background: #333; color: white; padding: 20px; text-align: center; position: sticky; top: 0; z-index: 100; }
-.order-list { padding: 10px; }
-.delivery-card { border: 1px solid #ddd; border-radius: 12px; padding: 15px; margin-bottom: 15px; background: white; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
-.delivery-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-.badge { background: #ff6b00; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; }
-.address-box { background: #f9f9f9; padding: 10px; border-radius: 8px; margin: 10px 0; font-size: 0.9rem; }
-
-.btn-map {
-    width: 100%;
-    background: #2196F3;
+.app-header {
+    background: var(--color-secondary);
     color: white;
-    border: none;
+    padding: 20px;
+    text-align: center;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    box-shadow: var(--shadow-floating);
+    margin-bottom: 20px;
+}
+
+.delivery-card {
+    position: relative;
+    border-left: 5px solid var(--color-primary);
+}
+
+.delivery-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.badge {
+    background: var(--color-accent);
+    color: var(--color-secondary);
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.address-box {
+    background: #F5F5F5;
     padding: 15px;
     border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    margin-bottom: 10px;
+    margin: 15px 0;
+    font-size: 0.95rem;
+    line-height: 1.8;
+}
+
+/* Boutons Livreur Spécifiques */
+.btn-map {
+    width: 100%;
+    background-color: var(--color-info); /* Bleu Maps */
+    margin-bottom: 12px;
+    box-shadow: 0 4px 6px rgba(33, 150, 243, 0.3);
 }
 
 .btn-deliver {
     width: 100%;
-    background: #4CAF50;
-    color: white;
-    border: none;
-    padding: 15px;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
+    background-color: var(--color-success); /* Vert Validation */
+    box-shadow: 0 4px 6px rgba(76, 175, 80, 0.3);
 }
 
-.nav-bottom { position: fixed; bottom: 0; width: 100%; max-width: 480px; background: white; border-top: 1px solid #ddd; display: flex; justify-content: space-around; padding: 0; z-index: 999; }
-.nav-bottom .nav-item { padding: 15px 0; flex: 1; text-align: center; color: #555; font-size: 0.8rem; display: flex; align-items: center; justify-content: center; }
-.nav-item.active { color: #ff6b00; font-weight: bold; background: #fff3e0; }
+/* Navigation du bas (Livreur) */
+.nav-bottom {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    display: flex;
+    justify-content: space-around;
+    padding: 10px 0;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 999;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
 
-/* --- NOTATION --- */
-.rating-container { max-width: 600px; margin: 50px auto; background: white; padding: 40px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
-.stars { font-size: 2.5rem; color: #ccc; cursor: pointer; margin: 20px 0; }
-.star.active { color: #ffcc00; }
-textarea { width: 100%; height: 100px; padding: 10px; margin: 20px 0; border: 1px solid #ddd; border-radius: 5px; font-family: inherit; }
-
-/* --- MENTIONS LÉGALES --- */
-.legal-page { display: flex; gap: 40px; max-width: 1200px; margin: 40px auto; padding: 0 20px; }
-.legal-nav { flex: 1; background: white; padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); }
-.legal-nav a { display: block; padding: 10px 0; border-bottom: 1px solid #eee; }
-.legal-content { flex: 3; background: white; padding: 40px; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); text-align: justify; }
-
-/* --- FOOTER --- */
-footer {
-    background-color: var(--color-secondary);
-    color: var(--color-bg);
+.nav-bottom .nav-item {
+    flex: 1;
     text-align: center;
-    padding: 30px;
-    margin-top: 60px;
-    border-top: 5px solid var(--color-accent);
+    padding: 10px;
+    color: #999;
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
 }
 
-/* =========================================
-   VERSION MOBILE COMPLÈTE (Responsive)
-   ========================================= */
+.nav-bottom .nav-item.active {
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* --- RESTAURATEUR (Kanban) --- */
+.kitchen-board {
+    display: flex;
+    gap: 20px;
+    padding: 20px 0;
+    overflow-x: auto;
+}
+
+.column {
+    flex: 1;
+    min-width: 300px;
+    background: #EEEEEE;
+    border-radius: 12px;
+    padding: 15px;
+}
+
+.order-card {
+    border-left-width: 5px;
+    border-left-style: solid;
+    cursor: grab;
+}
+.col-waiting .order-card { border-left-color: var(--color-primary); }
+.col-prep .order-card { border-left-color: var(--color-info); }
+.col-ready .order-card { border-left-color: var(--color-success); }
+
+/* ==========================================================================
+   📱 MOBILE OPTIMIZATIONS (Max-width: 768px)
+   ========================================================================== */
 @media screen and (max-width: 768px) {
 
-    /* --- Navigation --- */
+    /* 1. Navigation Mobile "Drawer" Style */
     nav {
         flex-direction: column;
-        padding: 15px;
+        align-items: stretch;
+        padding: 10px 15px;
     }
 
     .logo-container {
-        margin-bottom: 15px;
+        text-align: center;
+        margin-bottom: 10px;
     }
 
     .nav-links {
         flex-direction: column;
         width: 100%;
-        gap: 0;
+        gap: 10px;
     }
 
-    .nav-links li {
-        width: 100%;
-        text-align: center;
-    }
+    .nav-links li { width: 100%; }
 
     .nav-links li a {
         display: block;
-        padding: 15px 0;
-        border-bottom: 1px solid #eee;
         width: 100%;
+        text-align: center;
+        background: white;
+        padding: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
     }
 
-    .nav-links li:last-child a {
+    .nav-links li a.active {
+        background: var(--color-primary);
+        color: white;
+    }
+
+    /* 2. Layout Général */
+    .flex-row {
+        flex-direction: column;
+        padding: 10px 0;
+    }
+
+    .container { padding: 10px; }
+
+    /* 3. Transformation des Tableaux en Cartes (Magie CSS) */
+    /* On cache l'en-tête du tableau */
+    .menu-table thead, .user-table thead, .history-table thead {
+        display: none;
+    }
+
+    /* Chaque ligne devient une carte */
+    .menu-table tr, .user-table tr, .history-table tr {
+        display: block;
+        background: white;
+        margin-bottom: 15px;
+        border-radius: 12px;
+        box-shadow: var(--shadow-card);
+        padding: 15px;
+        border: 1px solid #f0f0f0;
+    }
+
+    /* Chaque cellule devient une ligne flex */
+    .menu-table td, .user-table td, .history-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+        text-align: right;
+    }
+
+    .menu-table td:last-child, .user-table td:last-child {
         border-bottom: none;
     }
 
-    .btn-login {
-        margin-top: 10px;
-        display: inline-block;
-        width: auto;
-    }
-
-    /* --- Layouts Généraux --- */
-    .flex-row {
+    /* Ajout de labels via CSS si possible, sinon layout simple */
+    .user-table td {
+        display: flex;
         flex-direction: column;
-        padding: 1rem;
-        gap: 1rem;
+        align-items: flex-start;
+        gap: 5px;
+        text-align: left;
     }
 
-    .container, .menu-container, .admin-container, .profile-container {
-        padding: 10px;
+    /* Actions Admin : Gros boutons */
+    .actions-cell {
+        flex-direction: row !important;
+        justify-content: space-between !important;
         width: 100%;
+        margin-top: 10px;
     }
 
-    /* --- Accueil --- */
-    .gallery-grid {
+    .action-btn {
+        flex: 1;
+        text-align: center;
+        padding: 10px;
+        margin: 0 5px;
+    }
+
+    /* 4. Cuisine (Restaurateur) */
+    .kitchen-board {
         flex-direction: column;
-        align-items: center;
     }
-    figure { width: 100%; }
-    figure img { width: 100%; height: auto; }
-
-    /* --- Tableaux (Scroll Horizontal) --- */
-    .menu-table, .user-table, .history-table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
+    .column {
+        width: 100%;
+        min-width: auto;
     }
 
-    /* --- Admin --- */
+    /* 5. Admin Header */
     .admin-header {
         flex-direction: column;
         align-items: flex-start;
+        gap: 15px;
     }
     .filter-container {
         width: 100%;
-        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
     }
     .filter-container select {
-        flex-grow: 1;
-        margin-left: 10px;
-    }
-
-    /* --- Restaurateur (Cuisine) --- */
-    .kitchen-board {
-        flex-direction: column;
-        padding: 10px;
-        min-height: auto;
-    }
-    .column {
-        min-width: 100%;
-        margin-bottom: 20px;
-    }
-
-    /* --- Formulaires --- */
-    .form-container {
-        padding: 20px;
-        margin: 10px;
-    }
-    fieldset {
+        margin-top: 5px;
         padding: 10px;
     }
 
-    /* --- Mentions Légales --- */
-    .legal-page {
-        flex-direction: column;
-        gap: 20px;
-    }
-    .legal-content {
-        padding: 20px;
-    }
-
-    /* --- Profil --- */
-    .loyalty-card {
-        width: 100%;
-        padding: 20px;
-    }
-    .loyalty-points {
-        font-size: 3rem;
-    }
+    /* 6. Profil */
     .tabs {
         flex-direction: column;
-        gap: 10px;
     }
     .tab-btn {
         width: 100%;
+        text-align: center;
+        padding: 15px;
+        border-radius: 8px;
     }
 
-    /* --- Notation --- */
-    .rating-container {
-        margin: 20px 10px;
-        padding: 20px;
-    }
-    .stars {
-        font-size: 2rem;
+    /* 7. Mentions Légales */
+    .legal-page {
+        flex-direction: column;
     }
 }
