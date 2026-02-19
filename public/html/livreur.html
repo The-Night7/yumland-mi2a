@@ -67,16 +67,16 @@
                     </div>
                     <div class="address-box">
                         📍 ${d.address}<br>
-                        🏢 Étage : ${d.floor || ''}<br>
-                        🔑 Code : <strong>${d.code}</strong><br>
-                        📞 Tél : ${d.tel || ''}<br>
-                        ${d.comment ? `💬 Commentaire : ${d.comment}` : ''}
+                        🏢 Étage : ${d.floor || ''}<br>
+                        🔑 Code : <strong>${d.code}</strong><br>
+                        📞 Tél : ${d.tel || ''}<br>
+                        ${d.comment ? `💬 Commentaire : ${d.comment}` : ''}
                     </div>
                     <div style="margin-bottom:10px; color:#666;">
-                        📦 Commande #${d.id}
+                        📦 Commande #${d.id}
                     </div>
-                    <button class="btn-map" onclick="openMap('${d.address}')">🗺️ Ouvrir dans Maps</button>
-                    <button class="btn-deliver" onclick="confirmDelivery('${d.id}')">VALIDER LA LIVRAISON</button>
+                    <button class="btn-map" onclick="openMap('${d.address}')">Ouvrir Maps/Waze</button>
+                    <button class="btn-deliver" onclick="confirmDelivery('${d.id}')">Terminé</button>
                 </div>
             `).join('');
     }
