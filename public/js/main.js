@@ -1,7 +1,10 @@
 
 function filterDishes() {
     // 1. Récupérer le texte saisi
-    const query = document.getElementById('homeSearchInput').value.toLowerCase();
+    const searchInput = document.getElementById('homeSearchInput');
+    if (!searchInput) return;
+    
+    const query = searchInput.value.toLowerCase();
 
     // 2. Récupérer toutes les cartes de plats
     const dishes = document.querySelectorAll('.gallery-grid figure');
@@ -22,10 +25,12 @@ function filterDishes() {
 
     // 5. Gérer le message "Aucun résultat"
     const noResultsMsg = document.getElementById('no-results');
-    if (hasResults) {
-        noResultsMsg.style.display = 'none';
-    } else {
-        noResultsMsg.style.display = 'block';
+    if (noResultsMsg) {
+        if (hasResults) {
+            noResultsMsg.style.display = 'none';
+        } else {
+            noResultsMsg.style.display = 'block';
+        }
     }
 }
 
@@ -47,9 +52,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const tbody = document.getElementById('user-list');
         const roleFilter = document.getElementById('role-filter');
-        document.getElementById('total-users').innerText = users.length;
+        if (document.getElementById('total-users')) {
+            document.getElementById('total-users').innerText = users.length;
+        }
 
         const renderUsers = (role = 'all') => {
+            if (!tbody) return;
+            
             const filteredUsers = (role === 'all')
                 ? users
                 : users.filter(user => user.role === role);
@@ -69,7 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
             `).join('');
         };
 
-        roleFilter.addEventListener('change', (e) => renderUsers(e.target.value));
+        if (roleFilter) {
+            roleFilter.addEventListener('change', (e) => renderUsers(e.target.value));
+        }
 
         renderUsers(); // Premier rendu
     }
@@ -81,6 +92,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Profil page logic
     if (document.querySelector('.profile-container')) {
+        // Initialiser l'affichage des onglets
+        const tabContents = document.querySelectorAll('.tab-content');
+        tabContents.forEach(tab => {
+            if (!tab.classList.contains('active')) {
+                tab.style.display = 'none';
+            } else {
+                tab.style.display = 'block';
+            }
+        });
+
         const currentUserJSON = sessionStorage.getItem('currentUser');
         if (!currentUserJSON) {
             window.location.href = "connexion.html";
@@ -345,9 +366,12 @@ function openTab(evt, tabName) {
     for (let i = 0; i < tablinks.length; i++) {
         tablinks[i].classList.remove("active");
     }
-    document.getElementById(tabName).style.display = "block";
-    document.getElementById(tabName).classList.add("active");
-    if (evt) {
+    const target = document.getElementById(tabName);
+    if (target) {
+        target.style.display = "block";
+        target.classList.add("active");
+    }
+    if (evt && evt.currentTarget) {
         evt.currentTarget.classList.add("active");
     }
 }
