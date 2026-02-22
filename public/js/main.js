@@ -142,9 +142,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- LOGIQUE PROFIL (USER DATA) ---
     if (document.querySelector('.profile-container')) {
-        const currentUserJSON = sessionStorage.getItem('currentUser');
+        let currentUserJSON = sessionStorage.getItem('currentUser');
         
-        // Redirection si non connecté
+        // Fallback sur localStorage si sessionStorage est vide (persistance auth-client.js)
+        if (!currentUserJSON) {
+            const localUser = localStorage.getItem('yumland_user');
+            if (localUser) {
+                console.log("Récupération de la session depuis localStorage");
+                currentUserJSON = localUser;
+                sessionStorage.setItem('currentUser', localUser); // Restaurer la session
+            }
+        }
+        
+        // Redirection si toujours non connecté
         if (!currentUserJSON) {
             console.warn("Aucun utilisateur connecté, redirection...");
             window.location.href = "connexion.html";
@@ -167,6 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const user = JSON.parse(currentUserJSON);
+        console.log("Utilisateur chargé :", user);
 
         // Affichage des points
         const miams = user.miams || user.points || 0;
@@ -221,9 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 user.adresse = document.getElementById('adresse').value;
                 user.complement = document.getElementById('complement').value;
 
-                sessionStorage.setItem('currentUser', JSON.stringify(user));
+                const updatedUserJSON = JSON.stringify(user);
+                sessionStorage.setItem('currentUser', updatedUserJSON);
                 // Mise à jour aussi pour auth-client.js si utilisé
-                localStorage.setItem('yumland_user', JSON.stringify(user));
+                localStorage.setItem('yumland_user', updatedUserJSON);
                 
                 alert("Modifications enregistrées !");
             });
