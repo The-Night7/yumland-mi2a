@@ -35,8 +35,8 @@ L'application repose sur une architecture multi-utilisateurs où chaque interfac
 
 * **Phase 1 : Conception Graphique et Intégration Statique (Front-End)**
   * **Début :** 27/01/2026 - 9f9547b
-  * **Fin / Soutenance :** 22/02/2026 
-  
+  * **Fin / Soutenance :** 22/02/2026 - bab7de5
+
 
 * **Phase 2 : Serveur et Base de Données (Back-End)**
 
