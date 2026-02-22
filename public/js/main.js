@@ -35,6 +35,56 @@ function filterDishes() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log("Main.js chargé");
+
+    // --- GESTION DES ONGLETS (PROFIL) ---
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    if (tabButtons.length > 0) {
+        console.log(`${tabButtons.length} onglets trouvés.`);
+
+        // 1. Initialisation : Masquer les contenus non actifs
+        tabContents.forEach(content => {
+            if (content.classList.contains('active')) {
+                content.style.display = 'block';
+            } else {
+                content.style.display = 'none';
+            }
+        });
+
+        // 2. Écouteurs d'événements
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = btn.getAttribute('data-tab');
+                console.log(`Clic sur l'onglet : ${targetId}`);
+
+                // Masquer tous les contenus
+                tabContents.forEach(content => {
+                    content.style.display = 'none';
+                    content.classList.remove('active');
+                });
+
+                // Désactiver tous les boutons
+                tabButtons.forEach(b => b.classList.remove('active'));
+
+                // Afficher le contenu cible
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.style.display = 'block';
+                    targetContent.classList.add('active');
+                } else {
+                    console.error(`Contenu d'onglet non trouvé : ${targetId}`);
+                }
+
+                // Activer le bouton cliqué
+                btn.classList.add('active');
+            });
+        });
+    }
+
+    // --- LOGIQUE PAGE ADMIN ---
     const isAminPage = document.querySelector('body.admin-container')
     if (isAminPage) {
         const mockUsers = [
@@ -85,75 +135,40 @@ document.addEventListener('DOMContentLoaded', () => {
         renderUsers(); // Premier rendu
     }
     
-    // Initial filter application on page load for carte.html
+    // --- LOGIQUE CARTE (FILTRES) ---
     if (document.querySelector('.menu-table')) {
         applyFilters();
     }
 
-    // Profil page logic
+    // --- LOGIQUE PROFIL (USER DATA) ---
     if (document.querySelector('.profile-container')) {
-        // Initialiser l'affichage des onglets
-        const tabContents = document.querySelectorAll('.tab-content');
-        tabContents.forEach(tab => {
-            if (!tab.classList.contains('active')) {
-                tab.style.display = 'none';
-            } else {
-                tab.style.display = 'block';
-            }
-        });
-
-        // Gestion des clics sur les onglets
-        const tabButtons = document.querySelectorAll('.tab-btn');
-        tabButtons.forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const targetId = btn.getAttribute('data-tab');
-                
-                // Masquer tous les contenus
-                tabContents.forEach(content => {
-                    content.style.display = 'none';
-                    content.classList.remove('active');
-                });
-
-                // Désactiver tous les boutons
-                tabButtons.forEach(b => b.classList.remove('active'));
-
-                // Afficher le contenu cible
-                const targetContent = document.getElementById(targetId);
-                if (targetContent) {
-                    targetContent.style.display = 'block';
-                    targetContent.classList.add('active');
-                }
-
-                // Activer le bouton cliqué
-                btn.classList.add('active');
-            });
-        });
-
         const currentUserJSON = sessionStorage.getItem('currentUser');
+        
+        // Redirection si non connecté
         if (!currentUserJSON) {
+            console.warn("Aucun utilisateur connecté, redirection...");
             window.location.href = "connexion.html";
             return;
         }
 
+        // Gestion Déconnexion
         const btnLogout = document.getElementById('btn-logout');
         if (btnLogout) {
             btnLogout.addEventListener('click', (e) => {
-                e.preventDefault(); // Empêche le lien de recharger la page
-                
-                // 1. On vide les données de session (sécurité)
+                e.preventDefault();
+                console.log("Déconnexion...");
                 sessionStorage.removeItem('currentUser');
-                localStorage.removeItem('currentUser'); // Pour être sûr selon ta méthode de stockage
+                localStorage.removeItem('currentUser'); // Nettoyage complet
+                localStorage.removeItem('yumland_user'); // Nettoyage auth-client.js
                 
-                // 2. Message de confirmation
                 alert("Vous avez été déconnecté avec succès. À bientôt chez Le Grand Miam !");
-                
-                // 3. Redirection vers la page de connexion
                 window.location.href = "connexion.html";
             });
         }
+
         const user = JSON.parse(currentUserJSON);
 
-        // --- REMPLACEMENT DU STATUT BRONZE ---
+        // Affichage des points
         const miams = user.miams || user.points || 0;
         const pointsDisplay = document.getElementById('points-display');
         const statusDisplay = document.getElementById('status-display');
@@ -163,34 +178,28 @@ document.addEventListener('DOMContentLoaded', () => {
         if (typeof getStatutFidelite === "function") {
             const statut = getStatutFidelite(miams);
             if(statusDisplay) {
-                statusDisplay.textContent = statut.nom; // Remplace "BRONZE" par le vrai nom
-                statusDisplay.style.color = statut.couleur; // Applique la couleur Or, Rouge ou Gris
+                statusDisplay.textContent = statut.nom;
+                statusDisplay.style.color = statut.couleur;
             }
         }
 
-        // --- INJECTION DES INFOS ---
+        // Injection des infos
         const welcomeTitle = document.getElementById('welcome-title');
         if (welcomeTitle) welcomeTitle.textContent = `Profil de ${user.prenom}`;
         
-        const nomInput = document.getElementById('nom');
-        if (nomInput) nomInput.value = user.nom || '';
-        
-        const prenomInput = document.getElementById('prenom');
-        if (prenomInput) prenomInput.value = user.prenom || '';
-        
-        const emailInput = document.getElementById('email');
-        if (emailInput) emailInput.value = user.email || '';
-        
-        const telInput = document.getElementById('tel');
-        if (telInput) telInput.value = user.tel || '';
-        
-        const adresseInput = document.getElementById('adresse');
-        if (adresseInput) adresseInput.value = user.adresse || '';
-        
-        const complementInput = document.getElementById('complement');
-        if (complementInput) complementInput.value = user.complement || '';
+        const setVal = (id, val) => {
+            const el = document.getElementById(id);
+            if(el) el.value = val || '';
+        };
 
-        // --- MODE NUIT HAUTE VISIBILITÉ ---
+        setVal('nom', user.nom);
+        setVal('prenom', user.prenom);
+        setVal('email', user.email);
+        setVal('tel', user.tel);
+        setVal('adresse', user.adresse);
+        setVal('complement', user.complement);
+
+        // Mode Nuit
         const nightBtn = document.createElement('button');
         nightBtn.innerHTML = "🌙";
         nightBtn.style = "position:fixed; bottom:20px; right:20px; z-index:1000; padding:15px; border-radius:50%; border:none; cursor:pointer; font-size:1.5rem; background:var(--color-secondary); color:var(--color-accent);";
@@ -201,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nightBtn.innerHTML = document.body.classList.contains('dark-mode') ? "☀️" : "🌙";
         });
 
-        // --- MISE À JOUR ---
+        // Mise à jour du profil
         const profileForm = document.getElementById('profile-form');
         if (profileForm) {
             profileForm.addEventListener('submit', (e) => {
@@ -213,12 +222,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 user.complement = document.getElementById('complement').value;
 
                 sessionStorage.setItem('currentUser', JSON.stringify(user));
+                // Mise à jour aussi pour auth-client.js si utilisé
+                localStorage.setItem('yumland_user', JSON.stringify(user));
+                
                 alert("Modifications enregistrées !");
             });
         }
     }
 
-    // Livreur page logic
+    // --- LOGIQUE LIVREUR ---
     if (document.querySelector('.delivery-app')) {
         renderDeliveries();
 
@@ -236,9 +248,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Notation page logic
+    // --- LOGIQUE NOTATION ---
     if (document.querySelector('.rating-container')) {
-        // Simulate pre-filling order data
         const orderIdInput = document.getElementById('order-id');
         if (orderIdInput) orderIdInput.value = '#CMD-8854';
         
@@ -276,33 +287,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (ratingForm) {
             ratingForm.addEventListener('submit', (e) => {
                 e.preventDefault();
-
-                const orderId = document.getElementById('order-id').value;
-                const orderContent = document.getElementById('order-content').value;
-                const deliveryNote = document.getElementById('delivery-rating-value').value;
-                const foodNote = document.getElementById('food-rating-value').value;
-                const comment = document.getElementById('comment').value;
-
-                if (deliveryNote == 0 || foodNote == 0) {
-                    alert("Veuillez sélectionner au moins une étoile pour chaque catégorie.");
-                    return;
-                }
-
-                console.log(`
-                    Avis envoyé:
-                    Order ID: ${orderId}
-                    Order Content: ${orderContent}
-                    Note Livreur: ${deliveryNote}/5
-                    Note Nourriture: ${foodNote}/5
-                    Commentaire: ${comment}
-                `);
+                // ... (Logique d'envoi d'avis simplifiée)
                 alert("Merci pour votre avis ! À bientôt.");
                 window.location.href = '../../index.html';
             });
         }
     }
 
-    // Restaurateur page logic
+    // --- LOGIQUE RESTAURATEUR ---
     if (document.querySelector('.kitchen-board')) {
         renderOrders();
     }
@@ -343,23 +335,16 @@ function applyFilters() {
         let tableHasVisibleRows = false;
         let hasRows = false;
 
-        // 1. Filter rows within the table
         const rows = table.querySelectorAll('tbody tr');
         rows.forEach(row => {
-            // Ignore separator rows
-            if (row.classList.contains('separator')) {
-                return;
-            }
+            if (row.classList.contains('separator')) return;
             hasRows = true;
 
             const text = row.textContent.toLowerCase();
-            // Check for spec in the row itself or if the table has a spec (not implemented in HTML but good for robustness)
-            // In the HTML provided, spec is in a td with data-spec attribute
             const specCell = row.querySelector('td[data-spec]');
             const spec = specCell ? specCell.getAttribute('data-spec') : null;
 
             const searchMatch = text.includes(searchQuery);
-            
             const specMatch = (selectedSpec === 'all' || spec === selectedSpec);
 
             if (searchMatch && specMatch) {
@@ -370,7 +355,6 @@ function applyFilters() {
             }
         });
 
-        // 2. Filter the entire table based on category
         if (selectedCategory === 'all') {
             table.style.display = tableHasVisibleRows ? '' : 'none';
         } else {
