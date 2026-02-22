@@ -102,6 +102,33 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Gestion des clics sur les onglets
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const targetId = btn.getAttribute('data-tab');
+                
+                // Masquer tous les contenus
+                tabContents.forEach(content => {
+                    content.style.display = 'none';
+                    content.classList.remove('active');
+                });
+
+                // Désactiver tous les boutons
+                tabButtons.forEach(b => b.classList.remove('active'));
+
+                // Afficher le contenu cible
+                const targetContent = document.getElementById(targetId);
+                if (targetContent) {
+                    targetContent.style.display = 'block';
+                    targetContent.classList.add('active');
+                }
+
+                // Activer le bouton cliqué
+                btn.classList.add('active');
+            });
+        });
+
         const currentUserJSON = sessionStorage.getItem('currentUser');
         if (!currentUserJSON) {
             window.location.href = "connexion.html";
@@ -354,26 +381,6 @@ function applyFilters() {
             }
         }
     });
-}
-
-function openTab(evt, tabName) {
-    const tabcontent = document.getElementsByClassName("tab-content");
-    for (let i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-        tabcontent[i].classList.remove("active");
-    }
-    const tablinks = document.getElementsByClassName("tab-btn");
-    for (let i = 0; i < tablinks.length; i++) {
-        tablinks[i].classList.remove("active");
-    }
-    const target = document.getElementById(tabName);
-    if (target) {
-        target.style.display = "block";
-        target.classList.add("active");
-    }
-    if (evt && evt.currentTarget) {
-        evt.currentTarget.classList.add("active");
-    }
 }
 
 // Livreur page functions
