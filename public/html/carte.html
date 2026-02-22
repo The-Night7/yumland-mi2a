@@ -438,55 +438,7 @@
 <footer>
     <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
 </footer>
-<script>
-    function applyFilters() {
-        const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-        const selectedCategory = document.getElementById('categoryFilter').value;
-        const selectedSpec = document.getElementById('specFilter').value;
-
-        document.querySelectorAll('.menu-table').forEach(table => {
-            const tableCategory = table.getAttribute('data-category');
-            let tableHasVisibleRows = false;
-
-            // 1. Filter rows within the table
-            table.querySelectorAll('tbody tr').forEach(row => {
-                // Ignore separator rows
-                if (row.classList.contains('separator')) {
-                    return;
-                }
-
-                const text = row.textContent.toLowerCase();
-                const specCell = row.querySelector('td[data-spec]');
-                const spec = specCell ? specCell.getAttribute('data-spec') : null;
-
-                const searchMatch = text.includes(searchQuery);
-                const specMatch = (selectedSpec === 'all' || spec === selectedSpec);
-
-                if (searchMatch && specMatch) {
-                    row.style.display = '';
-                    // If the category filter is active, this row might make the table visible
-                    if (selectedCategory === 'all' || selectedCategory === tableCategory) {
-                        tableHasVisibleRows = true;
-                    }
-                } else {
-                    row.style.display = 'none';
-                }
-            });
-
-            // 2. Filter the entire table based on category
-            if (selectedCategory === 'all') {
-                // If showing all categories, visibility depends on whether it has rows that match other filters
-                table.style.display = tableHasVisibleRows ? '' : 'none';
-            } else {
-                // If a specific category is chosen, hide or show the whole table
-                table.style.display = (selectedCategory === tableCategory && tableHasVisibleRows) ? '' : 'none';
-            }
-        });
-    }
-
-    // Initial filter application on page load
-    document.addEventListener('DOMContentLoaded', applyFilters);
-</script>
+<script src="../js/main.js"></script>
 
 </body>
 </html>

@@ -57,62 +57,6 @@
     </section>
 </main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // Simulate pre-filling order data
-        document.getElementById('order-id').value = '#CMD-8854';
-        document.getElementById('order-content').textContent = '2 Menus Burger, 1 Salade César, 2 Boissons';
-
-        const setupStarRating = (containerId, hiddenInputId) => {
-            const stars = document.querySelectorAll(`#${containerId} .star`);
-            const ratingInput = document.getElementById(hiddenInputId);
-
-            stars.forEach(star => {
-                star.addEventListener('click', () => {
-                    const value = parseInt(star.getAttribute('data-value'));
-                    ratingInput.value = value;
-
-                    stars.forEach(s => {
-                        const sVal = parseInt(s.getAttribute('data-value'));
-                        if(sVal <= value) {
-                            s.classList.add('active');
-                        } else {
-                            s.classList.remove('active');
-                        }
-                    });
-                });
-            });
-        };
-
-        setupStarRating('delivery-star-rating', 'delivery-rating-value');
-        setupStarRating('food-star-rating', 'food-rating-value');
-
-        document.getElementById('rating-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-
-            const orderId = document.getElementById('order-id').value;
-            const orderContent = document.getElementById('order-content').value;
-            const deliveryNote = document.getElementById('delivery-rating-value').value;
-            const foodNote = document.getElementById('food-rating-value').value;
-            const comment = document.getElementById('comment').value;
-
-            if (deliveryNote == 0 || foodNote == 0) {
-                alert("Veuillez sélectionner au moins une étoile pour chaque catégorie.");
-                return;
-            }
-
-            console.log(`
-                Avis envoyé:
-                Order ID: ${orderId}
-                Order Content: ${orderContent}
-                Note Livreur: ${deliveryNote}/5
-                Note Nourriture: ${foodNote}/5
-                Commentaire: ${comment}
-            `);
-            alert("Merci pour votre avis ! À bientôt.");
-            window.location.href = '../../index.html';
-        });
-    });
-</script>
+<script src="../js/main.js"></script>
 </body>
 </html>

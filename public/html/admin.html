@@ -6,7 +6,7 @@
     <title>Administration - Le Grand Miam</title>
     <link rel="stylesheet" href="../css/style.css">
 </head>
-<body>
+<body class="admin-container">
 <header>
     <nav style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: #222;">
         <div class="logo-container">
@@ -53,71 +53,6 @@
     </table>
 </main>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const mockUsers = [
-            { id: 1, nom: "Admin", prenom: "Super", email: "admin@yumland.com", role: "admin" },
-            { id: 2, nom: "Chef", prenom: "Gusteau", email: "chef@yumland.com", role: "restaurateur" },
-            { id: 3, nom: "Rapido", prenom: "Luigi", email: "livreur@yumland.com", role: "livreur" },
-            { id: 4, nom: "Dupont", prenom: "Jean", email: "jean@client.com", role: "client" }
-        ];
-
-        let users = JSON.parse(localStorage.getItem('yumland_users')) || mockUsers;
-
-        if (!localStorage.getItem('yumland_users')) {
-            localStorage.setItem('yumland_users', JSON.stringify(users));
-        }
-
-        const tbody = document.getElementById('user-list');
-        const roleFilter = document.getElementById('role-filter');
-        document.getElementById('total-users').innerText = users.length;
-
-        const renderUsers = (role = 'all') => {
-            const filteredUsers = (role === 'all')
-                ? users
-                : users.filter(user => user.role === role);
-
-            tbody.innerHTML = filteredUsers.map(user => `
-                <tr>
-                    <td>#${user.id || '?'}</td>
-                    <td>${user.nom.toUpperCase()} ${user.prenom || ''}</td>
-                    <td>${user.email}</td>
-                    <td><span class="role-badge role-${user.role}">${user.role}</span></td>
-                    <td class="actions-cell">
-                        <button class="action-btn edit-btn" onclick="editUser('${user.email}')">Modifier</button>
-                        <button class="action-btn delete-btn" onclick="deleteUser('${user.email}')">Supprimer</button>
-                        <button class="action-btn hide-btn" onclick="hideUser('${user.email}')">Masquer</button>
-                    </td>
-                </tr>
-            `).join('');
-        };
-
-        roleFilter.addEventListener('change', (e) => renderUsers(e.target.value));
-
-        renderUsers(); // Premier rendu
-    });
-
-    function editUser(email) {
-        alert('Action "Modifier" non implémentée pour la phase 1.');
-    }
-
-    function hideUser(email) {
-        alert('Action "Masquer" non implémentée pour la phase 1.');
-    }
-
-    function deleteUser(email) {
-        if(confirm('Confirmer la suppression de cet utilisateur ?')) {
-            let users = JSON.parse(localStorage.getItem('yumland_users'));
-            users = users.filter(u => u.email !== email);
-            localStorage.setItem('yumland_users', JSON.stringify(users));
-            window.location.reload(); // Rechargement simple pour la phase 1
-        }
-    }
-
-    function logout() {
-        sessionStorage.removeItem('currentUser');
-        window.location.href = 'connexion.html';
-    }
-</script>
+<script src="../js/main.js"></script>
 </body>
 </html>
