@@ -5,42 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Espace Livreur</title>
     <link rel="stylesheet" href="../css/style.css">
-    <style>
-        body { background-color: #FDFBF7; font-family: 'Lato', sans-serif; margin: 0; padding: 0; }
-        .app-header { background-color: #2D2D2D; color: #FDFBF7; padding: 20px; text-align: center; }
-        .order-list { padding: 20px; }
-        .delivery-card { background-color: white; border: 2px solid #D32F2F; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        .btn-livreur { font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; min-height: 60px; border-radius: 8px; text-decoration: none; width: 100%; border: none; font-size: 1.1rem; }
-        
-        /* Nav du bas */
-        .nav-bottom { position: fixed; bottom: 0; width: 100%; background: #2D2D2D; display: flex; justify-content: space-around; padding: 15px 0; }
-        .nav-item { color: white; text-decoration: none; font-weight: bold; }
-        .nav-item.active { color: #FFC107; }
-
-        /* Le fameux mode nuit ! */
-        body.dark-mode { background-color: #000000 !important; color: white !important; }
-        body.dark-mode .delivery-card { background-color: #1a1a1a !important; border-color: #FFC107 !important; color: white !important; }
-        body.dark-mode .app-header { border-bottom: 2px solid #FFC107; }
-    </style>
 </head>
 <body>
 <div class="delivery-app">
     <header class="app-header">
-        <h2 style="margin:0; font-family: 'Oswald', sans-serif;">LIVRAISON</h2>
-        <small style="display:block; margin-bottom: 15px;">Zone : Cergy Centre</small>
-        
-        <button id="toggle-dark-mode" class="btn-livreur" style="background-color: #FFC107; color: #000;">
+        <h2>LIVRAISON</h2>
+        <small>Zone : Cergy Centre</small>
+
+        <button id="toggle-dark-mode" class="btn-livreur">
             🌙 MODE NUIT
         </button>
     </header>
 
     <main class="order-list" id="deliveries-container">
-        </main>
+    </main>
 
-    <div style="height: 80px;"></div> <nav class="nav-bottom">
+    <div class="nav-bottom-spacer"></div>
+    <nav class="nav-bottom">
         <a href="#" class="nav-item active">Commandes</a>
         <a href="profil.html" class="nav-item">Mon Profil</a>
-        <a href="../../index.html" class="nav-item" style="color: #D32F2F;">Quitter</a>
+        <a href="../../index.html" class="nav-item nav-item-quit">Quitter</a>
     </nav>
 </div>
 
@@ -69,41 +53,38 @@
         }
     ];
 
-    // 2. Fonction pour afficher les cartes
+    // 2. Fonction pour afficher les cartes (sans styles en ligne)
     function renderDeliveries() {
         const container = document.getElementById('deliveries-container');
-        
+
         if(deliveries.length === 0) {
             container.innerHTML = '<p style="text-align:center; padding:20px; font-weight:bold;">Aucune commande à livrer pour le moment.</p>';
             return;
         }
 
-        // On crée le code HTML pour chaque commande
         container.innerHTML = deliveries.map(d => `
             <div class="delivery-card">
-                <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                    <h3 style="margin-top:0;">${d.client}</h3>
-                    <span style="font-weight:bold; color:var(--color-primary);">${d.total}</span>
+                <div class="delivery-card-header">
+                    <h3>${d.client}</h3>
+                    <span class="delivery-total">${d.total}</span>
                 </div>
-                
-                <p style="font-size: 1.1rem; margin: 5px 0;">📍 <strong>Adresse:</strong> ${d.address}</p>
-                <p style="font-size: 1rem; margin: 5px 0;">🔑 <strong>Accès:</strong> ${d.code} | ${d.floor}</p>
-                <p style="font-size: 0.9rem; margin: 5px 0; color: #666;">📞 ${d.tel} ${d.comment ? `| ⚠️ ${d.comment}` : ''}</p>
-                
-                <div style="margin-top: 15px;">
-                    <a href="https://www.google.com/maps/search/?api=1&query=$${encodeURIComponent(d.address)}" 
-                       target="_blank" class="btn-livreur" 
-                       style="background-color: #4285F4; color: white; margin-bottom: 10px;">
+
+                <p>📍 <strong>Adresse:</strong> ${d.address}</p>
+                <p>🔑 <strong>Accès:</strong> ${d.code} | ${d.floor}</p>
+                <p class="delivery-tel">📞 ${d.tel} ${d.comment ? `| ⚠️ ${d.comment}` : ''}</p>
+
+                <div class="delivery-actions">
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address)}"
+                       target="_blank" class="btn-livreur btn-gps">
                        🗺️ OUVRIR LE GPS
                     </a>
 
-                    <button class="btn-livreur" onclick="confirmDelivery('${d.id}')" 
-                            style="background-color: #D32F2F; color: white;">
+                    <button class="btn-livreur btn-validate" onclick="confirmDelivery('${d.id}')">
                        ✅ VALIDER LA LIVRAISON
                     </button>
                 </div>
             </div>
-        `).join('');    
+        `).join('');
     }
 
     // 3. Fonction pour valider et supprimer la commande
@@ -111,31 +92,26 @@
         if(confirm('Confirmez-vous la remise de la commande ' + id + ' au client ?')) {
             const index = deliveries.findIndex(d => d.id === id);
             if(index > -1) {
-                deliveries.splice(index, 1); // Retire la commande de la liste
-                renderDeliveries(); // Met à jour l'affichage
+                deliveries.splice(index, 1);
+                renderDeliveries();
                 alert('Commande validée ! Bon travail.');
             }
         }
     }
 
-    // 4. Initialisation (Quand la page est prête)
+    // 4. Initialisation et gestion du mode nuit
     document.addEventListener('DOMContentLoaded', () => {
-        
-        // On affiche les commandes
         renderDeliveries();
 
-        // On active le Mode Nuit
         const toggleBtn = document.getElementById('toggle-dark-mode');
         if(toggleBtn) {
             toggleBtn.addEventListener('click', () => {
                 document.body.classList.toggle('dark-mode');
-                
+
                 if(document.body.classList.contains('dark-mode')) {
-                    toggleBtn.innerHTML = "☀️ DÉSACTIVER MODE NUIT";
-                    toggleBtn.style.backgroundColor = "white";
+                    toggleBtn.innerHTML = "☀️ MODE JOUR";
                 } else {
                     toggleBtn.innerHTML = "🌙 MODE NUIT";
-                    toggleBtn.style.backgroundColor = "#FFC107";
                 }
             });
         }

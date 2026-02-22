@@ -1,0 +1,192 @@
+/* --- DARK MODE STYLES (Enhanced & Full Black for Delivery) --- */
+
+/* 1. Base & Backgrounds */
+body.dark-mode,
+body.dark-mode .delivery-app {
+    background-color: #000000 !important; /* Noir absolu pour le livreur */
+    color: #e0e0e0 !important;
+}
+
+/* 2. Header & Navigation */
+body.dark-mode header,
+body.dark-mode .app-header,
+body.dark-mode .nav-bottom,
+body.dark-mode nav {
+    background-color: #121212 !important; /* Très sombre, presque noir */
+    border-color: #333 !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.8) !important; /* Ombre plus marquée */
+}
+
+body.dark-mode .logo-text {
+    color: #ffffff !important;
+}
+
+body.dark-mode .nav-links li a {
+    color: #b0b0b0 !important;
+}
+
+body.dark-mode .nav-links li a.active,
+body.dark-mode .nav-item.active {
+    color: var(--color-accent) !important;
+    background-color: rgba(255, 193, 7, 0.1) !important;
+}
+
+body.dark-mode .nav-item {
+    color: #888 !important;
+}
+
+/* 3. Cartes & Conteneurs */
+body.dark-mode .card-style,
+body.dark-mode .menu-formule,
+body.dark-mode .delivery-card,
+body.dark-mode .order-card,
+body.dark-mode .form-container,
+body.dark-mode .legal-nav,
+body.dark-mode .legal-content,
+body.dark-mode .info-box,
+body.dark-mode figure,
+body.dark-mode .profile-container .tab-content {
+    background-color: #1a1a1a !important; /* Gris très foncé pour les cartes */
+    color: #e0e0e0 !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.8) !important;
+    border: 1px solid #333 !important;
+}
+
+/* 4. Typographie & Titres */
+body.dark-mode h1,
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode .text-highlight,
+body.dark-mode .delivery-total {
+    color: var(--color-accent) !important;
+}
+
+body.dark-mode a {
+    color: #64b5f6;
+}
+
+body.dark-mode small,
+body.dark-mode .delivery-tel {
+    color: #aaa !important;
+}
+
+/* 5. Formulaires & Inputs */
+body.dark-mode input,
+body.dark-mode select,
+body.dark-mode textarea {
+    background-color: #2c2c2c !important;
+    color: #ffffff !important;
+    border: 1px solid #444 !important;
+}
+
+body.dark-mode input:focus,
+body.dark-mode select:focus,
+body.dark-mode textarea:focus {
+    border-color: var(--color-accent) !important;
+    background-color: #333 !important;
+    box-shadow: 0 0 0 2px rgba(255, 193, 7, 0.2) !important;
+}
+
+body.dark-mode input:disabled {
+    background-color: #1a1a1a !important;
+    color: #666 !important;
+    border-color: #333 !important;
+}
+
+/* 6. Tableaux */
+body.dark-mode table {
+    background-color: #1a1a1a !important;
+    color: #e0e0e0 !important;
+}
+
+body.dark-mode th {
+    background-color: #2c2c2c !important;
+    color: var(--color-accent) !important;
+    border-bottom: 1px solid #444 !important;
+}
+
+body.dark-mode td {
+    border-bottom: 1px solid #333 !important;
+}
+
+/* 7. Composants Spécifiques Livreur */
+
+/* Boutons */
+body.dark-mode .btn-livreur {
+    /* Par défaut, bouton sombre avec bordure accent */
+    background-color: #333 !important;
+    color: var(--color-accent) !important;
+    border: 1px solid var(--color-accent) !important;
+}
+
+/* Bouton GPS spécifique */
+body.dark-mode .btn-gps {
+    background-color: #1565C0 !important; /* Bleu foncé */
+    color: white !important;
+    border: none !important;
+}
+
+/* Bouton Valider spécifique */
+body.dark-mode .btn-validate {
+    background-color: #2E7D32 !important; /* Vert foncé */
+    color: white !important;
+    border: none !important;
+}
+
+/* Bouton Toggle Mode Nuit */
+body.dark-mode #toggle-dark-mode {
+    background-color: var(--color-accent) !important;
+    color: #000 !important;
+    font-weight: bold;
+}
+
+body.dark-mode .delivery-card {
+    border-left: 5px solid var(--color-accent) !important;
+}
+
+body.dark-mode .address-box {
+    background-color: #252525 !important;
+    color: #ddd !important;
+    border: 1px solid #333;
+}
+
+/* Profil & Onglets */
+body.dark-mode .tab-btn {
+    color: #aaa;
+    border-color: #444;
+}
+
+body.dark-mode .tab-btn:hover {
+    color: var(--color-accent);
+    border-color: var(--color-accent);
+}
+
+body.dark-mode .tab-btn.active {
+    background-color: var(--color-accent);
+    color: #000;
+    border-color: var(--color-accent);
+}
+
+body.dark-mode .ribbon-title {
+    background: var(--color-accent) !important;
+    color: #000 !important;
+    box-shadow: 3px 3px 10px rgba(0,0,0,0.5) !important;
+}
+
+body.dark-mode .ribbon-title::after {
+    border-top-color: #bfa006 !important;
+}
+
+/* Carte Fidélité */
+body.dark-mode .loyalty-card {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6) !important;
+    border-color: var(--color-accent) !important;
+}
+
+/* Badges */
+body.dark-mode .status-delivered {
+    background-color: rgba(76, 175, 80, 0.2) !important;
+    color: #81c784 !important;
+    border-color: #2e7d32 !important;
+}

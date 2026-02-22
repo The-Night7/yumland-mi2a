@@ -1,6 +1,9 @@
 /* --- IMPORT DES POLICES (Google Fonts) --- */
 @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Oswald:wght@300;400;700&display=swap');
 
+/* --- IMPORT DARK MODE --- */
+@import url('dark-mode.css');
+
 :root {
     /* --- PALETTE DE COULEURS (Charte Le Grand Miam) --- */
     --color-primary: #D32F2F;
@@ -413,6 +416,18 @@ figure img {
     margin-bottom: 20px;
 }
 
+.app-header h2 {
+    margin: 0;
+    font-family: 'Oswald', sans-serif;
+}
+
+.app-header small {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.order-list { padding: 20px; }
+
 .delivery-card {
     position: relative;
     border-left: 5px solid var(--color-primary);
@@ -423,6 +438,31 @@ figure img {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 15px;
+}
+
+.delivery-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.delivery-card-header h3 {
+    margin-top: 0;
+}
+
+.delivery-total {
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+.delivery-tel {
+    font-size: 0.9rem;
+    margin: 5px 0;
+    color: #666;
+}
+
+.delivery-actions {
+    margin-top: 15px;
 }
 
 .badge {
@@ -457,6 +497,36 @@ figure img {
     box-shadow: 0 4px 6px rgba(76, 175, 80, 0.3);
 }
 
+.btn-livreur {
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+    border-radius: 8px;
+    text-decoration: none;
+    width: 100%;
+    border: none;
+    font-size: 1.1rem;
+}
+
+.btn-gps {
+    background-color: #4285F4;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.btn-validate {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+#toggle-dark-mode {
+    background-color: #FFC107;
+    color: #000;
+}
+
 /* Navigation du bas (Livreur) */
 .nav-bottom {
     position: fixed;
@@ -471,6 +541,10 @@ figure img {
     z-index: 999;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
+}
+
+.nav-bottom-spacer {
+    height: 80px;
 }
 
 .nav-bottom .nav-item {
@@ -488,6 +562,10 @@ figure img {
 .nav-bottom .nav-item.active {
     color: var(--color-primary);
     font-weight: bold;
+}
+
+.nav-item-quit {
+    color: #D32F2F !important;
 }
 
 /* --- RESTAURATEUR (CUISINE) --- */
@@ -795,33 +873,4 @@ footer {
     padding: 30px;
     margin-top: 60px;
     border-top: 5px solid var(--color-accent);
-}
-/* Mode Nuit Spécial Livreur */
-body.dark-mode {
-    background-color: #000000 !important;
-    color: #ffffff !important;
-}
-
-body.dark-mode .app-header, 
-body.dark-mode header {
-    background-color: #1a1a1a !important;
-    border-bottom: 2px solid var(--color-accent) !important;
-}
-
-body.dark-mode .delivery-card {
-    background-color: #1a1a1a !important;
-    border: 2px solid var(--color-accent) !important;
-    color: white !important;
-}
-
-body.dark-mode .btn-livreur {
-    background-color: var(--color-accent) !important; /* Jaune or */
-    color: #000 !important;
-    border: none !important;
-}
-
-/* On s'assure que le texte dans les cartes reste lisible */
-body.dark-mode .delivery-card h3, 
-body.dark-mode .delivery-card p {
-    color: white !important;
 }
