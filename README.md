@@ -34,18 +34,38 @@ L'application repose sur une architecture multi-utilisateurs où chaque interfac
 Le dépôt est organisé de manière modulaire :
 
 ```text
-/
-├── index.html              # Page d'accueil (Vitrine)
-├── public/
-│   ├── html/               # Pages de l'application (carte, profil, livreur, etc.)
-│   ├── css/                # Feuille de style unique (Charte Oswald & Lato)
-│   ├── js/                 # Logique d'interactivité (Auth & API Fetch)
-│   └── images/             # Assets graphiques (Logo, Plats HD)
-├── data/
-│   └── user.json           # Structure de données simulée (Phase 1)
-└── docs/
-    └── charte_graphique.pdf # Identité visuelle officielle
-
+📦 yumland-mi2a
+├── 📂 api/                        # (Préparation Phase 2) Scripts serveur PHP
+│   └── 📄 index.php             # Point d'entrée de notre future API
+├── 📂 consigne/                   # Documents et cahiers des charges officiels
+├── 📂 data/                       # Données statiques de test (Mock)
+│   └── 📄 user.json             # Simulation de la base de données (Phase 1)
+├── 📂 docs/                       # Livrables et documents de conception de l'équipe
+│   ├── 📄 Charte_graphique.pdf  # UI/UX, choix des couleurs (Rouge Grill, Noir Charbon...)
+│   ├── 📄 Compte Rendu MI2.pdf  # Répartition des tâches au sein de l'équipe
+│   └── 📄 Programme de fidélité.pdf # Concept d'innovation "Le Grand Miam Club"
+├── 📂 public/                     # Ressources Front-End accessibles au client
+│   ├── 📂 css/
+│   │   ├── 📄 style.css         # Feuille de style principale commune
+│   │   └── 📄 dark-mode.css     # Gestion du thème sombre (Innovation ergonomique)
+│   ├── 📂 html/
+│   │   ├── 📄 admin.html        # Interface Administrateur (Optimisée Desktop)
+│   │   ├── 📄 carte.html        # Consultation du menu avec filtres
+│   │   ├── 📄 connexion.html    # Authentification
+│   │   ├── 📄 inscription.html  # Création de compte client
+│   │   ├── 📄 livreur.html      # Interface Livreur (Mobile, gros boutons pour gants, fort contraste)
+│   │   ├── 📄 mentions.html     # Mentions légales
+│   │   ├── 📄 notation.html     # Retour d'expérience client
+│   │   ├── 📄 profil.html       # Gestion du compte et des adresses
+│   │   └── 📄 restaurateur.html # Interface Cuisine/Restaurateur (Optimisée Tablette)
+│   ├── 📂 images/
+│   │   ├── 📂 logo/             # Identité visuelle du restaurant
+│   │   └── 📂 nourriture/       # Assets visuels des plats (Burger, Entrecôte...)
+│   └── 📂 js/
+│       └── 📄 auth-client.js    # (Préparation Phase 3) Scripts d'interactivité dynamique
+├── 📄 index.html                  # Page d'accueil racine (Vitrine principale)
+├── 📄 vercel.json                 # Configuration pour le déploiement continu
+└── 📄 README.md                   # Présentation du projet et guide de démarrage
 ```
 
 ## 🚀 Utilisation
