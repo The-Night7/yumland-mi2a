@@ -31,7 +31,21 @@ L'application repose sur une architecture multi-utilisateurs où chaque interfac
 
 ## 📁 Organisation du Projet
 
-Le dépôt est organisé de manière modulaire :
+### 📅 Calendrier et Phases de Développement
+
+* **Phase 1 : Conception Graphique et Intégration Statique (Front-End)**
+  * **Début :** 27/01/2026 - 9f9547b
+  * **Fin / Soutenance :** 22/02/2026 
+  
+
+* **Phase 2 : Serveur et Base de Données (Back-End)**
+
+* **Phase 3 : Interactivité et Requêtes Asynchrones**
+
+* **Phase 4 : Standardisation, Sécurité et Soutenance Finale**
+
+
+### Le dépôt est organisé de manière modulaire :
 
 ```text
 📦 yumland-mi2a
@@ -73,4 +87,4 @@ Le dépôt est organisé de manière modulaire :
    ```bash
    git clone [https://github.com/the-night7/yumland-mi2a.git](https://github.com/the-night7/yumland-mi2a.git)
 
-Projet réalisé dans le cadre de l'UE Informatique 4 - CY Tech - 2025/2026.
+Projet réalisé dans le cadre de l'UE Sciences - Module Informatique 4 - CY Tech - 2025/2026.
