@@ -28,6 +28,94 @@
     </nav>
 </div>
 
-<script src="../js/main.js"></script>
+<script>
+    // 1. Base de données des livraisons en cours
+    const deliveries = [
+        {
+            id: 'CMD-002',
+            client: 'M. Martin',
+            address: '12 Rue du Port, Cergy',
+            code: 'A123',
+            floor: '3ème étage',
+            tel: '06 01 02 03 04',
+            comment: 'Sonner fort',
+            total: '22.50€'
+        },
+        {
+            id: 'CMD-005',
+            client: 'Mme. Durand',
+            address: "5 Bd de l'Oise, Cergy",
+            code: 'Interphone B',
+            floor: '1er étage',
+            tel: '06 05 06 07 08',
+            comment: '',
+            total: '15.00€'
+        }
+    ];
+
+    // 2. Fonction pour afficher les cartes (sans styles en ligne)
+    function renderDeliveries() {
+        const container = document.getElementById('deliveries-container');
+
+        if(deliveries.length === 0) {
+            container.innerHTML = '<p style="text-align:center; padding:20px; font-weight:bold;">Aucune commande à livrer pour le moment.</p>';
+            return;
+        }
+
+        container.innerHTML = deliveries.map(d => `
+            <div class="delivery-card">
+                <div class="delivery-card-header">
+                    <h3>${d.client}</h3>
+                    <span class="delivery-total">${d.total}</span>
+                </div>
+
+                <p>📍 <strong>Adresse:</strong> ${d.address}</p>
+                <p>🔑 <strong>Accès:</strong> ${d.code} | ${d.floor}</p>
+                <p class="delivery-tel">📞 ${d.tel} ${d.comment ? `| ⚠️ ${d.comment}` : ''}</p>
+
+                <div class="delivery-actions">
+                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.address)}"
+                       target="_blank" class="btn-livreur btn-gps">
+                       🗺️ OUVRIR LE GPS
+                    </a>
+
+                    <button class="btn-livreur btn-validate" onclick="confirmDelivery('${d.id}')">
+                       ✅ VALIDER LA LIVRAISON
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // 3. Fonction pour valider et supprimer la commande
+    function confirmDelivery(id) {
+        if(confirm('Confirmez-vous la remise de la commande ' + id + ' au client ?')) {
+            const index = deliveries.findIndex(d => d.id === id);
+            if(index > -1) {
+                deliveries.splice(index, 1);
+                renderDeliveries();
+                alert('Commande validée ! Bon travail.');
+            }
+        }
+    }
+
+    // 4. Initialisation et gestion du mode nuit
+    document.addEventListener('DOMContentLoaded', () => {
+        renderDeliveries();
+
+        const toggleBtn = document.getElementById('toggle-dark-mode');
+        if(toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+
+                if(document.body.classList.contains('dark-mode')) {
+                    toggleBtn.innerHTML = "☀️ MODE JOUR";
+                } else {
+                    toggleBtn.innerHTML = "🌙 MODE NUIT";
+                }
+            });
+        }
+    });
+</script>
 </body>
 </html>
