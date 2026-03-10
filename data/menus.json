@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nom": "Menu Classique",
+    "description": "Notre menu traditionnel avec les grands classiques du steakhouse",
+    "disponible": true
+  },
+  {
+    "id": 2,
+    "nom": "Menu Gourmet",
+    "description": "Une sélection de nos plats les plus raffinés pour les connaisseurs",
+    "disponible": true
+  },
+  {
+    "id": 3,
+    "nom": "Menu XXL",
+    "description": "Pour les grandes faims, des portions généreuses et des saveurs intenses",
+    "disponible": true
+  }
+]

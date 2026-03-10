@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "nom": "L'Entrecôte Royale",
+    "description": "Entrecôte de bœuf grillée à la flamme, 300g de pur bonheur",
+    "prix": 24.90,
+    "categorie": "Viandes",
+    "image": "public/images/nourriture/entrecote.png",
+    "menu_id": 1,
+    "ingredients": ["Entrecôte de bœuf", "Sel de Guérande", "Poivre noir", "Herbes de Provence"],
+    "disponible": true
+  },
+  {
+    "id": 2,
+    "nom": "Le Grand Miam Burger",
+    "description": "Notre burger signature avec double steak, cheddar fondu et sauce secrète",
+    "prix": 18.90,
+    "categorie": "Burgers",
+    "image": "public/images/nourriture/burger.png",
+    "menu_id": 1,
+    "ingredients": ["Pain artisanal", "Double steak haché", "Cheddar", "Bacon", "Sauce secrète", "Salade", "Tomate", "Oignon rouge"],
+    "disponible": true
+  },
+  {
+    "id": 3,
+    "nom": "Le Pavé du Chef",
+    "description": "Pavé de rumsteck grillé, accompagné de sa sauce au poivre vert",
+    "prix": 22.50,
+    "categorie": "Viandes",
+    "image": "public/images/nourriture/pave.png",
+    "menu_id": 1,
+    "ingredients": ["Rumsteck", "Poivre vert", "Crème fraîche", "Cognac", "Échalotes"],
+    "disponible": true
+  },
+  {
+    "id": 4,
+    "nom": "Le Cheesy Tower",
+    "description": "Burger monumental avec triple étage de viande et fromage coulant",
+    "prix": 21.90,
+    "categorie": "Burgers",
+    "image": "public/images/nourriture/cheesytower.png",
+    "menu_id": 3,
+    "ingredients": ["Pain spécial", "Triple steak", "Cheddar", "Emmental", "Mozzarella", "Sauce BBQ", "Oignons frits"],
+    "disponible": true
+  },
+  {
+    "id": 5,
+    "nom": "Profiteroles XXL",
+    "description": "Choux géants fourrés à la glace vanille, nappés de chocolat chaud",
+    "prix": 9.50,
+    "categorie": "Desserts",
+    "image": "public/images/nourriture/profiteroles.png",
+    "menu_id": 1,
+    "ingredients": ["Choux pâtissiers", "Glace vanille", "Chocolat noir", "Amandes effilées"],
+    "disponible": true
+  },
+  {
+    "id": 6,
+    "nom": "Côte de Bœuf Maturée",
+    "description": "Côte de bœuf maturée 30 jours, pour 2 personnes (700g)",
+    "prix": 59.90,
+    "categorie": "Viandes",
+    "image": "public/images/nourriture/cote_boeuf.png",
+    "menu_id": 2,
+    "ingredients": ["Côte de bœuf maturée", "Fleur de sel", "Poivre concassé"],
+    "disponible": true
+  },
+  {
+    "id": 7,
+    "nom": "Ribs Caramélisés",
+    "description": "Travers de porc marinés et laqués, fondants à souhait",
+    "prix": 19.90,
+    "categorie": "Viandes",
+    "image": "public/images/nourriture/ribs.png",
+    "menu_id": 3,
+    "ingredients": ["Travers de porc", "Miel", "Sauce soja", "Épices cajun", "Paprika fumé"],
+    "disponible": true
+  },
+  {
+    "id": 8,
+    "nom": "Tartare Tradition",
+    "description": "Tartare de bœuf préparé à la minute selon la recette traditionnelle",
+    "prix": 17.50,
+    "categorie": "Viandes",
+    "image": "public/images/nourriture/tartare.png",
+    "menu_id": 1,
+    "ingredients": ["Bœuf charolais", "Câpres", "Cornichons", "Oignons", "Jaune d'œuf", "Tabasco", "Worcestershire sauce"],
+    "disponible": true
+  },
+  {
+    "id": 9,
+    "nom": "Tomahawk Grill",
+    "description": "L'impressionnante pièce de viande avec son os pour les amateurs",
+    "prix": 45.00,
+    "categorie": "Viandes",
+    "image": "public/images/nourriture/tomahawk.png",
+    "menu_id": 2,
+    "ingredients": ["Côte de bœuf Tomahawk", "Sel fumé", "Poivre noir"],
+    "disponible": true
+  },
+  {
+    "id": 10,
+    "nom": "Burger Rossini",
+    "description": "Burger de luxe avec steak haché, foie gras poêlé et truffe",
+    "prix": 29.90,
+    "categorie": "Burgers",
+    "image": "public/images/nourriture/burger_rossini.png",
+    "menu_id": 2,
+    "ingredients": ["Pain brioché", "Steak haché", "Foie gras", "Truffe noire", "Sauce au porto"],
+    "disponible": true
+  },
+  {
+    "id": 11,
+    "nom": "Frites Maison",
+    "description": "Frites fraîches coupées à la main, double cuisson",
+    "prix": 4.50,
+    "categorie": "Accompagnements",
+    "image": "public/images/nourriture/frites.png",
+    "menu_id": null,
+    "ingredients": ["Pommes de terre", "Huile végétale", "Sel"],
+    "disponible": true
+  },
+  {
+    "id": 12,
+    "nom": "Salade César",
+    "description": "La classique salade César avec poulet grillé et croûtons à l'ail",
+    "prix": 14.90,
+    "categorie": "Entrées",
+    "image": "public/images/nourriture/salade_cesar.png",
+    "menu_id": 1,
+    "ingredients": ["Salade romaine", "Poulet grillé", "Parmesan", "Croûtons", "Sauce César maison"],
+    "disponible": true
+  },
+  {
+    "id": 13,
+    "nom": "Tiramisu Géant",
+    "description": "Notre version XXL du célèbre dessert italien",
+    "prix": 8.90,
+    "categorie": "Desserts",
+    "image": "public/images/nourriture/tiramisu.png",
+    "menu_id": 3,
+    "ingredients": ["Mascarpone", "Café", "Biscuits cuillère", "Cacao", "Amaretto"],
+    "disponible": true
+  },
+  {
+    "id": 14,
+    "nom": "Purée Truffée",
+    "description": "Purée de pommes de terre crémeuse à la truffe",
+    "prix": 7.90,
+    "categorie": "Accompagnements",
+    "image": "public/images/nourriture/puree_truffee.png",
+    "menu_id": 2,
+    "ingredients": ["Pommes de terre", "Crème", "Beurre", "Truffe noire", "Sel"],
+    "disponible": true
+  },
+  {
+    "id": 15,
+    "nom": "Fondant au Chocolat",
+    "description": "Gâteau au chocolat au cœur coulant, servi avec glace vanille",
+    "prix": 8.50,
+    "categorie": "Desserts",
+    "image": "public/images/nourriture/fondant.png",
+    "menu_id": 1,
+    "ingredients": ["Chocolat noir", "Beurre", "Œufs", "Sucre", "Farine", "Glace vanille"],
+    "disponible": true
+  }
+]

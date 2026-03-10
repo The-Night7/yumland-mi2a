@@ -1,0 +1,98 @@
+/* Styles spécifiques pour l'interface livreur */
+.livreur-section {
+    background-color: #FDFBF7; /* SauceCream pour le fond */
+    padding: 20px;
+}
+
+.livraison-card {
+    margin-bottom: 30px; /* Espacement vertical important */
+    border-radius: 4px;
+    border-left: 5px solid #D32F2F; /* Bordure rouge à gauche pour identification rapide */
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.livraison-header {
+    background-color: #2D2D2D; /* CoalBlack */
+    color: #FDFBF7; /* SauceCream */
+    padding: 15px;
+    border-radius: 4px 4px 0 0;
+}
+
+.livraison-header h3 {
+    font-family: 'Oswald', sans-serif; /* Selon la charte graphique */
+    font-size: 24px;
+    margin: 0;
+}
+
+.livraison-date {
+    font-size: 16px;
+    color: #BDBDBD; /* StoneGray */
+}
+
+.livraison-details, .livraison-items {
+    padding: 20px;
+    font-family: 'Lato', 'Roboto', sans-serif; /* Selon la charte graphique */
+    font-size: 18px; /* Taille augmentée pour mobile & livreur */
+}
+
+.status-badge {
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.status-en-livraison {
+    background-color: #FFC107; /* FryGold */
+    color: #2D2D2D;
+}
+
+.status-livrée {
+    background-color: #4CAF50; /* Vert pour succès */
+    color: white;
+}
+
+.item-quantity {
+    font-weight: bold;
+    margin-right: 10px;
+    color: #D32F2F; /* GrillRed */
+}
+
+.livraison-actions {
+    padding: 20px;
+    display: flex;
+    flex-direction: column; /* Boutons empilés pour éviter les erreurs */
+    gap: 15px;
+}
+
+/* Boutons adaptés pour utilisation avec gants */
+.livraison-actions button {
+    height: 60px; /* Hauteur minimale selon la charte */
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: 'Oswald', sans-serif;
+}
+
+.btn-success {
+    background-color: #D32F2F; /* GrillRed */
+    color: #FDFBF7; /* SauceCream */
+}
+
+.btn-danger {
+    background-color: #2D2D2D; /* CoalBlack */
+    color: #FDFBF7; /* SauceCream */
+}
+
+/* Message quand aucune livraison */
+.empty-livraisons {
+    padding: 30px;
+    text-align: center;
+    font-size: 20px;
+    background-color: white;
+}

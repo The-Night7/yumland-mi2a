@@ -1,18 +1,6 @@
 <?php
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/plats.php';
-
-// Définir la page courante pour le menu actif
 $currentPage = 'home';
-$pageTitle = 'Accueil';
-
-// Récupérer les plats pour la galerie
-$featuredPlats = getAllPlats();
-// Limiter à 5 plats pour l'affichage sur la page d'accueil
-$featuredPlats = array_slice($featuredPlats, 0, 5);
-
-// Inclure le header
-include_once __DIR__ . '/../includes/header.php';
+require_once __DIR__ . '/includes/header.php';
 ?>
 
 <section id="hero">
@@ -27,6 +15,7 @@ include_once __DIR__ . '/../includes/header.php';
 
 <section id="presentation">
     <div class="container flex-row">
+
         <article class="concept-text">
             <h2>L'Esprit Steakhouse</h2>
             <p>Chez <strong>Le Grand Miam</strong>, nous ne faisons pas dans la demi-mesure. Fondé en 2015 par des passionnés de barbecue, notre restaurant vous propose des viandes maturées et grillées à la flamme sous vos yeux.</p>
@@ -57,50 +46,33 @@ include_once __DIR__ . '/../includes/header.php';
         </div>
 
         <div class="gallery-grid" id="dish-gallery">
-            <?php foreach ($featuredPlats as $plat): ?>
-                <figure class="card-style">
-                    <img src="<?= htmlspecialchars($plat['image']) ?>" alt="<?= htmlspecialchars($plat['nom']) ?>">
-                    <figcaption><?= htmlspecialchars($plat['nom']) ?></figcaption>
-                </figure>
-            <?php endforeach; ?>
+            <figure class="card-style">
+                <img src="/public/images/nourriture/entrecote.png" alt="Entrecôte grillée 300g">
+                <figcaption>L'Entrecôte Royale</figcaption>
+            </figure>
+            <figure class="card-style">
+                <img src="/public/images/nourriture/burger.png" alt="Burger Double Steak">
+                <figcaption>Le Grand Miam Burger</figcaption>
+            </figure>
+            <figure class="card-style">
+                <img src="/public/images/nourriture/pave.png" alt="Pavé du Chef">
+                <figcaption>Le Pavé du Chef</figcaption>
+            </figure>
+            <figure class="card-style">
+                <img src="/public/images/nourriture/cheesytower.png" alt="Cheesy Tower">
+                <figcaption>Le Cheesy Tower</figcaption>
+            </figure>
+            <figure class="card-style">
+                <img src="/public/images/nourriture/profiteroles.png" alt="Profiteroles géantes">
+                <figcaption>Profiteroles XXL</figcaption>
+            </figure>
         </div>
     </div>
 </section>
 
-<!-- Script de recherche fonctionnel -->
-<script>
-    function filterDishes() {
-        // 1. Récupérer le texte saisi
-        const query = document.getElementById('homeSearchInput').value.toLowerCase();
-
-        // 2. Récupérer toutes les cartes de plats
-        const dishes = document.querySelectorAll('.gallery-grid figure');
-        let hasResults = false;
-
-        // 3. Boucler sur chaque plat
-        dishes.forEach(dish => {
-            const title = dish.querySelector('figcaption').textContent.toLowerCase();
-
-            // 4. Vérifier si le titre contient la recherche
-            if (title.includes(query)) {
-                dish.style.display = ""; // Afficher (reset CSS)
-                hasResults = true;
-            } else {
-                dish.style.display = "none"; // Masquer
-            }
-        });
-
-        // 5. Gérer le message "Aucun résultat"
-        const noResultsMsg = document.getElementById('no-results');
-        if (hasResults) {
-            noResultsMsg.style.display = 'none';
-        } else {
-            noResultsMsg.style.display = 'block';
-        }
-    }
-</script>
-
 <?php
-// Inclure le footer
-include_once __DIR__ . '/../includes/footer.php';
+// Le footer se chargera de fermer la balise <main> et d'inclure les scripts JS.
+// La logique de recherche a été déplacée dans un fichier JS dédié pour la propreté.
+$additionalJs = ['/public/js/home_search.js']; 
+require_once __DIR__ . '/includes/footer.php';
 ?>

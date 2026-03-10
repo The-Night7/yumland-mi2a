@@ -1,0 +1,104 @@
+[
+  {
+    "id": 1,
+    "user_id": 1,
+    "date": "2026-03-08T19:30:00",
+    "status": "livrée",
+    "mode": "livraison",
+    "adresse_livraison": "12 rue des Lilas, 95000 Cergy",
+    "montant_total": 43.80,
+    "livreur_id": 9,
+    "details": [
+      {
+        "plat_id": 2,
+        "quantite": 2,
+        "prix_unitaire": 18.90,
+        "options": ["Sans oignon"]
+      },
+      {
+        "plat_id": 11,
+        "quantite": 1,
+        "prix_unitaire": 4.50,
+        "options": ["Portion XL"]
+      },
+      {
+        "plat_id": 5,
+        "quantite": 1,
+        "prix_unitaire": 9.50,
+        "options": []
+      }
+    ]
+  },
+  {
+    "id": 2,
+    "user_id": 3,
+    "date": "2026-03-09T20:15:00",
+    "status": "en préparation",
+    "mode": "sur place",
+    "adresse_livraison": null,
+    "montant_total": 54.40,
+    "livreur_id": null,
+    "details": [
+      {
+        "plat_id": 1,
+        "quantite": 1,
+        "prix_unitaire": 24.90,
+        "options": ["Cuisson saignante"]
+      },
+      {
+        "plat_id": 12,
+        "quantite": 1,
+        "prix_unitaire": 14.90,
+        "options": []
+      },
+      {
+        "plat_id": 11,
+        "quantite": 2,
+        "prix_unitaire": 4.50,
+        "options": []
+      },
+      {
+        "plat_id": 15,
+        "quantite": 1,
+        "prix_unitaire": 8.50,
+        "options": ["Supplément chocolat"]
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "user_id": 2,
+    "date": "2026-03-10T12:30:00",
+    "status": "en livraison",
+    "mode": "livraison",
+    "adresse_livraison": "24 avenue des Roses, 95800 Cergy",
+    "montant_total": 29.90,
+    "livreur_id": 9,
+    "details": [
+      {
+        "plat_id": 10,
+        "quantite": 1,
+        "prix_unitaire": 29.90,
+        "options": ["Cuisson à point"]
+      }
+    ]
+  },
+  {
+    "id": 4,
+    "user_id": 4,
+    "date": "2026-03-07T19:45:00",
+    "status": "livrée",
+    "mode": "à emporter",
+    "adresse_livraison": null,
+    "montant_total": 45.00,
+    "livreur_id": null,
+    "details": [
+      {
+        "plat_id": 9,
+        "quantite": 1,
+        "prix_unitaire": 45.00,
+        "options": ["Cuisson bleue"]
+      }
+    ]
+  }
+]

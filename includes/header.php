@@ -1,0 +1,71 @@
+<?php
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/auth.php';
+require_once __DIR__ . '/../includes/panier.php';
+
+// Récupérer le nombre d'articles dans le panier
+$cartItemCount = getCartItemCount();
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= isset($pageTitle) ? $pageTitle . ' | ' . APP_NAME : APP_NAME ?></title>
+    <link rel="stylesheet" href="/public/css/style.css">
+    <?php if (isset($additionalCss)): ?>
+        <?php foreach ($additionalCss as $css): ?>
+            <link rel="stylesheet" href="<?= $css ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
+</head>
+<body>
+
+<header>
+    <nav>
+        <div class="logo-container">
+            <a href="/index.php" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="/index.php" class="<?= $currentPage === 'home' ? 'active' : '' ?>">Accueil</a></li>
+            <li><a href="/public/html/carte.php" class="<?= $currentPage === 'carte' ? 'active' : '' ?>">La Carte</a></li>
+            
+            <?php if (isLoggedIn()): ?>
+                <!-- Menu déroulant pour utilisateur connecté -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        <?= htmlspecialchars($_SESSION['user_name']) ?> 
+                        <span class="dropdown-icon">▼</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <?php if (hasRole('admin')): ?>
+                            <li><a href="/admin/dashboard.php">Administration</a></li>
+                        <?php elseif (hasRole('restaurateur')): ?>
+                            <li><a href="/restaurateur/commandes.php">Commandes</a></li>
+                        <?php elseif (hasRole('livreur')): ?>
+                            <li><a href="/livreur/livraisons.php">Mes Livraisons</a></li>
+                        <?php else: ?>
+                            <li><a href="/client/profil.php">Mon Profil</a></li>
+                            <li><a href="/client/commandes.php">Mes Commandes</a></li>
+                        <?php endif; ?>
+                        <li><a href="/logout.php">Déconnexion</a></li>
+                    </ul>
+                </li>
+            <?php else: ?>
+                <li><a href="/public/html/connexion.php" class="btn-login">Mon Compte</a></li>
+            <?php endif; ?>
+            
+            <!-- Icône du panier avec compteur -->
+            <li>
+                <a href="/panier.php" class="cart-icon">
+                    🛒
+                    <?php if ($cartItemCount > 0): ?>
+                        <span class="cart-count"><?= $cartItemCount ?></span>
+                    <?php endif; ?>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<main>
