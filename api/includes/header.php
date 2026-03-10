@@ -24,11 +24,11 @@ $cartItemCount = getCartItemCount();
 <header>
     <nav>
         <div class="logo-container">
-            <a href="/index.php" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
+            <a href="/api/index.php" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
         </div>
         <ul class="nav-links">
-            <li><a href="/index.php" class="<?= $currentPage === 'home' ? 'active' : '' ?>">Accueil</a></li>
-            <li><a href="/public/html/carte.php" class="<?= $currentPage === 'carte' ? 'active' : '' ?>">La Carte</a></li>
+            <li><a href="/api/index.php" class="<?= $currentPage === 'home' ? 'active' : '' ?>">Accueil</a></li>
+            <li><a href="/api/pages/carte.php" class="<?= $currentPage === 'carte' ? 'active' : '' ?>">La Carte</a></li>
             
             <?php if (isLoggedIn()): ?>
                 <!-- Menu déroulant pour utilisateur connecté -->
@@ -39,25 +39,25 @@ $cartItemCount = getCartItemCount();
                     </a>
                     <ul class="dropdown-menu">
                         <?php if (hasRole('admin')): ?>
-                            <li><a href="/admin/dashboard.php">Administration</a></li>
+                            <li><a href="/api/admin/dashboard.php">Administration</a></li>
                         <?php elseif (hasRole('restaurateur')): ?>
-                            <li><a href="/restaurateur/commandes.php">Commandes</a></li>
+                            <li><a href="/api/restaurateur/commandes.php">Commandes</a></li>
                         <?php elseif (hasRole('livreur')): ?>
-                            <li><a href="/livreur/livraisons.php">Mes Livraisons</a></li>
+                            <li><a href="/api/livreur/livraisons.php">Mes Livraisons</a></li>
                         <?php else: ?>
-                            <li><a href="/client/profil.php">Mon Profil</a></li>
-                            <li><a href="/client/commandes.php">Mes Commandes</a></li>
+                            <li><a href="/api/client/profil.php">Mon Profil</a></li>
+                            <li><a href="/api/client/commandes.php">Mes Commandes</a></li>
                         <?php endif; ?>
-                        <li><a href="/logout.php">Déconnexion</a></li>
+                        <li><a href="/api/logout.php">Déconnexion</a></li>
                     </ul>
                 </li>
             <?php else: ?>
-                <li><a href="/public/html/connexion.php" class="btn-login">Mon Compte</a></li>
+                <li><a href="/api/pages/connexion.php" class="btn-login">Mon Compte</a></li>
             <?php endif; ?>
             
             <!-- Icône du panier avec compteur -->
             <li>
-                <a href="/panier.php" class="cart-icon">
+                <a href="/api/panier.php" class="cart-icon">
                     🛒
                     <?php if ($cartItemCount > 0): ?>
                         <span class="cart-count"><?= $cartItemCount ?></span>

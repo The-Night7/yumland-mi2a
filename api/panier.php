@@ -60,10 +60,10 @@ include_once __DIR__ . '/includes/header.php';
         <?php if (empty($cart['items'])): ?>
             <div class="empty-cart">
                 <p>Votre panier est vide.</p>
-                <a href="/public/html/carte.php" class="btn-primary">Voir la carte</a>
+                <a href="/api/pages/carte.php" class="btn-primary">Voir la carte</a>
             </div>
         <?php else: ?>
-            <form action="/panier.php" method="post" class="cart-form">
+            <form action="/api/panier.php" method="post" class="cart-form">
                 <input type="hidden" name="action" value="update">
                 <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                 
@@ -114,7 +114,7 @@ include_once __DIR__ . '/includes/header.php';
                     <div class="cart-actions">
                         <button type="submit" class="btn-update">Mettre à jour</button>
                         <a href="/panier.php?action=clear" class="btn-clear">Vider le panier</a>
-                        <a href="/commander.php" class="btn-checkout">Passer commande</a>
+                        <a href="/api/commander.php" class="btn-checkout">Passer commande</a>
                     </div>
                 </div>
             </form>

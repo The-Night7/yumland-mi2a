@@ -129,7 +129,7 @@ include_once __DIR__ . '/includes/header.php';
             <div class="order-form">
                 <h2>Informations de livraison</h2>
                 
-                <form action="/commander.php" method="post">
+                <form action="/api/commander.php" method="post">
                     <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     
                     <div class="form-group">

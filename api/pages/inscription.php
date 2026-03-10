@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 // Rediriger si déjà connecté
 if (isLoggedIn()) {
@@ -65,7 +65,7 @@ $currentPage = 'inscription';
 $pageTitle = 'Inscription';
 
 // Inclure le header
-include_once __DIR__ . '/../../includes/header.php';
+include_once __DIR__ . '/../includes/header.php';
 ?>
 
 <section class="auth-section">
@@ -82,10 +82,10 @@ include_once __DIR__ . '/../../includes/header.php';
             <?php if (!empty($success)): ?>
                 <div class="alert alert-success">
                     <?= htmlspecialchars($success) ?>
-                    <p><a href="/public/html/connexion.php">Se connecter</a></p>
+                    <p><a href="/api/pages/connexion.php">Se connecter</a></p>
                 </div>
             <?php else: ?>
-                <form action="/public/html/inscription.php" method="post" class="auth-form">
+                <form action="/api/pages/inscription.php" method="post" class="auth-form">
                     <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     
                     <div class="form-group">
@@ -137,7 +137,7 @@ include_once __DIR__ . '/../../includes/header.php';
                 </form>
                 
                 <div class="auth-links">
-                    <p>Déjà inscrit ? <a href="/public/html/connexion.php">Se connecter</a></p>
+                    <p>Déjà inscrit ? <a href="/api/pages/connexion.php">Se connecter</a></p>
                 </div>
             <?php endif; ?>
         </div>
@@ -146,5 +146,5 @@ include_once __DIR__ . '/../../includes/header.php';
 
 <?php
 // Inclure le footer
-include_once __DIR__ . '/../../includes/footer.php';
+include_once __DIR__ . '/../includes/footer.php';
 ?>

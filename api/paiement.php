@@ -108,7 +108,7 @@ include_once __DIR__ . '/includes/header.php';
                     <h2>Informations de paiement</h2>
                     <p class="payment-info">Paiement sécurisé via CYBank</p>
                     
-                    <form action="/paiement.php?commande_id=<?= $commande_id ?>" method="post">
+                    <form action="/api/paiement.php?commande_id=<?= $commande_id ?>" method="post">
                         <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                         
                         <div class="form-group">

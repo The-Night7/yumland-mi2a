@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/auth.php';
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/auth.php';
 
 // Rediriger si déjà connecté
 if (isLoggedIn()) {
@@ -69,7 +69,7 @@ $currentPage = 'connexion';
 $pageTitle = 'Connexion';
 
 // Inclure le header
-include_once __DIR__ . '/../../includes/header.php';
+include_once __DIR__ . '/../includes/header.php';
 ?>
 
 <section class="auth-section">
@@ -89,7 +89,7 @@ include_once __DIR__ . '/../../includes/header.php';
                 </div>
             <?php endif; ?>
             
-            <form action="/public/html/connexion.php" method="post" class="auth-form">
+            <form action="/api/pages/connexion.php" method="post" class="auth-form">
                 <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                 
                 <div class="form-group">
@@ -106,7 +106,7 @@ include_once __DIR__ . '/../../includes/header.php';
             </form>
             
             <div class="auth-links">
-                <p>Pas encore de compte ? <a href="/public/html/inscription.php">S'inscrire</a></p>
+                <p>Pas encore de compte ? <a href="/api/pages/inscription.php">S'inscrire</a></p>
             </div>
         </div>
     </div>
@@ -114,5 +114,5 @@ include_once __DIR__ . '/../../includes/header.php';
 
 <?php
 // Inclure le footer
-include_once __DIR__ . '/../../includes/footer.php';
+include_once __DIR__ . '/../includes/footer.php';
 ?>

@@ -4,8 +4,8 @@
     <div class="footer-content">
         <p>&copy; <?= date('Y') ?> Le Grand Miam - Projet Creative Yumland (CY Tech)</p>
         <div class="footer-links">
-            <a href="/public/html/mentions.php">Mentions Légales</a> |
-            <a href="/public/html/inscription.php">Devenir Membre</a>
+            <a href="/api/pages/mentions.php">Mentions Légales</a> |
+            <a href="/api/pages/inscription.php">Devenir Membre</a>
         </div>
     </div>
 </footer>

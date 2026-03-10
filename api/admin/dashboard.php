@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/auth.php';
 
 // Vérifier si l'utilisateur est connecté et est un administrateur
 if (!isLoggedIn() || !hasRole('admin')) {
-    redirect('/public/html/connexion.php');
+    redirect('/api/pages/connexion.php');
 }
 
 // Récupérer tous les utilisateurs
@@ -27,11 +27,11 @@ include_once __DIR__ . '/../includes/header.php';
                 <div class="admin-menu card-style">
                     <h3>Menu Admin</h3>
                     <ul>
-                        <li class="active"><a href="/admin/dashboard.php">Utilisateurs</a></li>
-                        <li><a href="/admin/commandes.php">Commandes</a></li>
-                        <li><a href="/admin/plats.php">Plats</a></li>
-                        <li><a href="/admin/menus.php">Menus</a></li>
-                        <li><a href="/logout.php">Déconnexion</a></li>
+                        <li class="active"><a href="/api/admin/dashboard.php">Utilisateurs</a></li>
+                        <li><a href="/api/admin/commandes.php">Commandes</a></li>
+                        <li><a href="/api/admin/plats.php">Plats</a></li>
+                        <li><a href="/api/admin/menus.php">Menus</a></li>
+                        <li><a href="/api/logout.php">Déconnexion</a></li>
                     </ul>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 <?php
-require_once __DIR__ . '/../../includes/config.php';
-require_once __DIR__ . '/../../includes/plats.php';
-require_once __DIR__ . '/../../includes/panier.php';
+require_once __DIR__ . '/../includes/config.php';
+require_once __DIR__ . '/../includes/plats.php';
+require_once __DIR__ . '/../includes/panier.php';
 
 // Récupérer toutes les catégories
 $categories = getAllCategories();
@@ -22,7 +22,7 @@ $currentPage = 'carte';
 $pageTitle = 'Notre Carte';
 
 // Inclure le header
-include_once __DIR__ . '/../../includes/header.php';
+include_once __DIR__ . '/../includes/header.php';
 ?>
 
 <section class="menu-header">
@@ -41,7 +41,7 @@ include_once __DIR__ . '/../../includes/header.php';
 <section class="menu-filters">
     <div class="container">
         <div class="filter-buttons">
-            <a href="/public/html/carte.php" class="filter-btn <?= !$categorie_filter ? 'active' : '' ?>">Tous</a>
+            <a href="/api/pages/carte.php" class="filter-btn <?= !$categorie_filter ? 'active' : '' ?>">Tous</a>
             <?php foreach ($categories as $categorie): ?>
                 <a href="/public/html/carte.php?categorie=<?= urlencode($categorie) ?>" 
                    class="filter-btn <?= $categorie_filter === $categorie ? 'active' : '' ?>">
@@ -68,7 +68,7 @@ include_once __DIR__ . '/../../includes/header.php';
                             <p class="menu-item-description"><?= htmlspecialchars($plat['description']) ?></p>
                             <div class="menu-item-footer">
                                 <span class="menu-item-price"><?= number_format($plat['prix'], 2, ',', ' ') ?> €</span>
-                                <form action="/ajouter_panier.php" method="post" class="add-to-cart-form">
+                                <form action="/api/ajouter_panier.php" method="post" class="add-to-cart-form">
                                     <input type="hidden" name="plat_id" value="<?= $plat['id'] ?>">
                                     <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
                                     <button type="submit" class="btn-add-cart">Ajouter</button>
@@ -84,5 +84,5 @@ include_once __DIR__ . '/../../includes/header.php';
 
 <?php
 // Inclure le footer
-include_once __DIR__ . '/../../includes/footer.php';
+include_once __DIR__ . '/../includes/footer.php';
 ?>

@@ -56,9 +56,9 @@ include_once __DIR__ . '/../includes/header.php';
                 <div class="profile-menu card-style">
                     <h3>Menu Client</h3>
                     <ul>
-                        <li class="active"><a href="/client/profil.php">Mon Profil</a></li>
-                        <li><a href="/client/commandes.php">Mes Commandes</a></li>
-                        <li><a href="/logout.php">Déconnexion</a></li>
+                        <li class="active"><a href="/api/client/profil.php">Mon Profil</a></li>
+                        <li><a href="/api/client/commandes.php">Mes Commandes</a></li>
+                        <li><a href="/api/logout.php">Déconnexion</a></li>
                     </ul>
                 </div>
             </div>
@@ -66,7 +66,7 @@ include_once __DIR__ . '/../includes/header.php';
             <div class="profile-content card-style">
                 <h2>Informations personnelles</h2>
                 
-                <form action="/client/profil.php" method="post" class="profile-form">
+                <form action="/api/client/profil.php" method="post" class="profile-form">
                     <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                     
                     <div class="form-row">

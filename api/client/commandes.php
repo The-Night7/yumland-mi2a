@@ -26,7 +26,7 @@ include_once __DIR__ . '/../includes/header.php';
         <?php if (empty($commandes)): ?>
             <div class="empty-commandes">
                 <p>Vous n'avez pas encore passé de commande.</p>
-                <a href="/public/html/carte.php" class="btn-primary">Voir la carte</a>
+                <a href="/api/pages/carte.php" class="btn-primary">Voir la carte</a>
             </div>
         <?php else: ?>
             <div class="commandes-list">
