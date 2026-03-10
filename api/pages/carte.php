@@ -35,12 +35,12 @@ $pageTitle = 'Notre Carte';
 <header>
     <nav>
         <div class="logo-container">
-            <a href="../../index.html" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
+            <a href="../../index.php" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
         </div>
         <ul class="nav-links">
-            <li><a href="../../index.html">Accueil</a></li>
-            <li><a href="carte.html" class="active">La Carte</a></li>
-            <li><a href="connexion.html" class="btn-login">Mon Compte</a></li>
+            <li><a href="../../index.php">Accueil</a></li>
+            <li><a href="carte.php" class="active">La Carte</a></li>
+            <li><a href="connexion.php" class="btn-login">Mon Compte</a></li>
         </ul>
     </nav>
 </header>
