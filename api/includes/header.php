@@ -12,7 +12,7 @@ $cartItemCount = getCartItemCount();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? $pageTitle . ' | ' . APP_NAME : APP_NAME ?></title>
-    <link rel="stylesheet" href="/public/css/style.css">
+    <link rel="stylesheet" href="../public/css/style.css">
     <?php if (isset($additionalCss)): ?>
         <?php foreach ($additionalCss as $css): ?>
             <link rel="stylesheet" href="<?= $css ?>">
