@@ -2,12 +2,30 @@
   "functions": {
     "api/*.php": {
       "runtime": "vercel-php@0.7.4"
+    },
+    "api/admin/*.php": {
+      "runtime": "vercel-php@0.7.4"
+    },
+    "api/client/*.php": {
+      "runtime": "vercel-php@0.7.4"
+    },
+    "api/includes/*.php": {
+      "runtime": "vercel-php@0.7.4"
+    },
+    "api/livreur/*.php": {
+      "runtime": "vercel-php@0.7.4"
+    },
+    "api/pages/*.php": {
+      "runtime": "vercel-php@0.7.4"
+    },
+    "api/restaurateur/*.php": {
+      "runtime": "vercel-php@0.7.4"
     }
   },
   "routes": [
     { "src": "/public/(.*)", "dest": "/public/$1" },
     { "src": "/css/(.*)", "dest": "/public/css/$1" },
     { "src": "/js/(.*)", "dest": "/public/js/$1" },
-    { "src": "/", "dest": "/api/$1" }
+    { "src": "/", "dest": "/api/index.php" }
   ]
 }
