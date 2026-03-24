@@ -64,33 +64,39 @@ try {
     echo "Plats migrés avec succès.<br>";
     
     // --- 4. MIGRATION DES COMMANDES ---
-    $cmdJson = file_get_contents(__DIR__ . '/../data/commandes.json');
-    $commandes = json_decode($cmdJson, true);
+    $commandesJson = json_decode(file_get_contents(__DIR__ . '/../data/commandes.json'), true);
     
-    $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, date_commande, prix_total, statut) VALUES (?, ?, ?, ?, ?)");
-    $stmtContenu = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire) VALUES (?, ?, ?, ?)");
-    foreach ($commandes as $c) {
+    // Préparation des requêtes
+    $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, id_livreur, date_commande, prix_total, statut, mode_retrait, adresse_livraison) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+    
+    // ATTENTION : Vérifiez que cette table existe dans votre init_db.php
+    // Sinon, créez-la : CREATE TABLE Details_Commandes (id_commande INT, id_produit INT, quantite INT)
+    $stmtDetails = $pdo->prepare("INSERT INTO Details_Commandes (id_commande, id_produit, quantite) VALUES (?, ?, ?)");
+    foreach ($commandesJson as $c) {
+        // 1. Insertion de la commande parente
         $stmtCmd->execute([
-            $c['id'], 
-            $c['id_user'] ?? $c['id_client'], // Utilise id_user si id_client est absent
-            $c['date'], 
-            $c['status'] ?? $c['statut'],     // Correction pour 'status' vs 'statut'
-            $c['total_price'] ?? $c['total']  // Correction pour 'total_price' vs 'total'
+            $c['id'],
+            $c['user_id'],
+            $c['livreur_id'], // Sera NULL si null dans le JSON, ce qui est correct
+            $c['date'],
+            $c['montant_total'], // Notez bien : 'montant_total' dans le JSON
+            $c['status'],        // Notez bien : 'status' dans le JSON
+            $c['mode'],          // 'mode' dans le JSON -> 'mode_retrait' en SQL
+            $c['adresse_livraison']
         ]);
         
-        // Insertion du contenu de la commande si disponible
+        // 2. Insertion des détails (les plats) pour cette commande
         if (isset($c['details']) && is_array($c['details'])) {
-            foreach ($c['details'] as $detail) {
-                $stmtContenu->execute([
-                    $c['id'],
-                    $detail['id_plat'] ?? $detail['id_produit'],
-                    $detail['quantite'] ?? 1,
-                    $detail['prix_unitaire'] ?? ($detail['prix'] ?? 0)
+            foreach ($c['details'] as $item) {
+                $stmtDetails->execute([
+                    $c['id'],          // On lie au même ID de commande
+                    $item['plat_id'],  // CORRECTION : 'plat_id' est la clé dans votre JSON
+                    $item['quantite']
                 ]);
             }
         }
     }
-    echo "Commandes et leur contenu migrés avec succès.<br>";
+    echo "Commandes et détails migrés avec succès.<br>";
     
     echo "<strong>Migration terminée avec succès !</strong>";
 } catch (Exception $e) {
