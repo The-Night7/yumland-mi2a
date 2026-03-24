@@ -52,7 +52,7 @@ try {
     foreach ($plats as $p) {
         $stmtProduit->execute([
             $p['id'], 
-            $p['nom'],
+            $p['nom'] ?? 'Produit sans nom',
             $p['categorie'] ?? 'Plat',
             $p['prix'], 
             $p['image'] ?? '', 
