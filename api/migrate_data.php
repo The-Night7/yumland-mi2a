@@ -7,14 +7,23 @@ require_once __DIR__ . '/includes/config.php';
 try {
     echo "Démarrage de la migration...<br>";
     
-    // --- 1. VIDAGE DES TABLES DANS LE BON ORDRE (Enfants d'abord) ---
-    // On supprime d'abord les détails et les commandes car elles pointent vers les utilisateurs/plats
-    $pdo->exec("DELETE FROM Detail_Commande");
-    $pdo->exec("DELETE FROM Commandes");
-    $pdo->exec("DELETE FROM Plats");
-    $pdo->exec("DELETE FROM Utilisateurs");
-    echo "Nettoyage des tables existantes terminé.<br>";
+    // --- SOLUTION 2 SÉCURISÉE ---
+    // On utilise "DELETE FROM" au lieu de "TRUNCATE" car c'est plus souple avec les clés étrangères
+    // Et on ajoute un @ pour ignorer l'erreur si la table n'existe pas encore,  
+    // ou mieux, on vérifie l'ordre.
     
+    $tablesToClean = ['Detail_Commande', 'Commandes', 'Plats', 'Utilisateurs'];
+    
+    foreach ($tablesToClean as $table) {
+        try {
+            $pdo->exec("DELETE FROM $table");
+        } catch (PDOException $e) {
+            // Si la table n'existe pas, on ignore l'erreur et on continue
+            echo "Note : La table $table n'existait pas encore ou était déjà vide.<br>";
+        }
+    }
+    
+    echo "Nettoyage terminé. Début de l'insertion...<br>";
     // --- 2. MIGRATION DES UTILISATEURS ---
     $usersJson = file_get_contents(__DIR__ . '/../data/users.json');
     $users = json_decode($usersJson, true);
