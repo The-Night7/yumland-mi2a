@@ -24,21 +24,25 @@ if (session_status() === PHP_SESSION_NONE) {
 // Configuration MySQL (à adapter selon votre environnement WAMP/XAMPP)
 define('DB_HOST', 'yumlandbase-yumland.l.aivencloud.com');
 define('DB_PORT', '25645'); // <--- TRÈS IMPORTANT sur Aiven
-define('DB_NAME', 'yumlandbase'); // Nom de la base de données
+define('DB_NAME', 'defaultdb'); // Nom de la base de données
 define('DB_USER', 'avnadmin');      // Nouvel utilisateur dédié
 define('DB_PASS', 'AVNS_PH3P24uM4D2Vg9YHMvZ'); // Nouveau mot de passe (plus sécurisé)
 
 define('DB_SSL_CA', __DIR__ . '/ca.pem');
 
 try {
-    // Création de l'objet PDO pour dialoguer avec MySQL
-    $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4', DB_USER, DB_PASS);
+    $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=utf8mb4';
     
-    // Configuration : déclencher une exception (erreur) si une requête SQL échoue
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // Configuration : récupérer les données SQL sous forme de tableau associatif
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+    // Configuration spécifique pour Aiven (SSL obligatoire + Mode erreur)
+    $options = [
+        PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+        // Active le SSL si tu as le fichier ca.pem
+        // PDO::MYSQL_ATTR_SSL_CA       => DB_SSL_CA, 
+    ];
+
+    // LA CORRECTION EST ICI : Ajout de "new PDO"
+    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
 
 } catch (PDOException $e) {
     die("Erreur critique de connexion à la base de données : " . $e->getMessage());
