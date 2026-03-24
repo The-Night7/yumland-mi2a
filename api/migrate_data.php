@@ -48,16 +48,17 @@ try {
     $platsJson = json_decode(file_get_contents(__DIR__ . '/../data/plats.json'), true);
 
     // AJOUTEZ CETTE LIGNE CI-DESSOUS (elle manquait probablement)
-    $stmtPlat = $pdo->prepare("INSERT INTO Plats (id_plat, nom, prix, description, image) VALUES (?, ?, ?, ?, ?)");
+    $stmtPlat = $pdo->prepare("INSERT INTO Produits (id_produit, nom, categorie, prix, image_url, description) VALUES (?, ?, ?, ?, ?, ?)");
 
     foreach ($platsJson as $p) {
         // C'est ici que l'erreur se produisait à la ligne 53
         $stmtPlat->execute([
             $p['id'], 
             $p['nom'], 
+            $p['categorie'] ?? 'plat', // Valeur par défaut si non spécifiée
             $p['prix'], 
-            $p['description'], 
-            $p['image']
+            $p['image'], 
+            $p['description']
         ]);
     }
     echo "Plats migrés avec succès.<br>";

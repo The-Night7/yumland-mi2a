@@ -27,7 +27,7 @@ try {
         id_produit INT AUTO_INCREMENT PRIMARY KEY,
         nom VARCHAR(255) NOT NULL,
         categorie VARCHAR(100),
-        prix REAL NOT NULL,
+        prix REAL(5,2) NOT NULL,
         image_url VARCHAR(255),
         description TEXT
     )");
@@ -38,7 +38,7 @@ try {
         id_client INT,
         id_livreur INT,
         date_commande DATETIME DEFAULT CURRENT_TIMESTAMP,
-        prix_total REAL,
+        prix_total REAL(10,2),
         statut VARCHAR(50) DEFAULT 'En attente',
         paiement_statut VARCHAR(50) DEFAULT 'Non payé',
         cybank_transaction VARCHAR(255),
