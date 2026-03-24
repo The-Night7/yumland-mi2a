@@ -10,8 +10,14 @@ header('Content-Type: application/json');
 // 2. On vérifie que les données ont bien été envoyées par la page HTML (Méthode POST)
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
+    // Vérification de la sécurité CSRF
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        echo json_encode(["success" => false, "message" => "Erreur de sécurité CSRF. Veuillez rafraîchir la page."]);
+        exit;
+    }
+
     // On récupère l'email et le mot de passe tapés par l'utilisateur
-    $email = $_POST['email'] ?? '';
+    $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
 
     try {

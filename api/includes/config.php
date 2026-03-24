@@ -7,25 +7,29 @@
 // Configuration de l'application
 define('APP_NAME', 'Le Grand Miam');
 define('APP_VERSION', '2.0');
-define('DEBUG_MODE', true); // Mettre à false en production
+define('DEBUG_MODE', false); // Mettre à false en production
 
 // ---------------------------------------------------------
 // 1. SÉCURITÉ ET SESSIONS
+// ------------------------------------// Configuration sécurisée des sessions (À mettre AVANT le session_start)
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.use_only_cookies', 1);
+    session_start();
+}
 // ---------------------------------------------------------
-ini_set('session.cookie_httponly', 1);
-ini_set('session.use_only_cookies', 1);
-session_start();
+// 2. CONNEXION À LA BASE DE DONNÉES (MYSQL)
+// ---------------------------------------------------------
 
-// ---------------------------------------------------------
-// 2. CONNEXION À LA BASE DE DONNÉES (SQLITE)
-// ---------------------------------------------------------
-// On définit le chemin vers le fichier de base de données SQLite
-// (On recule de deux dossiers depuis api/includes/ pour aller dans data/)
-define('DB_PATH', __DIR__ . '/../../data/yumland.db');
+// Configuration MySQL (à adapter selon votre environnement WAMP/XAMPP)
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'yumland_mi2a'); // Nom de la base de données
+define('DB_USER', 'yumland');      // Nouvel utilisateur dédié
+define('DB_PASS', 'Miam123!_Yumland'); // Nouveau mot de passe (plus sécurisé)
 
 try {
-    // Création de l'objet PDO pour dialoguer avec SQLite
-    $pdo = new PDO('sqlite:' . DB_PATH);
+    // Création de l'objet PDO pour dialoguer avec MySQL
+    $pdo = new PDO('mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4', DB_USER, DB_PASS);
     
     // Configuration : déclencher une exception (erreur) si une requête SQL échoue
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -49,14 +53,7 @@ function debug($var) {
     }
 }
 
-function redirect($url) {
-    header("Location: $url");
-    exit;
-}
 
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
 
 function hasRole($role) {
     if (!isLoggedIn()) return false;

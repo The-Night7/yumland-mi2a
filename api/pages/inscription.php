@@ -4,7 +4,7 @@ require_once __DIR__ . '/../includes/auth.php';
 
 // Rediriger si déjà connecté
 if (isLoggedIn()) {
-    redirect('/index.php');
+    redirect('/api/index.php');
 }
 
 $error = '';
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = $_POST['username'] ?? '';
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
-        $email = $_POST['email'] ?? '';
+        $email = trim($_POST['email'] ?? '');
         $nom = $_POST['nom'] ?? '';
         $prenom = $_POST['prenom'] ?? '';
         $adresse = $_POST['adresse'] ?? '';
@@ -90,7 +90,7 @@ include_once __DIR__ . '/../includes/header.php';
                     
                     <div class="form-group">
                         <label for="username">Nom d'utilisateur *</label>
-                        <input type="text" id="username" name="username" required>
+                        <input type="text" id="username" name="username" required autocomplete="nickname">
                     </div>
                     
                     <div class="form-row">
@@ -107,19 +107,19 @@ include_once __DIR__ . '/../includes/header.php';
                     
                     <div class="form-group">
                         <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required>
+                        <input type="email" id="email" name="email" required autocomplete="username">
                     </div>
                     
                     <div class="form-row">
                         <div class="form-group">
                             <label for="password">Mot de passe *</label>
-                            <input type="password" id="password" name="password" required>
+                            <input type="password" id="password" name="password" required autocomplete="new-password">
                             <small>Minimum 6 caractères</small>
                         </div>
                         
                         <div class="form-group">
                             <label for="confirm_password">Confirmer le mot de passe *</label>
-                            <input type="password" id="confirm_password" name="confirm_password" required>
+                            <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password">
                         </div>
                     </div>
                     

@@ -1,7 +1,8 @@
 <?php
-require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/auth.php';
-require_once __DIR__ . '/../includes/panier.php';
+// api/includes/header.php
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/panier.php';
 
 // Récupérer le nombre d'articles dans le panier
 $cartItemCount = getCartItemCount();
@@ -38,11 +39,11 @@ $cartItemCount = getCartItemCount();
                         <span class="dropdown-icon">▼</span>
                     </a>
                     <ul class="dropdown-menu">
-                        <?php if (hasRole('admin')): ?>
+                        <?php if (hasRole('Administrateur')): ?>
                             <li><a href="/api/admin/dashboard.php">Administration</a></li>
-                        <?php elseif (hasRole('restaurateur')): ?>
+                        <?php elseif (hasRole('Restaurateur')): ?>
                             <li><a href="/api/restaurateur/commandes.php">Commandes</a></li>
-                        <?php elseif (hasRole('livreur')): ?>
+                        <?php elseif (hasRole('Livreur')): ?>
                             <li><a href="/api/livreur/livraisons.php">Mes Livraisons</a></li>
                         <?php else: ?>
                             <li><a href="/api/client/profil.php">Mon Profil</a></li>

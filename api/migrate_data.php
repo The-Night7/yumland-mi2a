@@ -34,7 +34,7 @@ try {
     if($cmdJson) {
         $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, date_commande, prix_total, statut) VALUES (?, ?, ?, ?, ?)");
         foreach ($cmdJson as $c) {
-            $stmtCmd->execute([$c['id'], $c['user_id'] ?? 1, $c['date'] ?? date('Y-m-d H:i:s'), $c['total'], $c['status']]);
+            $stmtCmd->execute([$c['id'], $c['user_id'] ?? 1, $c['date'] ?? date('Y-m-d H:i:s'), $c['total'] ?? $c['prix_total'] ?? 0, $c['status'] ?? 'En attente']);
         }
     }
     echo "<li>Historique des commandes migré.</li>";

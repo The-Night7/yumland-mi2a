@@ -4,8 +4,8 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/commandes.php';
 
 // Vérifier si l'utilisateur est connecté et est un restaurateur
-if (!isLoggedIn() || !hasRole('restaurateur')) {
-    redirect('/public/html/connexion.php');
+if (!isLoggedIn() || !hasRole('Restaurateur')) {
+    redirect('/api/pages/connexion.php');
 }
 
 // Récupérer les commandes à traiter
@@ -150,7 +150,7 @@ include_once __DIR__ . '/../includes/header.php';
                                     <div class="commande-info">
                                         <p><strong>Livreur:</strong> 
                                             <?php 
-                                            $livreur = getUserById($commande['livreur_id']);
+                                            $livreur = getUserById($commande['id_livreur']);
                                             echo $livreur ? htmlspecialchars($livreur['prenom'] . ' ' . $livreur['nom']) : 'Non assigné';
                                             ?>
                                         </p>

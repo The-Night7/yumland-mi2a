@@ -1,20 +1,13 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/panier.php';
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_produit = intval($_POST['id_produit']);
+    $quantite = isset($_POST['quantite']) ? intval($_POST['quantite']) : 1;
     
-    if (!isset($_SESSION['panier'])) {
-        $_SESSION['panier'] = [];
-    }
-
-    // On stocke l'ID et on incrémente la quantité
-    if (isset($_SESSION['panier'][$id_produit])) {
-        $_SESSION['panier'][$id_produit]++;
-    } else {
-        $_SESSION['panier'][$id_produit] = 1;
-    }
-
-    echo json_encode(["success" => true, "count" => array_sum($_SESSION['panier'])]);
+    $success = addToCart($id_produit, $quantite);
+    
+    echo json_encode(["success" => $success, "count" => getCartItemCount()]);
 }

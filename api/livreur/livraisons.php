@@ -4,8 +4,8 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/commandes.php';
 
 // Vérifier si l'utilisateur est connecté et est un livreur
-if (!isLoggedIn() || !hasRole('livreur')) {
-    redirect('/public/html/connexion.php');
+if (!isLoggedIn() || !hasRole('Livreur')) {
+    redirect('/api/pages/connexion.php');
 }
 
 // Récupérer les commandes assignées à ce livreur

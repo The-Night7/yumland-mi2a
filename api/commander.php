@@ -4,20 +4,16 @@
  * Calcule le total réel via SQL et redirige vers CYBank.
  */
 require_once __DIR__ . '/includes/config.php';
+require_once __DIR__ . '/includes/panier.php';
 
-if (!isset($_SESSION['panier']) || empty($_SESSION['panier'])) {
-    header('Location: ../public/html/carte.html?error=panier_vide');
+if (!isset($_SESSION['cart']['items']) || empty($_SESSION['cart']['items'])) {
+    header('Location: /api/pages/carte.php?error=panier_vide');
     exit;
 }
 
-$total = 0;
-// On boucle sur le panier (ID => Quantité)
-foreach ($_SESSION['panier'] as $id => $qte) {
-    $stmt = $pdo->prepare("SELECT prix FROM Produits WHERE id_produit = ?");
-    $stmt->execute([$id]);
-    $prix = $stmt->fetchColumn();
-    $total += $prix * $qte;
-}
+// Recalculer le total par sécurité
+updateCartTotal();
+$total = $_SESSION['cart']['total'];
 
 // Paramètres CYBank
 $vendeur = "MI-2_A";

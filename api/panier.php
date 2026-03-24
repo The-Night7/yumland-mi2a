@@ -98,7 +98,7 @@ include_once __DIR__ . '/includes/header.php';
                                     </td>
                                     <td><?= number_format($item['prix_unitaire'] * $item['quantite'], 2, ',', ' ') ?> €</td>
                                     <td>
-                                        <a href="/panier.php?action=remove&index=<?= $index ?>" class="btn-remove">Supprimer</a>
+                                    <a href="/api/panier.php?action=remove&index=<?= $index ?>" class="btn-remove">Supprimer</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -113,7 +113,7 @@ include_once __DIR__ . '/includes/header.php';
                     
                     <div class="cart-actions">
                         <button type="submit" class="btn-update">Mettre à jour</button>
-                        <a href="/panier.php?action=clear" class="btn-clear">Vider le panier</a>
+                        <a href="/api/panier.php?action=clear" class="btn-clear">Vider le panier</a>
                         <a href="/api/commander.php" class="btn-checkout">Passer commande</a>
                     </div>
                 </div>

@@ -3,8 +3,8 @@ require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 
 // Vérifier si l'utilisateur est connecté et est un client
-if (!isLoggedIn() || !hasRole('client')) {
-    redirect('/public/html/connexion.php');
+if (!isLoggedIn() || !hasRole('Client')) {
+    redirect('/api/pages/connexion.php');
 }
 
 // Récupérer les informations de l'utilisateur

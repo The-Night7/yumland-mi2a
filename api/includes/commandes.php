@@ -12,23 +12,23 @@ require_once __DIR__ . '/plats.php';
  * @return array Liste des commandes
  */
 function getAllCommandes($status = null, $user_id = null) {
-    $commandes = loadData(COMMANDES_FILE);
+    global $pdo;
+    $query = "SELECT * FROM Commandes WHERE 1=1";
+    $params = [];
     
-    // Filtrer par statut si spécifié
     if ($status !== null) {
-        $commandes = array_filter($commandes, function($commande) use ($status) {
-            return $commande['status'] === $status;
-        });
+        $query .= " AND statut = ?";
+        $params[] = $status;
     }
     
-    // Filtrer par utilisateur si spécifié
     if ($user_id !== null) {
-        $commandes = array_filter($commandes, function($commande) use ($user_id) {
-            return $commande['user_id'] == $user_id;
-        });
+        $query .= " AND id_client = ?";
+        $params[] = $user_id;
     }
     
-    return $commandes;
+    $stmt = $pdo->prepare($query);
+    $stmt->execute($params);
+    return $stmt->fetchAll();
 }
 
 /**
@@ -37,15 +37,11 @@ function getAllCommandes($status = null, $user_id = null) {
  * @return array|null Données de la commande ou null si non trouvée
  */
 function getCommandeById($id) {
-    $commandes = loadData(COMMANDES_FILE);
-    
-    foreach ($commandes as $commande) {
-        if ($commande['id'] == $id) {
-            return $commande;
-        }
-    }
-    
-    return null;
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT * FROM Commandes WHERE id_commande = ?");
+    $stmt->execute([$id]);
+    $commande = $stmt->fetch();
+    return $commande ?: null;
 }
 
 /**
@@ -54,28 +50,19 @@ function getCommandeById($id) {
  * @return bool|int ID de la commande créée ou false en cas d'échec
  */
 function createCommande($commandeData) {
-    $commandes = loadData(COMMANDES_FILE);
-    
-    // Générer un nouvel ID
-    $newId = 1;
-    if (!empty($commandes)) {
-        $lastCommande = end($commandes);
-        $newId = $lastCommande['id'] + 1;
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("INSERT INTO Commandes (id_client, prix_total, statut, adresse_livraison) VALUES (?, ?, ?, ?)");
+        $stmt->execute([
+            $commandeData['user_id'],
+            $commandeData['total'],
+            $commandeData['status'] ?? 'En attente',
+            $commandeData['adresse'] ?? ''
+        ]);
+        return $pdo->lastInsertId();
+    } catch (PDOException $e) {
+        return false;
     }
-    
-    // Préparer les données de la nouvelle commande
-    $commandeData['id'] = $newId;
-    $commandeData['date'] = date('Y-m-d\TH:i:s');
-    
-    // Ajouter la nouvelle commande
-    $commandes[] = $commandeData;
-    
-    // Sauvegarder les données
-    if (saveData(COMMANDES_FILE, $commandes)) {
-        return $newId;
-    }
-    
-    return false;
 }
 
 /**
@@ -85,16 +72,13 @@ function createCommande($commandeData) {
  * @return bool Succès ou échec
  */
 function updateCommandeStatus($id, $status) {
-    $commandes = loadData(COMMANDES_FILE);
-    
-    foreach ($commandes as &$commande) {
-        if ($commande['id'] == $id) {
-            $commande['status'] = $status;
-            return saveData(COMMANDES_FILE, $commandes);
-        }
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("UPDATE Commandes SET statut = ? WHERE id_commande = ?");
+        return $stmt->execute([$status, $id]);
+    } catch (PDOException $e) {
+        return false;
     }
-    
-    return false;
 }
 
 /**
@@ -104,17 +88,13 @@ function updateCommandeStatus($id, $status) {
  * @return bool Succès ou échec
  */
 function assignLivreur($commande_id, $livreur_id) {
-    $commandes = loadData(COMMANDES_FILE);
-    
-    foreach ($commandes as &$commande) {
-        if ($commande['id'] == $commande_id) {
-            $commande['livreur_id'] = $livreur_id;
-            $commande['status'] = 'en livraison';
-            return saveData(COMMANDES_FILE, $commandes);
-        }
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("UPDATE Commandes SET statut = 'En livraison', id_livreur = ? WHERE id_commande = ?");
+        return $stmt->execute([$livreur_id, $commande_id]);
+    } catch (PDOException $e) {
+        return false;
     }
-    
-    return false;
 }
 
 /**
@@ -138,9 +118,12 @@ function calculateTotal($details) {
  * @return array Liste des commandes
  */
 function getCommandesByLivreur($livreur_id) {
-    $commandes = loadData(COMMANDES_FILE);
-    
-    return array_filter($commandes, function($commande) use ($livreur_id) {
-        return $commande['livreur_id'] == $livreur_id;
-    });
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM Commandes WHERE statut = 'En livraison' AND id_livreur = ?");
+        $stmt->execute([$livreur_id]);
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        return [];
+    }
 }

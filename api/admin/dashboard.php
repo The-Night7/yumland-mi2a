@@ -3,12 +3,13 @@ require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 
 // Vérifier si l'utilisateur est connecté et est un administrateur
-if (!isLoggedIn() || !hasRole('admin')) {
+if (!isLoggedIn() || !hasRole('Administrateur')) {
     redirect('/api/pages/connexion.php');
 }
 
 // Récupérer tous les utilisateurs
-$users = loadData(USERS_FILE);
+$stmt = $pdo->query("SELECT * FROM Utilisateurs");
+$users = $stmt->fetchAll();
 
 // Définir la page courante pour le menu actif
 $currentPage = 'admin_dashboard';
@@ -59,10 +60,10 @@ include_once __DIR__ . '/../includes/header.php';
                         <tbody>
                             <?php foreach ($users as $user): ?>
                                 <tr>
-                                    <td><?= $user['id'] ?></td>
-                                    <td><?= htmlspecialchars($user['username']) ?></td>
+                                    <td><?= $user['id_user'] ?></td>
+                                    <td><?= htmlspecialchars($user['nom'] . ' ' . ($user['prenom'] ?? '')) ?></td>
                                     <td><?= htmlspecialchars($user['nom']) ?></td>
-                                    <td><?= htmlspecialchars($user['prenom']) ?></td>
+                                    <td><?= htmlspecialchars($user['prenom'] ?? '') ?></td>
                                     <td><?= htmlspecialchars($user['email']) ?></td>
                                     <td>
                                         <span class="role-badge role-<?= strtolower($user['role']) ?>">
@@ -70,14 +71,14 @@ include_once __DIR__ . '/../includes/header.php';
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="status-badge status-<?= strtolower($user['status']) ?>">
-                                            <?= htmlspecialchars($user['status']) ?>
+                                        <span class="status-badge status-active">
+                                            Actif
                                         </span>
                                     </td>
                                     <td class="actions">
                                         <!-- Ces boutons sont visuels uniquement pour la Phase 2 -->
                                         <button class="btn-edit" title="Modifier" disabled>✏️</button>
-                                        <?php if ($user['status'] === 'active'): ?>
+                                        <?php if (true): // En attendant la gestion du statut SQL ?>
                                             <button class="btn-block" title="Bloquer" disabled>🚫</button>
                                         <?php else: ?>
                                             <button class="btn-activate" title="Activer" disabled>✅</button>
