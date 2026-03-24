@@ -47,5 +47,25 @@ if (preg_match('/^\/(.*\.php)$/', $path, $matches)) {
     }
 }
 
-// 5. Laisse le serveur PHP gérer tout le reste normalement (images, polices, etc.)
+// 5. Simuler le raccourci Vercel pour les images (/images/ -> /public/images/)
+if (preg_match('/^\/images\/(.*)$/', $path, $matches)) {
+    $file = __DIR__ . '/public/images/' . $matches[1];
+    if (file_exists($file)) {
+        // Détecter le type d'image pour bien l'afficher
+        $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
+        $mime_types = [
+            'png' => 'image/png',
+            'jpg' => 'image/jpg',
+            'jpeg' => 'image/jpeg',
+            'gif' => 'image/gif',
+            'svg' => 'image/svg+xml',
+            'webp' => 'image/webp'
+        ];
+        header('Content-Type: ' . ($mime_types[$ext] ?? 'application/octet-stream'));
+        readfile($file);
+        return true;
+    }
+}
+
+// 6. Laisse le serveur PHP gérer tout le reste normalement (images, polices, etc.)
 return false;
