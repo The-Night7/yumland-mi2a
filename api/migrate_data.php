@@ -27,15 +27,19 @@ try {
     // --- 2. MIGRATION DES UTILISATEURS ---
     $usersJson = file_get_contents(__DIR__ . '/../data/users.json');
     $users = json_decode($usersJson, true);
-    $stmtUser = $pdo->prepare("INSERT INTO Utilisateurs (id_user, nom, email, password, role) VALUES (?, ?, ?, ?, ?)");
+    $stmtUser = $pdo->prepare("INSERT INTO Utilisateurs (id_user, nom, prenom, email, mot_de_passe, role, tel, adresse, solde_miams) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
     foreach ($users as $u) {
         // On hache le mot de passe s'il ne l'est pas déjà (optionnel selon ton JSON)
         $stmtUser->execute([
             $u['id'], 
             $u['nom'], 
+            $u['prenom'] ?? '', 
             $u['email'], 
             password_hash($u['password'], PASSWORD_DEFAULT), 
-            $u['role']
+            $u['role'],
+            $u['tel'] ?? '',
+            $u['adresse'] ?? '',
+            $u['solde_miams'] ?? 0
         ]);
     }
     echo "Utilisateurs migrés avec succès.<br>";
