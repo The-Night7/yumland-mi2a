@@ -6,7 +6,7 @@
 
 // Configuration de l'application
 define('APP_NAME', 'Le Grand Miam');
-define('APP_VERSION', '2.0');
+define('APP_VERSION', '3.0');
 define('DEBUG_MODE', false); // Mettre à false en production
 
 // ---------------------------------------------------------
@@ -22,10 +22,13 @@ if (session_status() === PHP_SESSION_NONE) {
 // ---------------------------------------------------------
 
 // Configuration MySQL (à adapter selon votre environnement WAMP/XAMPP)
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'yumland_mi2a'); // Nom de la base de données
-define('DB_USER', 'yumland');      // Nouvel utilisateur dédié
-define('DB_PASS', 'Miam123!_Yumland'); // Nouveau mot de passe (plus sécurisé)
+define('DB_HOST', 'yumlandbase-yumland.l.aivencloud.com');
+define('DB_PORT', '25645'); // <--- TRÈS IMPORTANT sur Aiven
+define('DB_NAME', 'yumlandbase'); // Nom de la base de données
+define('DB_USER', 'avnadmin');      // Nouvel utilisateur dédié
+define('DB_PASS', 'AVNS_PH3P24uM4D2Vg9YHMvZ'); // Nouveau mot de passe (plus sécurisé)
+
+define('DB_SSL_CA', __DIR__ . '/ca.pem');
 
 try {
     // Création de l'objet PDO pour dialoguer avec MySQL
