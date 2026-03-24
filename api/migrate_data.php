@@ -44,22 +44,23 @@ try {
     }
     echo "Utilisateurs migrés avec succès.<br>";
     
-    // --- 3. MIGRATION DES PLATS VERS PRODUITS ---
-    $platsJson = file_get_contents(__DIR__ . '/../data/plats.json');
-    $plats = json_decode($platsJson, true);
-    
-    $stmtProduit = $pdo->prepare("INSERT INTO Produits (id_produit, nom, categorie, prix, image_url, description) VALUES (?, ?, ?, ?, ?, ?)");
-    foreach ($plats as $p) {
-        $stmtProduit->execute([
+    // --- 3. Migration des Plats (Produits) ---
+    $platsJson = json_decode(file_get_contents(__DIR__ . '/../data/plats.json'), true);
+
+    // AJOUTEZ CETTE LIGNE CI-DESSOUS (elle manquait probablement)
+    $stmtPlat = $pdo->prepare("INSERT INTO Plats (id_plat, nom, prix, description, image) VALUES (?, ?, ?, ?, ?)");
+
+    foreach ($platsJson as $p) {
+        // C'est ici que l'erreur se produisait à la ligne 53
+        $stmtPlat->execute([
             $p['id'], 
-            $p['nom'] ?? 'Produit sans nom',
-            $p['categorie'] ?? 'Plat',
+            $p['nom'], 
             $p['prix'], 
-            $p['image'] ?? '', 
-            $p['description'] ?? ''
+            $p['description'], 
+            $p['image']
         ]);
     }
-    echo "Plats migrés vers Produits avec succès.<br>";
+    echo "Plats migrés avec succès.<br>";
     
     // --- 4. MIGRATION DES COMMANDES ---
     $cmdJson = file_get_contents(__DIR__ . '/../data/commandes.json');
@@ -68,13 +69,12 @@ try {
     $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, date_commande, prix_total, statut) VALUES (?, ?, ?, ?, ?)");
     $stmtContenu = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire) VALUES (?, ?, ?, ?)");
     foreach ($commandes as $c) {
-        // Insertion de la commande principale
         $stmtCmd->execute([
             $c['id'], 
-            $c['id_client'], 
+            $c['id_user'] ?? $c['id_client'], // Utilise id_user si id_client est absent
             $c['date'], 
-            $c['total'], 
-            $c['statut']
+            $c['status'] ?? $c['statut'],     // Correction pour 'status' vs 'statut'
+            $c['total_price'] ?? $c['total']  // Correction pour 'total_price' vs 'total'
         ]);
         
         // Insertion du contenu de la commande si disponible
