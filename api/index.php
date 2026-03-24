@@ -47,23 +47,23 @@ require_once __DIR__ . '/includes/header.php';
 
         <div class="gallery-grid" id="dish-gallery">
             <figure class="card-style">
-                <img src="/public/images/nourriture/entrecote.png" alt="Entrecôte grillée 300g">
+                <img src="/images/nourriture/entrecote.png" alt="Entrecôte grillée 300g">
                 <figcaption>L'Entrecôte Royale</figcaption>
             </figure>
             <figure class="card-style">
-                <img src="/public/images/nourriture/burger.png" alt="Burger Double Steak">
+                <img src="/images/nourriture/burger.png" alt="Burger Double Steak">
                 <figcaption>Le Grand Miam Burger</figcaption>
             </figure>
             <figure class="card-style">
-                <img src="/public/images/nourriture/pave.png" alt="Pavé du Chef">
+                <img src="/images/nourriture/pave.png" alt="Pavé du Chef">
                 <figcaption>Le Pavé du Chef</figcaption>
             </figure>
             <figure class="card-style">
-                <img src="/public/images/nourriture/cheesytower.png" alt="Cheesy Tower">
+                <img src="/images/nourriture/cheesytower.png" alt="Cheesy Tower">
                 <figcaption>Le Cheesy Tower</figcaption>
             </figure>
             <figure class="card-style">
-                <img src="/public/images/nourriture/profiteroles.png" alt="Profiteroles géantes">
+                <img src="/images/nourriture/profiteroles.png" alt="Profiteroles géantes">
                 <figcaption>Profiteroles XXL</figcaption>
             </figure>
         </div>
