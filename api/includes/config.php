@@ -1,68 +1,72 @@
 <?php
 /**
- * Fichier de configuration principale
- * Contient les constantes et paramètres globaux de l'application
+ * Fichier de configuration principale - Projet Yumland (Phase 2)
+ * Contient les paramètres globaux, la sécurité et la connexion à la base de données SQL
  */
-
-// Chemins des fichiers de données
-define('DATA_PATH', __DIR__ . '/../data/');
-define('USERS_FILE', DATA_PATH . 'users.json');
-define('PLATS_FILE', DATA_PATH . 'plats.json');
-define('MENUS_FILE', DATA_PATH . 'menus.json');
-define('COMMANDES_FILE', DATA_PATH . 'commandes.json');
 
 // Configuration de l'application
 define('APP_NAME', 'Le Grand Miam');
 define('APP_VERSION', '2.0');
 define('DEBUG_MODE', true); // Mettre à false en production
 
-// Configuration de session
-ini_set('session.cookie_httponly', 1); // Protection contre les attaques XSS
-ini_set('session.use_only_cookies', 1); // Forcer l'utilisation des cookies
+// ---------------------------------------------------------
+// 1. SÉCURITÉ ET SESSIONS
+// ---------------------------------------------------------
+ini_set('session.cookie_httponly', 1);
+ini_set('session.use_only_cookies', 1);
 session_start();
 
-// Fonction pour afficher les erreurs en mode debug
+// ---------------------------------------------------------
+// 2. CONNEXION À LA BASE DE DONNÉES (SQLITE)
+// ---------------------------------------------------------
+// On définit le chemin vers le fichier de base de données SQLite
+// (On recule de deux dossiers depuis api/includes/ pour aller dans data/)
+define('DB_PATH', __DIR__ . '/../../data/yumland.db');
+
+try {
+    // Création de l'objet PDO pour dialoguer avec SQLite
+    $pdo = new PDO('sqlite:' . DB_PATH);
+    
+    // Configuration : déclencher une exception (erreur) si une requête SQL échoue
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    
+    // Configuration : récupérer les données SQL sous forme de tableau associatif
+    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+
+} catch (PDOException $e) {
+    die("Erreur critique de connexion à la base de données : " . $e->getMessage());
+}
+
+// ---------------------------------------------------------
+// 3. FONCTIONS UTILITAIRES ET AUTHENTIFICATION
+// ---------------------------------------------------------
+
 function debug($var) {
     if (DEBUG_MODE) {
-        echo '<pre>';
+        echo '<pre style="background:#eee; padding:10px; border:1px solid #ccc;">';
         print_r($var);
         echo '</pre>';
     }
 }
 
-// Fonction pour rediriger l'utilisateur
 function redirect($url) {
     header("Location: $url");
     exit;
 }
 
-// Fonction pour vérifier si l'utilisateur est connecté
 function isLoggedIn() {
     return isset($_SESSION['user_id']);
 }
 
-// Fonction pour vérifier le rôle de l'utilisateur
 function hasRole($role) {
     if (!isLoggedIn()) return false;
     return $_SESSION['user_role'] === $role;
 }
 
-// Fonction pour charger des données depuis un fichier JSON
-function loadData($file) {
-    if (!file_exists($file)) {
-        return [];
-    }
-    $json = file_get_contents($file);
-    return json_decode($json, true);
-}
+// ---------------------------------------------------------
+// 4. PROTECTION CSRF (Phase 4)
+// ---------------------------------------------------------
 
-// Fonction pour sauvegarder des données dans un fichier JSON
-function saveData($file, $data) {
-    $json = json_encode($data, JSON_PRETTY_PRINT);
-    return file_put_contents($file, $json);
-}
-
-// Fonction pour générer un token CSRF
 function generateCSRFToken() {
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -70,10 +74,10 @@ function generateCSRFToken() {
     return $_SESSION['csrf_token'];
 }
 
-// Fonction pour vérifier un token CSRF
 function verifyCSRFToken($token) {
     if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-        die('CSRF token validation failed');
+        die('Erreur de sécurité : Validation du token CSRF a échoué.');
     }
     return true;
 }
+?>

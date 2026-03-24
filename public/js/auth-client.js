@@ -213,41 +213,52 @@ const logout = () => {
     window.location.href = '../../index.html';
 };
 
-// Exécution au chargement de la page
-document.addEventListener('DOMContentLoaded', () => {
-    const user = getConnectedUser();
-
-    if (user) {
-        console.log(`Bon retour, ${user.nom} !`);
-        updateMenuForUser(user);
-    } else {
-        console.log("Utilisateur non connecté");
-        // Optionnel : Rediriger vers connexion si la page est privée (ex: profil.html)
-        // if (window.location.pathname.includes('profil.html')) {
-        //    window.location.href = 'connexion.html';
-        // }
-    }
-    
-    const loginForm = document.getElementById('login-form');
+// Exécution au chargement de la page// public/js/auth-client.js
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. On cible le formulaire de la page connexion.html
+    const loginForm = document.getElementById("loginForm"); // Vérifiez que votre <form> a bien cet id !
+    const messageBox = document.getElementById("messageBox"); // Une <div> pour afficher les erreurs
 
     if (loginForm) {
-        loginForm.addEventListener('submit', async (event) => {
-            // 1. Empêcher le rechargement de la page (comportement par défaut)
-            event.preventDefault();
+        loginForm.addEventListener("submit", async (e) => {
+            // 2. On empêche la page de se recharger
+            e.preventDefault(); 
 
-            // 2. Récupération des données du formulaire (Syntaxe ES6+)
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+            // 3. On récupère les données tapées par l'utilisateur (email et mot de passe)
+            const formData = new FormData(loginForm);
 
-            // 3. Appel de votre fonction de connexion
-            const result = await loginUser(email, password);
+            try {
+                // 4. On envoie les données à notre nouveau fichier PHP (Phase 3 : Fetch API)
+                const response = await fetch("../../api/login.php", {
+                    method: "POST",
+                    body: formData
+                });
 
-            // 4. Gestion du résultat
-            if (result.success) {
-                // Utilisation de votre fonction de redirection déjà existante
-                redirectBasedOnRole(result.user.role);
-            } else {
-                alert(result.message); // Simple alert pour le moment
+                // 5. On lit la réponse du serveur (notre fameux json_encode en PHP)
+                const data = await response.json();
+
+                if (data.success) {
+                    // Si c'est bon, on redirige la personne selon son rôle !
+                    if(messageBox) messageBox.innerHTML = "<p style='color:green;'>Connexion réussie ! Redirection...</p>";
+                    
+                    setTimeout(() => {
+                        if (data.role === 'Administrateur') {
+                            window.location.href = "admin.html";
+                        } else if (data.role === 'Livreur') {
+                            window.location.href = "livreur.html";
+                        } else {
+                            window.location.href = "profil.html"; // Pour les clients
+                        }
+                    }, 1000);
+
+                } else {
+                    // Si le mot de passe est faux
+                    if(messageBox) messageBox.innerHTML = `<p style='color:red;'>❌ ${data.message}</p>`;
+                }
+
+            } catch (error) {
+                console.error("Erreur de communication :", error);
+                if(messageBox) messageBox.innerHTML = "<p style='color:red;'>Erreur du serveur.</p>";
             }
         });
     }
