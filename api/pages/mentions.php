@@ -1,25 +1,17 @@
+<?php
+require_once __DIR__ . '/../includes/header.php';
+
+// Récupérer le nombre d'articles dans le panier
+$cartItemCount = getCartItemCount();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mentions Légales & CGV | Le Grand Miam</title>
-    <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-
-<header>
-    <nav>
-        <div class="logo-container">
-            <a href="../../index.html" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="../../index.html">Accueil</a></li>
-            <li><a href="carte.html">La Carte</a></li>
-            <li><a href="connexion.html" class="btn-login">Mon Compte</a></li>
-        </ul>
-    </nav>
-</header>
 
 <main class="legal-page">
 
