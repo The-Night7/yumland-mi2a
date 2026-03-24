@@ -66,37 +66,41 @@ try {
     // --- 4. MIGRATION DES COMMANDES ---
     $commandesJson = json_decode(file_get_contents(__DIR__ . '/../data/commandes.json'), true);
     
-    // Préparation des requêtes
+    // Requête pour la table parente
     $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, id_livreur, date_commande, prix_total, statut, mode_retrait, adresse_livraison) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
     
-    // ATTENTION : Vérifiez que cette table existe dans votre init_db.php
-    // Sinon, créez-la : CREATE TABLE Details_Commandes (id_commande INT, id_produit INT, quantite INT)
-    $stmtDetails = $pdo->prepare("INSERT INTO Details_Commandes (id_commande, id_produit, quantite) VALUES (?, ?, ?)");
+    // Requête pour votre table de liaison : Contenu_Commandes
+    $stmtContenu = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire, options_choisies) VALUES (?, ?, ?, ?, ?)");
     foreach ($commandesJson as $c) {
-        // 1. Insertion de la commande parente
+        // 1. Insertion dans "Commandes"
         $stmtCmd->execute([
             $c['id'],
             $c['user_id'],
-            $c['livreur_id'], // Sera NULL si null dans le JSON, ce qui est correct
+            $c['livreur_id'], 
             $c['date'],
-            $c['montant_total'], // Notez bien : 'montant_total' dans le JSON
-            $c['status'],        // Notez bien : 'status' dans le JSON
-            $c['mode'],          // 'mode' dans le JSON -> 'mode_retrait' en SQL
+            $c['montant_total'],
+            $c['status'],
+            $c['mode'],
             $c['adresse_livraison']
         ]);
         
-        // 2. Insertion des détails (les plats) pour cette commande
+        // 2. Insertion dans "Contenu_Commandes"
         if (isset($c['details']) && is_array($c['details'])) {
             foreach ($c['details'] as $item) {
-                $stmtDetails->execute([
-                    $c['id'],          // On lie au même ID de commande
-                    $item['plat_id'],  // CORRECTION : 'plat_id' est la clé dans votre JSON
-                    $item['quantite']
+                // On transforme le tableau d'options en chaîne JSON pour la colonne TEXT
+                $optionsJson = json_encode($item['options'] ?? []);
+                $stmtContenu->execute([
+                    $c['id'],           // id_commande
+                    $item['plat_id'],   // id_produit (clé du JSON)
+                    $item['quantite'],  // quantite
+                    $item['prix_unitaire'], // prix_unitaire
+                    $optionsJson        // options_choisies (format JSON)
                 ]);
             }
         }
     }
-    echo "Commandes et détails migrés avec succès.<br>";
+    
+    echo "Migration des commandes et du contenu réussie !<br>";
     
     echo "<strong>Migration terminée avec succès !</strong>";
 } catch (Exception $e) {
