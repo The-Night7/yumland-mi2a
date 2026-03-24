@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-// Rediriger si déjà connecté
+// Rediriger si l'utilisateur est déjà connecté
 if (isLoggedIn()) {
     redirect('/api/index.php');
 }
@@ -18,38 +18,68 @@ $pageTitle = 'Connexion';
 include_once __DIR__ . '/../includes/header.php';
 ?>
 
-<main class="form-page" style="padding: 40px 20px;">
-    <section class="form-container narrow card-style" style="max-width: 450px; margin: 0 auto; padding: 30px;">
-        <h1 style="text-align: center;">Connexion</h1>
-        <p style="text-align: center; margin-bottom: 20px;">Heureux de vous revoir !</p>
-
-        <form id="login-form">
-            <input type="hidden" id="csrf_token" name="csrf_token" value="<?= $csrf_token ?>">
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-container" style="max-width: 500px; margin: 0 auto;">
+            <h2>Connexion</h2>
             
-            <fieldset style="border: none; padding: 0; margin-bottom: 20px;">
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="email" style="display: block; font-weight: bold; margin-bottom: 5px;">Adresse Email</label>
-                    <input type="email" id="email" name="email" placeholder="exemple@email.com" required autocomplete="username" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+            <div id="login-error" class="alert alert-danger" style="display: none;"></div>
+            
+            <?php if (isset($_GET['error']) && $_GET['error'] === 'must_login'): ?>
+                <div class="alert alert-info" style="margin-bottom: 20px; background-color: var(--color-fry-gold); color: var(--color-coal-black); border: none;">
+                    ⚠️ <strong>Accès requis :</strong> Vous devez vous connecter ou créer un compte pour valider votre panier et procéder au paiement.
                 </div>
-
+            <?php endif; ?>
+            
+            <form id="loginForm" class="auth-form">
+                <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
+                
                 <div class="form-group">
-                    <label for="password" style="display: block; font-weight: bold; margin-bottom: 5px;">Mot de passe</label>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" style="width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required autocomplete="username">
                 </div>
-            </fieldset>
+                
+                <div class="form-group">
+                    <label for="password">Mot de passe</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="btn-primary" style="width: 100%;">Se connecter</button>
+            </form>
+            
+            <div class="auth-links" style="text-align: center; margin-top: 15px;">
+                <p>Pas encore de compte ? <a href="/api/pages/inscription.php">S'inscrire</a></p>
+            </div>
 
-            <button type="button" onclick="submitLogin()" class="btn-primary" style="width: 100%; padding: 15px; font-size: 16px; font-weight: bold; cursor: pointer;">Se Connecter</button>
-            <div id="login-error" style="color: #D32F2F; margin-top: 15px; display: none; text-align: center; font-weight: bold; padding: 10px; background: #ffebee; border-radius: 4px;"></div>
-        </form>
-
-        <p class="switch-form" style="text-align: center; margin-top: 25px;">Pas encore de compte ? <a href="/api/pages/inscription.php" style="font-weight: bold;">Créer un compte</a></p>
-    </section>
-</main>
+            <!-- ZONE DE TEST RAPIDE -->
+            <div class="test-accounts card-style" style="margin-top: 30px; padding: 15px; background: var(--color-sauce-cream); border-left: 4px solid var(--color-primary);">
+                <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--color-coal-black);">🧪 Accès Rapides (Test)</h3>
+                <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Cliquez sur un profil pour auto-remplir les identifiants :</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem; background: #006064;" onclick="fillLogin('client@yumland.com', '123')">👤 Client</button>
+                    <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem; background: #880e4f;" onclick="fillLogin('admin@yumland.com', 'admin')">🛡️ Admin</button>
+                    <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem; background: #e65100;" onclick="fillLogin('chef@yumland.com', 'chef')">👨‍🍳 Chef</button>
+                    <button type="button" class="btn-primary" style="padding: 6px 12px; font-size: 0.85rem; background: #2e7d32;" onclick="fillLogin('livreur@yumland.com', 'go')">🛵 Livreur</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
 <script>
-function submitLogin() {
-    const form = document.getElementById('login-form');
-    const formData = new FormData(form);
+// Fonction pour remplir automatiquement le formulaire
+function fillLogin(email, password) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = password;
+}
+
+// Interception du formulaire pour utiliser l'API JSON de login.php
+document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault(); // Empêcher le rechargement de la page
+    
+    const formData = new FormData(this);
+    const errorDiv = document.getElementById('login-error');
     
     fetch('/api/login.php', {
         method: 'POST',
@@ -58,14 +88,35 @@ function submitLogin() {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            window.location.href = '/api/index.php'; // Redirection après connexion
+            // Redirection intelligente en fonction du rôle
+            switch(data.role) {
+                case 'Administrateur':
+                    window.location.href = '/api/admin/dashboard.php';
+                    break;
+                case 'Restaurateur':
+                    window.location.href = '/api/restaurateur/commandes.php';
+                    break;
+                case 'Livreur':
+                    window.location.href = '/api/livreur/livraisons.php';
+                    break;
+                default:
+                    window.location.href = '/api/index.php';
+                    break;
+            }
         } else {
-            const errorDiv = document.getElementById('login-error');
-            errorDiv.innerText = data.message;
             errorDiv.style.display = 'block';
+            errorDiv.textContent = data.message;
         }
+    })
+    .catch(err => {
+        console.error(err);
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = "Erreur de connexion au serveur.";
     });
-}
+});
 </script>
 
-<?php include_once __DIR__ . '/../includes/footer.php'; ?>
+<?php
+// Inclure le footer
+include_once __DIR__ . '/../includes/footer.php';
+?>

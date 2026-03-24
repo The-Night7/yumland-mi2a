@@ -2,110 +2,89 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 
-// Vérifier si l'utilisateur est connecté et est un client
-if (!isLoggedIn() || !hasRole('Client')) {
+// L'utilisateur doit être connecté pour accéder à cette page
+if (!isLoggedIn()) {
     redirect('/api/pages/connexion.php');
 }
 
-// Récupérer les informations de l'utilisateur
-$user = getUserById($_SESSION['user_id']);
+$user_id = $_SESSION['user_id'];
+$message = '';
+$messageType = 'success'; // ou 'danger'
 
-$error = '';
-$success = '';
+// Traitement du formulaire de modification
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_profile') {
+    $nom = trim($_POST['nom'] ?? '');
+    $prenom = trim($_POST['prenom'] ?? '');
+    $tel = trim($_POST['tel'] ?? '');
+    $adresse = trim($_POST['adresse'] ?? '');
 
-// Traitement du formulaire de mise à jour du profil
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Vérifier le token CSRF
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        $error = 'Erreur de sécurité, veuillez réessayer.';
-    } else {
-        // Cette fonctionnalité sera implémentée dans la Phase 3
-        $success = 'La mise à jour du profil sera disponible dans la prochaine version.';
+    try {
+        $stmt = $pdo->prepare("UPDATE Utilisateurs SET nom = ?, prenom = ?, tel = ?, adresse = ? WHERE id_user = ?");
+        $stmt->execute([$nom, $prenom, $tel, $adresse, $user_id]);
+        
+        // Mettre à jour le nom en session au cas où il a changé
+        $_SESSION['user_name'] = $nom;
+        
+        $message = "Vos informations ont été mises à jour avec succès !";
+    } catch (PDOException $e) {
+        $message = "Erreur lors de la mise à jour de vos informations.";
+        $messageType = 'danger';
     }
 }
 
-// Générer un token CSRF
-$csrf_token = generateCSRFToken();
+// Récupération des informations actuelles de l'utilisateur
+$stmt = $pdo->prepare("SELECT * FROM Utilisateurs WHERE id_user = ?");
+$stmt->execute([$user_id]);
+$user = $stmt->fetch();
 
-// Définir la page courante pour le menu actif
-$currentPage = 'client_profil';
+// Détermination du statut Miams
+$miams = $user['solde_miams'] ?? 0;
+if ($miams < 150) $statut_miams = "Débutant 🥉";
+elseif ($miams < 500) $statut_miams = "Argent 🥈";
+else $statut_miams = "Or 🥇";
+
+$currentPage = 'profil';
 $pageTitle = 'Mon Profil';
-
-// Inclure le header
 include_once __DIR__ . '/../includes/header.php';
 ?>
 
-<section class="client-section">
-    <div class="container">
-        <h1>Mon Profil</h1>
-        
-        <?php if (!empty($error)): ?>
-            <div class="alert alert-danger">
-                <?= htmlspecialchars($error) ?>
-            </div>
-        <?php endif; ?>
-        
-        <?php if (!empty($success)): ?>
-            <div class="alert alert-success">
-                <?= htmlspecialchars($success) ?>
-            </div>
-        <?php endif; ?>
-        
-        <div class="profile-container">
-            <div class="profile-sidebar">
-                <div class="profile-menu card-style">
-                    <h3>Menu Client</h3>
-                    <ul>
-                        <li class="active"><a href="/api/client/profil.php">Mon Profil</a></li>
-                        <li><a href="/api/client/commandes.php">Mes Commandes</a></li>
-                        <li><a href="/api/logout.php">Déconnexion</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="profile-content card-style">
-                <h2>Informations personnelles</h2>
-                
-                <form action="/api/client/profil.php" method="post" class="profile-form">
-                    <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="nom">Nom</label>
-                            <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom']) ?>" disabled>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="prenom">Prénom</label>
-                            <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user['prenom']) ?>" disabled>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="<?= htmlspecialchars($user['email']) ?>" disabled>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="adresse">Adresse</label>
-                        <textarea id="adresse" name="adresse" rows="2" disabled><?= htmlspecialchars($user['adresse'] ?? '') ?></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="telephone">Téléphone</label>
-                        <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($user['telephone'] ?? '') ?>" disabled>
-                    </div>
-                    
-                    <p class="form-note">La modification du profil sera disponible dans la prochaine version.</p>
-                    
-                    <button type="submit" class="btn-primary" disabled>Mettre à jour</button>
-                </form>
-            </div>
+<section class="container form-page">
+    <div class="form-container card-style">
+        <h2>⚙️ Paramètres du compte</h2>
+        <div style="background: var(--color-sauce-cream); padding: 15px; border-left: 4px solid var(--color-fry-gold); margin-bottom: 20px;">
+            <h3 style="margin-bottom: 5px;">Club Le Grand Miam</h3>
+            <p>Solde Miams actuel : <strong><?= htmlspecialchars($miams) ?> 🍔</strong></p>
+            <p>Statut fidélité : <strong><?= $statut_miams ?></strong></p>
         </div>
+        
+        <?php if (!empty($message)): ?>
+            <div class="alert alert-<?= $messageType ?>" style="margin-bottom: 20px;">
+                <?= htmlspecialchars($message) ?>
+            </div>
+        <?php endif; ?>
+
+        <form action="/api/client/profil.php" method="POST">
+            <input type="hidden" name="action" value="update_profile">
+            
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom'] ?? '') ?>" required>
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user['prenom'] ?? '') ?>">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label for="tel">Téléphone :</label>
+                <input type="text" id="tel" name="tel" value="<?= htmlspecialchars($user['tel'] ?? '') ?>">
+            </div>
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label for="adresse">Adresse de livraison par défaut :</label>
+                <textarea id="adresse" name="adresse" rows="3"><?= htmlspecialchars($user['adresse'] ?? '') ?></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width: 100%;">Enregistrer les modifications</button>
+        </form>
     </div>
 </section>
 
-<?php
-// Inclure le footer
-include_once __DIR__ . '/../includes/footer.php';
-?>
+<?php include_once __DIR__ . '/../includes/footer.php'; ?>
