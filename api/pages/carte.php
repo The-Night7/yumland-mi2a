@@ -32,19 +32,6 @@ $pageTitle = 'Notre Carte';
 </head>
 <body>
 
-<header>
-    <nav>
-        <div class="logo-container">
-            <a href="../../index.php" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>
-        </div>
-        <ul class="nav-links">
-            <li><a href="../../index.php">Accueil</a></li>
-            <li><a href="carte.php" class="active">La Carte</a></li>
-            <li><a href="connexion.php" class="btn-login">Mon Compte</a></li>
-        </ul>
-    </nav>
-</header>
-
 <main class="menu-container">
     <h1>Notre Carte</h1>
     <p class="intro-text">Steakhouse, Grillades & Burgers XXL - Une expérience culinaire unique</p>
