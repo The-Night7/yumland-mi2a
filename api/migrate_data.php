@@ -12,7 +12,7 @@ try {
     // Et on ajoute un @ pour ignorer l'erreur si la table n'existe pas encore,  
     // ou mieux, on vérifie l'ordre.
     
-    $tablesToClean = ['Detail_Commande', 'Commandes', 'Plats', 'Utilisateurs'];
+    $tablesToClean = ['Contenu_Commandes', 'Paiements', 'Evaluations', 'Commandes', 'Produits', 'Utilisateurs', 'Coupons'];
     
     foreach ($tablesToClean as $table) {
         try {
@@ -44,37 +44,52 @@ try {
     }
     echo "Utilisateurs migrés avec succès.<br>";
     
-    // --- 3. MIGRATION DES PLATS ---
+    // --- 3. MIGRATION DES PLATS VERS PRODUITS ---
     $platsJson = file_get_contents(__DIR__ . '/../data/plats.json');
     $plats = json_decode($platsJson, true);
     
-    $stmtPlat = $pdo->prepare("INSERT INTO Plats (id_plat, nom, prix, description, image) VALUES (?, ?, ?, ?, ?)");
+    $stmtProduit = $pdo->prepare("INSERT INTO Produits (id_produit, nom, categorie, prix, image_url, description) VALUES (?, ?, ?, ?, ?, ?)");
     foreach ($plats as $p) {
-        $stmtPlat->execute([
+        $stmtProduit->execute([
             $p['id'], 
-            $p['nom'], 
+            $p['nom'],
+            $p['categorie'] ?? 'Plat',
             $p['prix'], 
-            $p['description'] ?? '', 
-            $p['image'] ?? ''
+            $p['image'] ?? '', 
+            $p['description'] ?? ''
         ]);
     }
-    echo "Plats migrés avec succès.<br>";
+    echo "Plats migrés vers Produits avec succès.<br>";
     
     // --- 4. MIGRATION DES COMMANDES ---
     $cmdJson = file_get_contents(__DIR__ . '/../data/commandes.json');
     $commandes = json_decode($cmdJson, true);
     
-    $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, date_commande, statut, total) VALUES (?, ?, ?, ?, ?)");
+    $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, date_commande, prix_total, statut) VALUES (?, ?, ?, ?, ?)");
+    $stmtContenu = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire) VALUES (?, ?, ?, ?)");
     foreach ($commandes as $c) {
+        // Insertion de la commande principale
         $stmtCmd->execute([
             $c['id'], 
             $c['id_client'], 
             $c['date'], 
-            $c['statut'], 
-            $c['total']
+            $c['total'], 
+            $c['statut']
         ]);
+        
+        // Insertion du contenu de la commande si disponible
+        if (isset($c['details']) && is_array($c['details'])) {
+            foreach ($c['details'] as $detail) {
+                $stmtContenu->execute([
+                    $c['id'],
+                    $detail['id_plat'] ?? $detail['id_produit'],
+                    $detail['quantite'] ?? 1,
+                    $detail['prix_unitaire'] ?? ($detail['prix'] ?? 0)
+                ]);
+            }
+        }
     }
-    echo "Commandes migrées avec succès.<br>";
+    echo "Commandes et leur contenu migrés avec succès.<br>";
     
     echo "<strong>Migration terminée avec succès !</strong>";
 } catch (Exception $e) {
