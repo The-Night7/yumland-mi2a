@@ -1,49 +1,70 @@
 <?php
 /**
- * PROJET YUMLAND - MIGRATION JSON VERS SQL
- * Transfère Utilisateurs, Plats et Commandes.
+ * PROJET YUMLAND - MIGRATION JSON VERS SQL (Version Corrigée - Solution 2)
  */
 require_once __DIR__ . '/includes/config.php';
 
 try {
-    $pdo->beginTransaction();
-
-    // --- 1. Migration des Utilisateurs ---
-    $usersJson = json_decode(file_get_contents(__DIR__ . '/../data/users.json'), true);
-    $pdo->exec("DELETE FROM Utilisateurs");
-    $stmtUser = $pdo->prepare("INSERT INTO Utilisateurs (nom, prenom, email, mot_de_passe, role, tel, adresse) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    foreach ($usersJson as $u) {
-        // Sécurité : On hache le MDP si ce n'est pas déjà fait
-        $mdp = (strlen($u['password']) < 20) ? password_hash($u['password'], PASSWORD_DEFAULT) : $u['password'];
-        $stmtUser->execute([$u['nom'], $u['prenom'] ?? '', $u['email'], $mdp, $u['role'], $u['tel'] ?? '', $u['adresse'] ?? '']);
-    }
-    echo "<li>Utilisateurs migrés.</li>";
-
-    // --- 2. Migration des Plats et Menus ---
-    $platsJson = json_decode(file_get_contents(__DIR__ . '/../data/plats.json'), true);
-    $pdo->exec("DELETE FROM Produits");
-    $stmtPlat = $pdo->prepare("INSERT INTO Produits (nom, categorie, prix, image_url, description) VALUES (?, ?, ?, ?, ?)");
-    foreach ($platsJson as $p) {
-        $stmtPlat->execute([$p['nom'], $p['categorie'] ?? 'Plat', $p['prix'], $p['image'] ?? '', $p['description'] ?? '']);
-    }
-    echo "<li>Produits migrés.</li>";
-
-    // --- 3. Migration des Commandes (Historique) ---
-    $cmdJson = json_decode(file_get_contents(__DIR__ . '/../data/commandes.json'), true);
+    echo "Démarrage de la migration...<br>";
+    
+    // --- 1. VIDAGE DES TABLES DANS LE BON ORDRE (Enfants d'abord) ---
+    // On supprime d'abord les détails et les commandes car elles pointent vers les utilisateurs/plats
+    $pdo->exec("DELETE FROM Detail_Commande");
     $pdo->exec("DELETE FROM Commandes");
-    if($cmdJson) {
-        $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, date_commande, prix_total, statut) VALUES (?, ?, ?, ?, ?)");
-        foreach ($cmdJson as $c) {
-            $stmtCmd->execute([$c['id'], $c['user_id'] ?? 1, $c['date'] ?? date('Y-m-d H:i:s'), $c['total'] ?? $c['prix_total'] ?? 0, $c['status'] ?? 'En attente']);
-        }
+    $pdo->exec("DELETE FROM Plats");
+    $pdo->exec("DELETE FROM Utilisateurs");
+    echo "Nettoyage des tables existantes terminé.<br>";
+    
+    // --- 2. MIGRATION DES UTILISATEURS ---
+    $usersJson = file_get_contents(__DIR__ . '/../data/users.json');
+    $users = json_decode($usersJson, true);
+    $stmtUser = $pdo->prepare("INSERT INTO Utilisateurs (id_user, nom, email, password, role) VALUES (?, ?, ?, ?, ?)");
+    foreach ($users as $u) {
+        // On hache le mot de passe s'il ne l'est pas déjà (optionnel selon ton JSON)
+        $stmtUser->execute([
+            $u['id'], 
+            $u['nom'], 
+            $u['email'], 
+            password_hash($u['password'], PASSWORD_DEFAULT), 
+            $u['role']
+        ]);
     }
-    echo "<li>Historique des commandes migré.</li>";
-
-    $pdo->commit();
-    echo "<h3>MIGRATION TERMINÉE AVEC SUCCÈS !</h3>";
-
+    echo "Utilisateurs migrés avec succès.<br>";
+    
+    // --- 3. MIGRATION DES PLATS ---
+    $platsJson = file_get_contents(__DIR__ . '/../data/plats.json');
+    $plats = json_decode($platsJson, true);
+    
+    $stmtPlat = $pdo->prepare("INSERT INTO Plats (id_plat, nom, prix, description, image) VALUES (?, ?, ?, ?, ?)");
+    foreach ($plats as $p) {
+        $stmtPlat->execute([
+            $p['id'], 
+            $p['nom'], 
+            $p['prix'], 
+            $p['description'] ?? '', 
+            $p['image'] ?? ''
+        ]);
+    }
+    echo "Plats migrés avec succès.<br>";
+    
+    // --- 4. MIGRATION DES COMMANDES ---
+    $cmdJson = file_get_contents(__DIR__ . '/../data/commandes.json');
+    $commandes = json_decode($cmdJson, true);
+    
+    $stmtCmd = $pdo->prepare("INSERT INTO Commandes (id_commande, id_client, date_commande, statut, total) VALUES (?, ?, ?, ?, ?)");
+    foreach ($commandes as $c) {
+        $stmtCmd->execute([
+            $c['id'], 
+            $c['id_client'], 
+            $c['date'], 
+            $c['statut'], 
+            $c['total']
+        ]);
+    }
+    echo "Commandes migrées avec succès.<br>";
+    
+    echo "<strong>Migration terminée avec succès !</strong>";
 } catch (Exception $e) {
-    if ($pdo->inTransaction()) $pdo->rollBack();
-    die("Erreur migration : " . $e->getMessage());
+    die("Erreur lors de la migration : " . $e->getMessage());
 }
 ?>
