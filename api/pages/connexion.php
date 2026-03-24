@@ -36,7 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (empty($username) || empty($password)) {
             $error = 'Veuillez remplir tous les champs.';
         } else {
-            $user = authenticateUser($username, $password);
             
             if ($user) {
                 // Redirection selon le rôle

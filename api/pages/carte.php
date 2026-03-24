@@ -4,12 +4,8 @@ require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/plats.php';
 require_once __DIR__ . '/../includes/panier.php';
 
-// Récupérer toutes les catégories
-$categories = getAllCategories();
-
 // Récupérer tous les plats, éventuellement filtrés par catégorie
 $categorie_filter = isset($_GET['categorie']) ? $_GET['categorie'] : null;
-$plats = getAllPlats($categorie_filter);
 
 // Message pour l'ajout au panier
 $message = '';
