@@ -98,11 +98,13 @@ img {
 
 /* --- HEADER & NAVIGATION (Sticky & Clean) --- */
 header {
-    background-color: var(--color-white);
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px); /* Effet verre (Glassmorphism) */
+    -webkit-backdrop-filter: blur(10px);
     position: sticky;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
     padding: 0.5rem 0;
 }
 
@@ -152,6 +154,28 @@ nav {
     box-shadow: none;
 }
 
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-white);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-family: var(--font-body);
+    font-weight: bold;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-dark);
+    transform: scale(1.05);
+}
+
+.btn-secondary-action {
+    background-color: var(--color-secondary);
+}
+
 /* --- LAYOUT & CARDS --- */
 .container {
     max-width: 1200px;
@@ -170,6 +194,19 @@ nav {
 }
 
 /* --- ACCUEIL --- */
+#hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1544025162-8a11520110ec?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    color: var(--color-white);
+    margin-top: -10px; /* Absorbe l'espace sous le header */
+    padding: 2rem 0;
+}
+#hero h1 { color: var(--color-accent); font-size: 3.5rem; text-shadow: 2px 2px 8px rgba(0,0,0,0.8); }
+#hero p { font-size: 1.5rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.8); }
+#hero .cta-button { font-size: 1.1rem; padding: 16px 32px; box-shadow: 0 8px 20px rgba(211,47,47,0.4); }
+
 .flex-row {
     display: flex;
     gap: 2rem;
@@ -231,6 +268,16 @@ figure img {
     transform: translateY(-2px);
 }
 
+/* --- FILTRES PAGE CARTE --- */
+.filter-input {
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--color-grey-light);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background: var(--color-white);
+}
+
 /* --- PAGE CARTE & MENUS --- */
 .menu-container {
     max-width: 1000px;
@@ -281,11 +328,9 @@ figure img {
     font-weight: 400;
 }
 
-.menu-table td:nth-child(3) {
-    font-weight: bold;
-    color: var(--color-primary);
-    font-size: 1.1rem;
-    white-space: nowrap;
+.menu-table tfoot td {
+    font-style: italic;
+    color: #666;
 }
 
 .category-cell {
@@ -327,6 +372,27 @@ figure img {
     padding-bottom: 10px;
     display: flex;
     justify-content: space-between;
+}
+
+/* Badges de spécificités */
+.spec-badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    display: inline-block;
+    white-space: nowrap;
+}
+.spec-vege { background: rgba(76, 175, 80, 0.15); color: #2e7d32; border: 1px solid rgba(76,175,80,0.3); }
+.spec-porc { background: rgba(233, 30, 99, 0.15); color: #880e4f; border: 1px solid rgba(233,30,99,0.3); }
+.spec-halal { background: rgba(0, 188, 212, 0.15); color: #006064; border: 1px solid rgba(0,188,212,0.3); }
+.spec-poisson { background: rgba(33, 150, 243, 0.15); color: #1565c0; border: 1px solid rgba(33,150,243,0.3); }
+
+/* Cellule de prix */
+.price-cell {
+    color: var(--color-primary);
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
 /* --- FORMULAIRES --- */

@@ -16,6 +16,7 @@
         <h2 id="modalMenuTitle" style="color:var(--color-primary); margin-top:0;">Composez votre menu</h2>
         <form id="optionsForm">
             <input type="hidden" id="modalProductId" name="id_produit" value="">
+            <input type="hidden" id="modalPrixMiams" name="prix_miams" value="0">
             <div id="optionsContainer" style="margin-top: 20px;"></div>
             
             <div style="display:flex; gap:10px; margin-top:25px;">
@@ -28,10 +29,11 @@
 
 <script>
     // Ouvre la fenêtre et génère les listes déroulantes
-    function showOptionsModal(productId, productName, optionsJsonString) {
+    function showOptionsModal(productId, productName, optionsJsonString, prixMiams = 0) {
         document.getElementById('optionsModal').style.display = 'flex';
-        document.getElementById('modalMenuTitle').innerText = productName;
+        document.getElementById('modalMenuTitle').innerText = prixMiams > 0 ? productName + " 🎁" : productName;
         document.getElementById('modalProductId').value = productId;
+        document.getElementById('modalPrixMiams').value = prixMiams;
         
         let options = [];
         try { options = JSON.parse(optionsJsonString || '[]'); } catch(e) {}
@@ -75,6 +77,7 @@
         let formData = new FormData();
         formData.append('id_produit', document.getElementById('modalProductId').value);
         formData.append('quantite', 1);
+        formData.append('prix_miams', document.getElementById('modalPrixMiams').value);
         
         // Envoi des options sous forme de tableau PHP (options[])
         optionsChoisies.forEach(opt => {

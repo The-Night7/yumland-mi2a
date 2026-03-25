@@ -14,6 +14,8 @@ $cartItemCount = getCartItemCount();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? $pageTitle . ' | ' . APP_NAME : APP_NAME ?></title>
     <link rel="stylesheet" href="/css/style.css">
+    <!-- Intégration de FontAwesome pour des icônes professionnelles -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <?php if (isset($additionalCss)): ?>
         <?php foreach ($additionalCss as $css): ?>
             <link rel="stylesheet" href="<?= $css ?>">
@@ -102,13 +104,13 @@ $cartItemCount = getCartItemCount();
             <?php if (isLoggedIn()): ?>
                 <?php if (hasRole('Restaurateur') || hasRole('Livreur')): ?>
                     <!-- Menu éclaté en gros boutons pour le personnel (Tablette / Gants) -->
-                    <li><a href="/api/client/profil.php" style="font-size: 1.1rem; padding: 12px 18px; border: 2px solid var(--color-grey-light); border-radius: 8px;">👤 Profil</a></li>
+                    <li><a href="/api/client/profil.php" style="font-size: 1.1rem; padding: 12px 18px; border: 2px solid var(--color-grey-light); border-radius: 8px;"><i class="fas fa-user-circle"></i> Profil</a></li>
                     <?php if (hasRole('Restaurateur')): ?>
-                        <li><a href="/api/restaurateur/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; background: #e65100; color: white; border-radius: 8px; font-weight: bold;">👨‍🍳 Cuisine</a></li>
+                        <li><a href="/api/restaurateur/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; background: #e65100; color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-fire-burner"></i> Cuisine</a></li>
                     <?php elseif (hasRole('Livreur')): ?>
-                        <li><a href="/api/livreur/livraisons.php" style="font-size: 1.1rem; padding: 12px 18px; background: #2e7d32; color: white; border-radius: 8px; font-weight: bold;">🛵 Courses</a></li>
+                        <li><a href="/api/livreur/livraisons.php" style="font-size: 1.1rem; padding: 12px 18px; background: #2e7d32; color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-motorcycle"></i> Courses</a></li>
                     <?php endif; ?>
-                    <li><a href="/api/logout.php" style="font-size: 1.1rem; padding: 12px 18px; background: var(--color-primary); color: white; border-radius: 8px; font-weight: bold;">🚪 Quitter</a></li>
+                    <li><a href="/api/logout.php" style="font-size: 1.1rem; padding: 12px 18px; background: var(--color-primary); color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> Quitter</a></li>
                 <?php else: ?>
                     <!-- Menu déroulant classique pour Client et Administrateur -->
                     <li class="dropdown">
@@ -117,12 +119,12 @@ $cartItemCount = getCartItemCount();
                             <span class="dropdown-icon">▼</span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/api/client/profil.php">👤 Mon Profil</a></li>
-                            <li><a href="/api/client/commandes.php">📦 Mes Commandes</a></li>
+                            <li><a href="/api/client/profil.php"><i class="fas fa-user"></i> Mon Profil</a></li>
+                            <li><a href="/api/client/commandes.php"><i class="fas fa-box-open"></i> Mes Commandes</a></li>
                             <?php if (hasRole('Administrateur')): ?>
-                                <li><a href="/api/admin/dashboard.php">🛡️ Administration</a></li>
+                                <li><a href="/api/admin/dashboard.php"><i class="fas fa-shield-alt"></i> Administration</a></li>
                             <?php endif; ?>
-                            <li><a href="/api/logout.php">🚪 Déconnexion</a></li>
+                            <li><a href="/api/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
                         </ul>
                     </li>
                 <?php endif; ?>
@@ -134,7 +136,7 @@ $cartItemCount = getCartItemCount();
             <?php if (!isLoggedIn() || (!hasRole('Restaurateur') && !hasRole('Livreur'))): ?>
             <li>
                 <a href="/api/panier.php" class="cart-icon">
-                    🛒
+                    <i class="fas fa-shopping-cart" style="font-size: 1.2rem;"></i>
                     <?php if ($cartItemCount > 0): ?>
                         <span class="cart-count"><?= $cartItemCount ?></span>
                     <?php endif; ?>

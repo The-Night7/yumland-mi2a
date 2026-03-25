@@ -37,6 +37,27 @@ if (isset($_GET['action']) && $_GET['action'] === 'clear') {
 // Récupérer le contenu du panier
 $cart = getCart();
 
+// Calcul des Miams déjà utilisés dans le panier actuel
+$miams_used = 0;
+foreach ($cart['items'] as $item) {
+    if (!empty($item['options']) && is_array($item['options'])) {
+        foreach ($item['options'] as $opt) {
+            if (preg_match('/-\s*([0-9]+)\s*Miams/', $opt, $matches)) {
+                $miams_used += (int)$matches[1];
+            }
+        }
+    }
+}
+
+// Recherche des IDs génériques pour associer les récompenses Miams
+$stmtProd = $pdo->query("SELECT id_produit, nom FROM Produits");
+$produits_db = $stmtProd->fetchAll();
+$id_sauce = 1; $id_boisson = 1; $id_dessert = 1; $id_burger = 1;
+foreach($produits_db as $p) { if(stripos($p['nom'], 'Sauce') !== false) $id_sauce = $p['id_produit']; }
+foreach($produits_db as $p) { if(stripos($p['nom'], 'Sodas') !== false || stripos($p['nom'], 'Boisson') !== false) $id_boisson = $p['id_produit']; }
+foreach($produits_db as $p) { if(stripos($p['nom'], 'Cookie') !== false || stripos($p['nom'], 'Dessert') !== false) $id_dessert = $p['id_produit']; }
+foreach($produits_db as $p) { if(stripos($p['nom'], 'Grand Miam') !== false) $id_burger = $p['id_produit']; }
+
 // Récupération du solde Miams si connecté
 $miams = 0;
 $statut_miams = "";
@@ -61,6 +82,9 @@ if (isLoggedIn()) {
         $color_miams = "var(--color-accent)"; // #FFC107
     }
 }
+
+// Calcul du solde prévisionnel en soustrayant ceux du panier
+$miams_dispo = max(0, $miams - $miams_used);
 
 // Générer un token CSRF
 $csrf_token = generateCSRFToken();
@@ -176,7 +200,7 @@ include_once __DIR__ . '/includes/header.php';
                 <?php if (isLoggedIn()): ?>
                 <div class="loyalty-box" style="background: #fffdf7; padding: 20px; border-radius: 8px; margin-top: 20px; border: 3px solid <?= $color_miams ?>;">
                     <h3 style="color: var(--color-secondary); margin-bottom: 10px;">🥩 Le Grand Miam Club</h3>
-                    <p>Votre solde : <strong><?= $miams ?> Miams</strong> (Rang : <strong style="color: <?= $color_miams ?>;"><?= $statut_miams ?></strong>)</p>
+                    <p>Miams disponibles : <strong><?= $miams_dispo ?> Miams</strong> (Rang : <strong style="color: <?= $color_miams ?>;"><?= $statut_miams ?></strong>)</p>
                     
                     <?php if ($statut_miams === "SAUCE CHEF" || $statut_miams === "LÉGENDE DU STEAK"): ?>
                         <div style="margin: 10px 0; padding: 10px; background: rgba(211, 47, 47, 0.1); border-left: 4px solid var(--color-primary); border-radius: 4px;">
@@ -194,34 +218,36 @@ include_once __DIR__ . '/includes/header.php';
                         
                         <div style="display: flex; flex-direction: column; gap: 10px;">
                             <!-- Option 150 Miams -->
-                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 150 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 150 ? '1' : '0.5' ?>;">
-                                <input type="radio" name="use_miams" value="150" <?= $miams < 150 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
-                                <strong>150 Miams</strong> : Une Sauce Maison offerte (valeur 1.50 €) 🥫
-                            </label>
+                            <div style="padding: 10px; background: <?= $miams_dispo >= 150 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 150 ? '1' : '0.5' ?>;">
+                                <div><strong>150 Miams</strong> : Une Sauce Maison offerte 🥫</div>
+                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                    onclick="showOptionsModal(<?= $id_sauce ?>, 'Sauce Maison', '[{&quot;titre&quot;:&quot;Choix&quot;,&quot;choix&quot;:[&quot;Sauce BBQ&quot;,&quot;Sauce Béarnaise&quot;,&quot;Sauce au Poivre&quot;,&quot;Sauce Roquefort&quot;,&quot;Moutarde Ancienne&quot;]}]', 150)" 
+                                    <?= $miams_dispo < 150 ? 'disabled' : '' ?>>Obtenir</button>
+                            </div>
                             
                             <!-- Option 300 Miams -->
-                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 300 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 300 ? '1' : '0.5' ?>;">
-                                <input type="radio" name="use_miams" value="300" <?= $miams < 300 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
-                                <strong>300 Miams</strong> : Un Soft ou une Bière (25cl) (valeur 3.50 €) 🍺
-                            </label>
+                            <div style="padding: 10px; background: <?= $miams_dispo >= 300 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 300 ? '1' : '0.5' ?>;">
+                                <div><strong>300 Miams</strong> : Un Soft ou une Bière (25cl) 🍺</div>
+                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                    onclick="showOptionsModal(<?= $id_boisson ?>, 'Boisson Offerte', '[{&quot;titre&quot;:&quot;Choix&quot;,&quot;choix&quot;:[&quot;Coca-Cola (33cl)&quot;,&quot;Sprite (33cl)&quot;,&quot;Ice Tea (25cl)&quot;,&quot;Bière Blonde (25cl)&quot;,&quot;Bière IPA (25cl)&quot;]}]', 300)" 
+                                    <?= $miams_dispo < 300 ? 'disabled' : '' ?>>Obtenir</button>
+                            </div>
 
                             <!-- Option 800 Miams -->
-                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 800 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 800 ? '1' : '0.5' ?>;">
-                                <input type="radio" name="use_miams" value="800" <?= $miams < 800 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
-                                <strong>800 Miams</strong> : Un Dessert (Cookie ou Profiterole) (valeur 8.00 €) 🍪
-                            </label>
+                            <div style="padding: 10px; background: <?= $miams_dispo >= 800 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 800 ? '1' : '0.5' ?>;">
+                                <div><strong>800 Miams</strong> : Un Dessert au choix 🍪</div>
+                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                    onclick="showOptionsModal(<?= $id_dessert ?>, 'Dessert Offert', '[{&quot;titre&quot;:&quot;Choix&quot;,&quot;choix&quot;:[&quot;Cookie Skillet&quot;,&quot;Cheesecake NY&quot;,&quot;Brioche Perdue&quot;]}]', 800)" 
+                                    <?= $miams_dispo < 800 ? 'disabled' : '' ?>>Obtenir</button>
+                            </div>
                             
                             <!-- Option 1500 Miams -->
-                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 1500 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 1500 ? '1' : '0.5' ?>;">
-                                <input type="radio" name="use_miams" value="1500" <?= $miams < 1500 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
-                                <strong>1500 Miams</strong> : Le Burger "Grand Miam" Offert (valeur 16.90 €) 🍔
-                            </label>
-                            
-                            <!-- Option Aucune (par défaut) -->
-                            <label style="cursor: pointer; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
-                                <input type="radio" name="use_miams" value="0" checked style="width: 18px; height: 18px;">
-                                Conserver mes Miams pour plus tard
-                            </label>
+                            <div style="padding: 10px; background: <?= $miams_dispo >= 1500 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 1500 ? '1' : '0.5' ?>;">
+                                <div><strong>1500 Miams</strong> : Le Burger "Grand Miam" 🍔</div>
+                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                    onclick="showOptionsModal(<?= $id_burger ?>, 'Burger Grand Miam', '[{&quot;titre&quot;:&quot;Viande&quot;,&quot;choix&quot;:[&quot;Bœuf Limousin&quot;,&quot;Bœuf (Halal)&quot;,&quot;Poulet Croustillant&quot;,&quot;Galette Veggie&quot;]},{&quot;titre&quot;:&quot;Cuisson&quot;,&quot;choix&quot;:[&quot;Saignant&quot;,&quot;À point&quot;,&quot;Bien cuit&quot;]}]', 1500)" 
+                                    <?= $miams_dispo < 1500 ? 'disabled' : '' ?>>Obtenir</button>
+                            </div>
                         </div>
                     </div>
                     

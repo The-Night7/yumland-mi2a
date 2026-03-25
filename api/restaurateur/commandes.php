@@ -28,9 +28,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
 }
 
 // Récupérer les commandes à traiter
-$commandes_attente = getAllCommandes('En attente');
-$commandes_preparation = getAllCommandes('En préparation');
-$commandes_pretes = getAllCommandes('Prête');
+$commandes_attente = getAllCommandes('En attente', null, 'ASC');
+$commandes_preparation = getAllCommandes('En préparation', null, 'ASC');
+$commandes_pretes = getAllCommandes('Prête', null, 'ASC');
 
 // Définir la page courante pour le menu actif
 $currentPage = 'restaurateur_commandes';

@@ -9,7 +9,7 @@ if (!isLoggedIn() || !hasRole('Client')) {
 }
 
 // Récupérer les commandes de l'utilisateur
-$commandes = getAllCommandes(null, $_SESSION['user_id']);
+$commandes = getAllCommandes(null, $_SESSION['user_id'], 'DESC');
 
 // Définir la page courante pour le menu actif
 $currentPage = 'client_commandes';

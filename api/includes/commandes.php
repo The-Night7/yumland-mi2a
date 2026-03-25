@@ -11,7 +11,7 @@ require_once __DIR__ . '/plats.php';
  * @param int|null $user_id Filtre par utilisateur (optionnel)
  * @return array Liste des commandes
  */
-function getAllCommandes($status = null, $user_id = null) {
+function getAllCommandes($status = null, $user_id = null, $order = 'ASC') {
     global $pdo;
     $query = "SELECT * FROM Commandes WHERE 1=1";
     $params = [];
@@ -26,6 +26,13 @@ function getAllCommandes($status = null, $user_id = null) {
         $params[] = $user_id;
     }
     
+    // Ajout du tri par date
+    if (strtoupper($order) === 'DESC') {
+        $query .= " ORDER BY date_commande DESC";
+    } else {
+        $query .= " ORDER BY date_commande ASC";
+    }
+
     $stmt = $pdo->prepare($query);
     $stmt->execute($params);
     return $stmt->fetchAll();

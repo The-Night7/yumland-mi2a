@@ -9,6 +9,7 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_produit = isset($_POST['id_produit']) ? (int)$_POST['id_produit'] : 0;
     $quantite = isset($_POST['quantite']) ? (int)$_POST['quantite'] : 1;
+    $prix_miams = isset($_POST['prix_miams']) ? (int)$_POST['prix_miams'] : 0;
     
     // Parsing des options personnalisées (ex: cuisson, type de boisson)
     $options = [];
@@ -45,10 +46,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$found) {
                 // Extrait le prix dynamiquement si une option payante est sélectionnée
                 $prix_final = $plat['prix'];
+            
+            if ($prix_miams > 0) {
+                $prix_final = 0; // C'est un cadeau !
+                $options[] = "🎁 Cadeau Club (-" . $prix_miams . " Miams)";
+            } else {
                 if (!empty($options) && is_array($options)) {
                     foreach ($options as $opt) {
                         if (preg_match('/-\s*([0-9]+[.,][0-9]{2})\s*€/', $opt, $matches)) {
                             $prix_final = (float)str_replace(',', '.', $matches[1]);
+                        }
                         }
                     }
                 }
