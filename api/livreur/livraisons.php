@@ -3,6 +3,13 @@ require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/commandes.php';
 
+// Traitement de l'action de livraison
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'terminee') {
+    updateCommandeStatus((int)$_POST['id_commande'], 'Livrée');
+    header('Location: /api/livreur/livraisons.php');
+    exit;
+}
+
 // Récupération du livreur connecté
 $livreur_id = $_SESSION['user_id'] ?? 9;
 $mes_livraisons = getCommandesByLivreur($livreur_id);
@@ -42,12 +49,19 @@ if (empty($mes_livraisons)) {
                 <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($livraison['adresse_livraison'] ?? '') ?>" target="_blank" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #4285F4; text-align: center;">
                     🗺️ OUVRIR DANS MAPS
                 </a>
-                <button class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #2ecc71;">
-                    ✅ MARQUER COMME LIVRÉE
-                </button>
-                <button class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: var(--color-coal-black);">
-                    ❌ ABANDONNER / PROBLÈME
-                </button>
+                
+                <?php if ($livraison['id_commande'] !== '9999 (Démo)'): ?>
+                <form method="POST" style="margin: 0; display: flex; flex-direction: column; gap: 15px;">
+                    <input type="hidden" name="action" value="terminee">
+                    <input type="hidden" name="id_commande" value="<?= $livraison['id_commande'] ?>">
+                    <button type="submit" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #2ecc71; border: none; cursor: pointer;">
+                        ✅ MARQUER COMME LIVRÉE
+                    </button>
+                    <button type="button" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: var(--color-coal-black); border: none; cursor: pointer;" onclick="alert('Contactez le support au 01 23 45 67 89')">
+                        ❌ PROBLÈME DE LIVRAISON
+                    </button>
+                </form>
+                <?php endif; ?>
             </div>
         </article>
     <?php endforeach; ?>

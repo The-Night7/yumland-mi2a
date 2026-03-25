@@ -26,7 +26,7 @@ include_once __DIR__ . '/../includes/header.php';
             <div id="login-error" class="alert alert-danger" style="display: none;"></div>
             
             <?php if (isset($_GET['error']) && $_GET['error'] === 'must_login'): ?>
-                <div class="alert alert-info" style="margin-bottom: 20px; background-color: var(--color-fry-gold); color: var(--color-coal-black); border: none;">
+                <div class="alert alert-info" style="margin-bottom: 20px; background-color: var(--color-accent); color: var(--color-secondary); border: none;">
                     ⚠️ <strong>Accès requis :</strong> Vous devez vous connecter ou créer un compte pour valider votre panier et procéder au paiement.
                 </div>
             <?php endif; ?>
@@ -52,8 +52,8 @@ include_once __DIR__ . '/../includes/header.php';
             </div>
 
             <!-- ZONE DE TEST RAPIDE -->
-            <div class="test-accounts card-style" style="margin-top: 30px; padding: 15px; background: var(--color-sauce-cream); border-left: 4px solid var(--color-grill-red);">
-                <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--color-coal-black);">🧪 Remplissage rapide (Comptes JSON)</h3>
+            <div class="test-accounts card-style" style="margin-top: 30px; padding: 15px; background: var(--color-bg); border-left: 4px solid var(--color-primary);">
+                <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--color-secondary);">🧪 Remplissage rapide (Comptes JSON)</h3>
                 <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Cliquez sur un profil pour auto-remplir les identifiants :</p>
                 
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">

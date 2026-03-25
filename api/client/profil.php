@@ -58,7 +58,7 @@ include_once __DIR__ . '/../includes/header.php';
 <section class="container form-page">
     <div class="form-container card-style">
         <h2>⚙️ Paramètres du compte</h2>
-        <div style="background: var(--color-sauce-cream); padding: 15px; border-left: 4px solid var(--color-fry-gold); margin-bottom: 20px;">
+        <div style="background: var(--color-bg); padding: 15px; border-left: 4px solid var(--color-accent); margin-bottom: 20px;">
             <h3 style="margin-bottom: 5px;">Club Le Grand Miam</h3>
             <p>Solde Miams actuel : <strong><?= htmlspecialchars($miams) ?> 🍔</strong></p>
             <p style="font-size: 0.9em; color: #666;">Total Miams cumulés (à vie) : <?= htmlspecialchars($miams_historique) ?></p>

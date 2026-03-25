@@ -8,6 +8,23 @@ if (!isLoggedIn() || !hasRole('Restaurateur')) {
     redirect('/api/pages/connexion.php');
 }
 
+// Traitement des actions (Changement de statut)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    $id_commande = (int)$_POST['id_commande'];
+    if ($_POST['action'] === 'preparer') {
+        updateCommandeStatus($id_commande, 'En préparation');
+    } elseif ($_POST['action'] === 'prete') {
+        updateCommandeStatus($id_commande, 'Prête');
+    } elseif ($_POST['action'] === 'livrer') {
+        // Assigner au livreur de démo (ID 9) ou au livreur connecté
+        assignLivreur($id_commande, 9);
+    } elseif ($_POST['action'] === 'servie') {
+        updateCommandeStatus($id_commande, 'Livrée');
+    }
+    header('Location: /api/restaurateur/commandes.php');
+    exit;
+}
+
 // Récupérer les commandes à traiter
 $commandes_attente = getAllCommandes('En attente');
 $commandes_preparation = getAllCommandes('En préparation');
@@ -84,10 +101,13 @@ include_once __DIR__ . '/../includes/header.php';
                                 </li>
                             <?php endforeach; ?>
                         </ul>
-                        <!-- Phase 3 : Formulaire AJAX -->
-                        <button class="kanban-btn" style="background: #e67e22;" onclick="alert('Bientôt en Phase 3 : Action AJAX')">
-                            Passer en préparation
-                        </button>
+                        <form method="POST" style="margin:0; margin-top: 15px;">
+                            <input type="hidden" name="action" value="preparer">
+                            <input type="hidden" name="id_commande" value="<?= $cmd['id_commande'] ?>">
+                            <button type="submit" class="kanban-btn" style="background: #e67e22; margin-top: 0;">
+                                Passer en préparation 🍳
+                            </button>
+                        </form>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -109,9 +129,13 @@ include_once __DIR__ . '/../includes/header.php';
                                 <li><span class="item-qty"><?= $detail['quantite'] ?>x</span> <?= htmlspecialchars($detail['nom']) ?></li>
                             <?php endforeach; ?>
                         </ul>
-                        <button class="kanban-btn" style="background: #27ae60;" onclick="alert('Bientôt en Phase 3 : Action AJAX')">
-                            Marquer comme Prête ✅
-                        </button>
+                        <form method="POST" style="margin:0; margin-top: 15px;">
+                            <input type="hidden" name="action" value="prete">
+                            <input type="hidden" name="id_commande" value="<?= $cmd['id_commande'] ?>">
+                            <button type="submit" class="kanban-btn" style="background: #27ae60; margin-top: 0;">
+                                Marquer comme Prête ✅
+                            </button>
+                        </form>
                     </div>
                 <?php endforeach; ?>
             </div>
@@ -128,9 +152,17 @@ include_once __DIR__ . '/../includes/header.php';
                         <p style="text-align: center; color: #27ae60; font-weight: bold;">En attente de retrait</p>
                         
                         <?php if(($cmd['mode_retrait'] ?? 'livraison') === 'livraison'): ?>
-                            <button class="kanban-btn" style="background: var(--color-coal-black);" onclick="alert('Bientôt en Phase 3 : Choix du livreur')">
-                                🚴 Assigner un livreur
-                            </button>
+                            <form method="POST" style="margin:0; margin-top: 15px;">
+                                <input type="hidden" name="action" value="livrer">
+                                <input type="hidden" name="id_commande" value="<?= $cmd['id_commande'] ?>">
+                                <button type="submit" class="kanban-btn" style="background: var(--color-coal-black); margin-top: 0;">🚴 Assigner un livreur</button>
+                            </form>
+                        <?php else: ?>
+                            <form method="POST" style="margin:0; margin-top: 15px;">
+                                <input type="hidden" name="action" value="servie">
+                                <input type="hidden" name="id_commande" value="<?= $cmd['id_commande'] ?>">
+                                <button type="submit" class="kanban-btn" style="background: var(--color-coal-black); margin-top: 0;">🍽️ Marquer comme Servie</button>
+                            </form>
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>

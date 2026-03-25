@@ -52,13 +52,13 @@ if (isLoggedIn()) {
     // Application des Paliers de Fidélité (D'après la doc)
     if ($miams_historique < 1000) {
         $statut_miams = "PETIT GRILLEUR";
-        $color_miams = "var(--color-stone-gray)"; // #BDBDBD
+        $color_miams = "var(--color-grey-light)"; // #BDBDBD
     } elseif ($miams_historique < 3000) {
         $statut_miams = "SAUCE CHEF";
-        $color_miams = "var(--color-grill-red)"; // #D32F2F
+        $color_miams = "var(--color-primary)"; // #D32F2F
     } else {
         $statut_miams = "LÉGENDE DU STEAK";
-        $color_miams = "var(--color-fry-gold)"; // #FFC107
+        $color_miams = "var(--color-accent)"; // #FFC107
     }
 }
 
@@ -76,28 +76,28 @@ include_once __DIR__ . '/includes/header.php';
 <style>
     /* Amélioration de l'interface du Panier */
     .cart-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
-    .cart-table th { background: var(--color-coal-black); color: var(--color-sauce-cream); padding: 15px; text-align: left; }
+    .cart-table th { background: var(--color-secondary); color: var(--color-bg); padding: 15px; text-align: left; }
     .cart-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
     .cart-item-info { display: flex; align-items: center; }
     .cart-item-image { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; background: #eee; }
-    .cart-item-info h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--color-coal-black); }
-    .quantity-input { width: 60px; padding: 8px; border: 1px solid var(--color-stone-gray); border-radius: 4px; text-align: center; font-size: 1.1rem; }
-    .btn-remove { color: var(--color-grill-red); font-weight: bold; text-decoration: none; padding: 5px 10px; border-radius: 4px; border: 1px solid var(--color-grill-red); transition: all 0.3s; }
-    .btn-remove:hover { background: var(--color-grill-red); color: white; }
+    .cart-item-info h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--color-secondary); }
+    .quantity-input { width: 60px; padding: 8px; border: 1px solid var(--color-grey-light); border-radius: 4px; text-align: center; font-size: 1.1rem; }
+    .btn-remove { color: var(--color-primary); font-weight: bold; text-decoration: none; padding: 5px 10px; border-radius: 4px; border: 1px solid var(--color-primary); transition: all 0.3s; }
+    .btn-remove:hover { background: var(--color-primary); color: white; }
     
-    .cart-summary { background: var(--color-sauce-cream); padding: 25px; border-radius: 8px; margin-top: 30px; border: 2px solid var(--color-fry-gold); display: flex; justify-content: space-between; align-items: center; }
+    .cart-summary { background: var(--color-bg); padding: 25px; border-radius: 8px; margin-top: 30px; border: 2px solid var(--color-accent); display: flex; justify-content: space-between; align-items: center; }
     .cart-total { text-align: left; }
     .cart-total p { font-size: 1.2rem; margin: 0; }
-    .cart-total strong { color: var(--color-grill-red); font-size: 2.2rem; display: block; margin-top: 5px; }
-    
     .cart-actions { display: flex; align-items: center; gap: 15px; }
-    .btn-checkout { background: var(--color-fry-gold); color: var(--color-coal-black); font-size: 1.2rem; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .cart-total strong { color: var(--color-primary); font-size: 2.2rem; display: block; margin-top: 5px; }
+    
+    .btn-checkout { background: var(--color-accent); color: var(--color-secondary); font-size: 1.2rem; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
     .btn-checkout:hover { transform: scale(1.05); background: #FFD54F; }
-    .btn-update { background: var(--color-coal-black); color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
-    .btn-clear { color: var(--color-stone-gray); text-decoration: underline; }
+    .btn-update { background: var(--color-secondary); color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
+    .btn-clear { color: var(--color-grey-light); text-decoration: underline; }
     
     .empty-cart { text-align: center; padding: 50px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .empty-cart p { font-size: 1.5rem; color: var(--color-stone-gray); margin-bottom: 20px; }
+    .empty-cart p { font-size: 1.5rem; color: var(--color-grey-light); margin-bottom: 20px; }
     
     /* Mobile */
     @media (max-width: 768px) {
@@ -145,15 +145,16 @@ include_once __DIR__ . '/includes/header.php';
                                 <tr>
                                     <td class="cart-item-info">
                                         <?php if(!empty($item['image'])): ?>
-                                            <img src="/<?= htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['nom']) ?>" class="cart-item-image">
+                                            <img src="<?= str_starts_with($item['image'], '/') ? htmlspecialchars($item['image']) : '/' . htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['nom']) ?>" class="cart-item-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                            <div class="cart-item-image fallback-img" style="display:none; align-items:center; justify-content:center; font-size: 2rem; background: #eee;">🍔</div>
                                         <?php else: ?>
-                                            <div class="cart-item-image" style="display:flex; align-items:center; justify-content:center; font-size: 2rem;">🍔</div>
+                                            <div class="cart-item-image fallback-img" style="display:flex; align-items:center; justify-content:center; font-size: 2rem; background: #eee;">🍔</div>
                                         <?php endif; ?>
                                         <div>
                                             <h3><?= htmlspecialchars($item['nom']) ?></h3>
                                             <?php if (!empty($item['options'])): ?>
                                                 <p class="cart-item-options">
-                                                    Options: <?= htmlspecialchars(implode(', ', $item['options'])) ?>
+                                                    Options: <?= htmlspecialchars(is_array($item['options']) ? implode(', ', $item['options']) : $item['options']) ?>
                                                 </p>
                                             <?php endif; ?>
                                         </div>
@@ -174,17 +175,17 @@ include_once __DIR__ . '/includes/header.php';
 
                 <?php if (isLoggedIn()): ?>
                 <div class="loyalty-box" style="background: #fffdf7; padding: 20px; border-radius: 8px; margin-top: 20px; border: 3px solid <?= $color_miams ?>;">
-                    <h3 style="color: var(--color-coal-black); margin-bottom: 10px;">🥩 Le Grand Miam Club</h3>
+                    <h3 style="color: var(--color-secondary); margin-bottom: 10px;">🥩 Le Grand Miam Club</h3>
                     <p>Votre solde : <strong><?= $miams ?> Miams</strong> (Rang : <strong style="color: <?= $color_miams ?>;"><?= $statut_miams ?></strong>)</p>
                     
                     <?php if ($statut_miams === "SAUCE CHEF" || $statut_miams === "LÉGENDE DU STEAK"): ?>
-                        <div style="margin: 10px 0; padding: 10px; background: rgba(211, 47, 47, 0.1); border-left: 4px solid var(--color-grill-red); border-radius: 4px;">
-                            <p style="color: var(--color-grill-red); font-weight: bold; margin: 0;">🔥 Avantage Rang : Une portion de frites "Sweet Potato" offerte !</p>
+                        <div style="margin: 10px 0; padding: 10px; background: rgba(211, 47, 47, 0.1); border-left: 4px solid var(--color-primary); border-radius: 4px;">
+                            <p style="color: var(--color-primary); font-weight: bold; margin: 0;">🔥 Avantage Rang : Une portion de frites "Sweet Potato" offerte !</p>
                         </div>
                     <?php endif; ?>
                     <?php if ($statut_miams === "LÉGENDE DU STEAK"): ?>
-                        <div style="margin: 10px 0; padding: 10px; background: var(--color-coal-black); border-left: 4px solid var(--color-fry-gold); border-radius: 4px;">
-                            <p style="color: var(--color-fry-gold); font-weight: bold; margin: 0;">👑 Avantage Ultime : -10% sur toute la carte & Livraison Prioritaire !</p>
+                        <div style="margin: 10px 0; padding: 10px; background: var(--color-secondary); border-left: 4px solid var(--color-accent); border-radius: 4px;">
+                            <p style="color: var(--color-accent); font-weight: bold; margin: 0;">👑 Avantage Ultime : -10% sur toute la carte & Livraison Prioritaire !</p>
                         </div>
                     <?php endif; ?>
 
@@ -224,7 +225,7 @@ include_once __DIR__ . '/includes/header.php';
                         </div>
                     </div>
                     
-                    <p style="font-size: 0.95rem; margin-top: 15px; color: var(--color-grill-red);">
+                    <p style="font-size: 0.95rem; margin-top: 15px; color: var(--color-primary);">
                         ✨ En réglant cette commande, vous cumulerez <strong><?= floor($cart['total'] * 10) ?> Miams</strong> supplémentaires !
                     </p>
                 </div>
@@ -242,7 +243,7 @@ include_once __DIR__ . '/includes/header.php';
                         <?php if (isLoggedIn()): ?>
                             <a href="/api/commander.php" class="btn-checkout">Payer la commande 💳</a>
                         <?php else: ?>
-                            <a href="/api/pages/connexion.php?error=must_login" class="btn-checkout" style="background: var(--color-grill-red); color: white;">Me connecter pour payer 🔒</a>
+                            <a href="/api/pages/connexion.php?error=must_login" class="btn-checkout" style="background: var(--color-primary); color: white;">Me connecter pour payer 🔒</a>
                         <?php endif; ?>
                     </div>
                 </div>

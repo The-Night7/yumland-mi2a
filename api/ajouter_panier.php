@@ -12,8 +12,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $quantite = isset($_POST['quantite']) ? (int)$_POST['quantite'] : 1;
     
     // Récupération des options choisies par le client via le JS du front-end
-    $options = isset($_POST['options']) ? json_decode($_POST['options'], true) : [];
-    if (!is_array($options)) $options = [];
+    $options = [];
+    if (isset($_POST['options'])) {
+        if (is_array($_POST['options'])) {
+            $options = $_POST['options'];
+        } else {
+            $options = json_decode($_POST['options'], true) ?: [];
+        }
+    }
 
     if ($id_produit > 0) {
         // 1. Récupérer les informations du plat dans la base
@@ -41,11 +47,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             // 4. Si c'est un nouveau plat, on l'ajoute au tableau
             if (!$found) {
+                // Ajustement du prix si une option contient un tarif (ex: "1L - 5.50 €")
+                $prix_final = $plat['prix'];
+                if (!empty($options) && is_array($options)) {
+                    foreach ($options as $opt) {
+                        if (preg_match('/-\s*([0-9]+[.,][0-9]{2})\s*€/', $opt, $matches)) {
+                            $prix_final = (float)str_replace(',', '.', $matches[1]);
+                        }
+                    }
+                }
+
                 $_SESSION['cart']['items'][] = [
                     'id' => $id_produit,
                     'plat_id' => $id_produit,
                     'nom' => $plat['nom'],
-                    'prix_unitaire' => $plat['prix'],
+                    'prix_unitaire' => $prix_final,
                     'quantite' => $quantite,
                     'image' => $plat['image'],
                     'options' => $options

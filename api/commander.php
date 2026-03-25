@@ -38,10 +38,15 @@ try {
     $id_commande = $pdo->lastInsertId();
 
     // On insère le contenu du panier
-    $stmtItem = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire) VALUES (?, ?, ?, ?)");
+    $stmtItem = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire, options_choisies) VALUES (?, ?, ?, ?, ?)");
     foreach ($_SESSION['cart']['items'] as $item) {
         $id_prod = $item['plat_id'] ?? $item['id'] ?? 1;
-        $stmtItem->execute([$id_commande, $id_prod, $item['quantite'], $item['prix_unitaire']]);
+        $opts_str = '';
+        if (!empty($item['options'])) {
+            $opts_str = is_array($item['options']) ? implode(', ', $item['options']) : $item['options'];
+        }
+        
+        $stmtItem->execute([$id_commande, $id_prod, $item['quantite'], $item['prix_unitaire'], $opts_str]);
     }
 } catch (Exception $e) {
     die("Erreur de création de commande : " . $e->getMessage());

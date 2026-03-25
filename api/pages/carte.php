@@ -1,6 +1,4 @@
-<?php 
-// Ajoutez cette ligne au tout début, juste avant require_once 'header.php'
-$currentPage = 'carte';   
+<?php
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/plats.php';
@@ -17,32 +15,52 @@ if (isset($_SESSION['cart_message'])) {
 }
 
 // Définir la page courante pour le menu actif
+$currentPage = 'carte';
 $pageTitle = 'Notre Carte';
 
 // Récupérer les produits pour associer les boutons d'ajout au bon ID
 $stmt = $pdo->query("SELECT id_produit, nom FROM Produits");
 $tous_les_produits = $stmt->fetchAll();
 
-function getPlatId($recherche, $produits) {
+function searchPlatId($recherche, $produits) {
     foreach ($produits as $p) {
         if (stripos($p['nom'], $recherche) !== false) {
             return $p['id_produit'];
         }
     }
-    return 1; // ID par défaut si introuvable
+    return -1; // Indicateur d'absence
+}
+
+// Auto-Création des Menus dans la BDD s'ils n'existent pas
+$menus_a_creer = [
+    'Formule LUNCH EXPRESS' => 16.90,
+    'Menu LITTLE COWBOY' => 10.90,
+    'Menu GRILL MASTER' => 32.00
+];
+$besoin_refresh = false;
+
+foreach ($menus_a_creer as $nom => $prix) {
+    if (searchPlatId($nom, $tous_les_produits) === -1) {
+        try {
+            $stmtInsert = $pdo->prepare("INSERT INTO Produits (nom, description, prix, categorie) VALUES (?, ?, ?, ?)");
+            $stmtInsert->execute([$nom, 'Menu complet à composer', $prix, 'Menus']);
+            $besoin_refresh = true;
+        } catch (Exception $e) {}
+    }
+}
+
+if ($besoin_refresh) {
+    $stmt = $pdo->query("SELECT id_produit, nom FROM Produits");
+    $tous_les_produits = $stmt->fetchAll();
+}
+
+function getPlatId($recherche, $produits) {
+    $id = searchPlatId($recherche, $produits);
+    return $id !== -1 ? $id : 1; // 1 par défaut pour éviter de casser le frontend
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>La Carte | Le Grand Miam</title>
-</head>
-<body>
-
-<main class="menu-container">
+<div class="menu-container">
     <h1>Notre Carte</h1>
     <p class="intro-text">Steakhouse, Grillades & Burgers XXL - Une expérience culinaire unique</p>
     
@@ -316,7 +334,11 @@ function getPlatId($recherche, $produits) {
             <td>Eaux</td>
             <td>Vittel, San Pellegrino (50cl / 1L)</td>
             <td>3.50 € / 5.50 €</td>
-            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" onclick="ajouterAuPanier(<?= getPlatId('Eaux', $tous_les_produits) ?>)">Ajouter 🛒</button></td>
+            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId('Eaux', $tous_les_produits) ?>" 
+                data-nom="Eaux" 
+                data-options='[{"titre":"Format","choix":["50cl - 3.50 €","1L - 5.50 €"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button></td>
         </tr>
         <tr>
             <td>Sirop à l'eau</td>
@@ -333,13 +355,21 @@ function getPlatId($recherche, $produits) {
             <td>Bière Pression Blonde</td>
             <td>Premium (25cl / 50cl)</td>
             <td>4.00 € / 7.50 €</td>
-            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" onclick="ajouterAuPanier(<?= getPlatId('Blonde', $tous_les_produits) ?>)">Ajouter 🛒</button></td>
+            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId('Blonde', $tous_les_produits) ?>" 
+                data-nom="Bière Pression Blonde" 
+                data-options='[{"titre":"Format","choix":["25cl - 4.00 €","50cl (Pinte) - 7.50 €"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button></td>
         </tr>
         <tr>
             <td>Bière Pression IPA</td>
             <td>Craft (25cl / 50cl)</td>
             <td>5.00 € / 8.50 €</td>
-            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" onclick="ajouterAuPanier(<?= getPlatId('IPA', $tous_les_produits) ?>)">Ajouter 🛒</button></td>
+            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId('IPA', $tous_les_produits) ?>" 
+                data-nom="Bière Pression IPA" 
+                data-options='[{"titre":"Format","choix":["25cl - 5.00 €","50cl (Pinte) - 8.50 €"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button></td>
         </tr>
         <tr>
             <td>Budweiser</td>
@@ -357,13 +387,21 @@ function getPlatId($recherche, $produits) {
             <td>Vin Rouge</td>
             <td>Côtes du Rhône ou Bordeaux (Verre 12cl / Bouteille)</td>
             <td>5.00 € / 24.00 €</td>
-            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" onclick="ajouterAuPanier(<?= getPlatId('Vin Rouge', $tous_les_produits) ?>)">Ajouter 🛒</button></td>
+            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId('Vin Rouge', $tous_les_produits) ?>" 
+                data-nom="Vin Rouge" 
+                data-options='[{"titre":"Format","choix":["Verre 12cl - 5.00 €","Bouteille - 24.00 €"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button></td>
         </tr>
         <tr>
             <td>Vin Rosé</td>
             <td>Côte de Provence (Verre 12cl / Bouteille)</td>
             <td>5.00 € / 22.00 €</td>
-            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" onclick="ajouterAuPanier(<?= getPlatId('Vin Rosé', $tous_les_produits) ?>)">Ajouter 🛒</button></td>
+            <td><button class="btn-primary" style="padding: 5px 10px; border-radius: 20px; font-size: 0.85rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId('Vin Rosé', $tous_les_produits) ?>" 
+                data-nom="Vin Rosé" 
+                data-options='[{"titre":"Format","choix":["Verre 12cl - 5.00 €","Bouteille - 22.00 €"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button></td>
         </tr>
         
         <tr class="separator"><td colspan="5"></td></tr>
@@ -447,8 +485,13 @@ function getPlatId($recherche, $produits) {
                 </ul>
                 <p>Tous servis avec Frites Maison à volonté & Salade</p>
             </li>
-            <li><strong>BOISSON</strong> : Soft (33cl), Verre de vin (12cl) ou Café</li>
+            <li><strong>BOISSON</strong> : Coca-Cola, Fanta, Sprite (33cl), Verre de vin (12cl) ou Café</li>
         </ul>
+        <button class="btn-primary" style="margin-top: 10px; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId("LUNCH EXPRESS", $tous_les_produits) ?>" 
+                data-nom="Formule LUNCH EXPRESS" 
+                data-options='[{"titre":"Plat","choix":["Burger Le Grand Miam","Le Pavé du Chef","Veggie Grill"]},{"titre":"Boisson","choix":["Coca-Cola (33cl)","Coca Zéro (33cl)","Fanta (33cl)","Sprite (33cl)","Ice Tea (33cl)","Verre de vin (12cl)","Café"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button>
     </div>
     
     <div class="menu-formule">
@@ -470,6 +513,11 @@ function getPlatId($recherche, $produits) {
             </li>
             <li><strong>BOISSON</strong> : Sirop à l'eau ou Jus de pomme</li>
         </ul>
+        <button class="btn-primary" style="margin-top: 10px; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId("LITTLE COWBOY", $tous_les_produits) ?>" 
+                data-nom="Menu LITTLE COWBOY" 
+                data-options='[{"titre":"Plat","choix":["Mini Cheeseburger","Nuggets de Poulet"]},{"titre":"Accompagnement","choix":["Frites","Haricots verts"]},{"titre":"Dessert","choix":["Sundae Vanille Chocolat","Sundae Vanille Fraise","Compote de fruits"]},{"titre":"Boisson","choix":["Sirop à l&apos;eau","Jus de pomme"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button>
     </div>
     
     <div class="menu-formule">
@@ -497,15 +545,25 @@ function getPlatId($recherche, $produits) {
                 </ul>
                 <p><em>Exclusion : Profiteroles XXL +2€</em></p>
             </li>
-            <li><strong>BOISSON INCLUSE</strong> : Pinte de Bière (50cl) ou Soft (50cl)</li>
+            <li><strong>BOISSON INCLUSE</strong> : Pinte de Bière (50cl) ou Soft au choix (50cl)</li>
         </ul>
+        <button class="btn-primary" style="margin-top: 10px; padding: 8px 15px; border-radius: 20px; font-size: 0.9rem; border: none; cursor: pointer;" 
+                data-id="<?= getPlatId("GRILL MASTER", $tous_les_produits) ?>" 
+                data-nom="Menu GRILL MASTER" 
+                data-options='[{"titre":"Entrée","choix":["Onion Rings","Os à Moelle","Œuf Mayo"]},{"titre":"Plat","choix":["Burger Le Grand Miam","Burger Cheesy Tower","Burger Montagnard","Burger Frenchy","BBQ Ribs","Magret de Canard","Le Pavé du Chef","Pavé de Saumon"]},{"titre":"Dessert","choix":["Cheesecake","Brioche Perdue","Coupe de Glace 3 boules"]},{"titre":"Boisson","choix":["Pinte de Bière","Coca-Cola (50cl)","Coca Zéro (50cl)","Fanta (50cl)","Sprite (50cl)","Ice Tea (50cl)"]}]'
+                onclick="openMenuModal(this)">Ajouter 🛒</button>
     </div>
-</main>
+</div>
 
-<footer>
-    <p>&copy; 2026 Le Grand Miam - Projet Creative Yumland</p>
-</footer>
 <script>
+    // --- FONCTION POUR OUVRIR LA MODAL MENU ---
+    function openMenuModal(btn) {
+        const id = btn.getAttribute('data-id');
+        const nom = btn.getAttribute('data-nom');
+        const options = btn.getAttribute('data-options');
+        showOptionsModal(id, nom, options);
+    }
+
     // --- FONCTION AJOUTER AU PANIER EN AJAX ---
     function ajouterAuPanier(id_produit) {
         const formData = new FormData();
@@ -577,8 +635,17 @@ function getPlatId($recherche, $produits) {
         });
     }
     
-    document.addEventListener('DOMContentLoaded', applyFilters);
+    document.addEventListener('DOMContentLoaded', () => {
+        applyFilters();
+        // Coloration automatique des prix en rouge et textes en noir
+        document.querySelectorAll('.menu-table td').forEach(td => {
+            td.style.color = 'var(--color-coal-black, #000)';
+            if (td.textContent.includes('€') && !td.querySelector('button')) {
+                td.style.color = 'var(--color-primary, #d32f2f)';
+                td.style.fontWeight = 'bold';
+            }
+        });
+    });
 </script>
 
-</body>
-</html>
+<?php require_once __DIR__ . '/../includes/footer.php'; ?>
