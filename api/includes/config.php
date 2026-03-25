@@ -1,76 +1,90 @@
 <?php
 /**
- * Fichier de configuration principale - Projet Yumland (Phase 2)
- * Contient les paramètres globaux, la sécurité et la connexion à la base de données SQL
+ * Fichier de configuration principale - Projet Yumland
+ * Gère la connexion hybride (Local / Vercel / Aiven)
  */
 
-// Configuration de l'application
+// 1. CONFIGURATION DE L'APPLICATION
 define('APP_NAME', 'Le Grand Miam');
 define('APP_VERSION', '3.0');
-define('DEBUG_MODE', false); // Mettre à false en production
+define('DEBUG_MODE', true); // Mettez à false une fois que tout fonctionne sur Vercel
 
-// ---------------------------------------------------------
-// 1. SÉCURITÉ ET SESSIONS
-// ------------------------------------// Configuration sécurisée des sessions (À mettre AVANT le session_start)
+// 2. SÉCURITÉ ET SESSIONS
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
+    // Sur Vercel (HTTPS), décommentez la ligne suivante :
+    // ini_set('session.cookie_secure', 1); 
     session_start();
 }
-// ---------------------------------------------------------
-// 2. CONNEXION À LA BASE DE DONNÉES (MYSQL)
-// ---------------------------------------------------------
 
-// Configuration MySQL (à adapter selon votre environnement WAMP/XAMPP)
-define('DB_HOST', 'yumlandbase-yumland.l.aivencloud.com');
-define('DB_PORT', '25645'); // <--- TRÈS IMPORTANT sur Aiven
-define('DB_NAME', 'defaultdb'); // Nom de la base de données
-define('DB_USER', 'avnadmin');      // Nouvel utilisateur dédié
-define('DB_PASS', 'AVNS_PH3P24uM4D2Vg9YHMvZ'); // Nouveau mot de passe (plus sécurisé)
+// 3. RÉCUPÉRATION DES PARAMÈTRES (Priorité aux variables d'environnement Vercel)
+$host = getenv('DB_HOST')     ?: 'yumlandbase-yumland.l.aivencloud.com';
+$port = getenv('DB_PORT')     ?: '25645';
+$db   = getenv('DB_NAME')     ?: 'defaultdb';
+$user = getenv('DB_USER')     ?: 'avnadmin';
+$pass = getenv('DB_PASSWORD') ?: 'AVNS_PH3P24uM4D2Vg9YHMvZ';
 
-define('DB_SSL_CA', __DIR__ . '/ca.pem');
+// Chemin vers le certificat SSL (indispensable pour Aiven)
+$ssl_ca = __DIR__ . '/ca.pem';
 
+// 4. CONNEXION À LA BASE DE DONNÉES
 try {
-    $dsn = 'mysql:host=' . DB_HOST . ';port=' . DB_PORT . ';dbname=' . DB_NAME . ';charset=utf8mb4';
+    $dsn = "mysql:host=$host;dbname=$db;port=$port;charset=utf8mb4";
     
-    // Configuration spécifique pour Aiven (SSL obligatoire + Mode erreur)
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        // Active le SSL si tu as le fichier ca.pem
-        // PDO::MYSQL_ATTR_SSL_CA       => DB_SSL_CA, 
+        PDO::ATTR_EMULATE_PREPARES   => false,
     ];
 
-    // LA CORRECTION EST ICI : Ajout de "new PDO"
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+    // Activation du SSL pour Aiven / Vercel
+    if (file_exists($ssl_ca)) {
+        $options[PDO::MYSQL_ATTR_SSL_CA] = $ssl_ca;
+        // Optionnel : désactive la vérification du nom d'hôte si certificat auto-signé
+        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false; 
+    }
+
+    $pdo = new PDO($dsn, $user, $pass, $options);
 
 } catch (PDOException $e) {
-    die("Erreur critique de connexion à la base de données : " . $e->getMessage());
+    if (DEBUG_MODE) {
+        die("Erreur critique de connexion : " . $e->getMessage());
+    } else {
+        die("Erreur de connexion au serveur de données. Veuillez réessayer plus tard.");
+    }
 }
 
-// ---------------------------------------------------------
-// 3. FONCTIONS UTILITAIRES ET AUTHENTIFICATION
-// ---------------------------------------------------------
+// 5. FONCTIONS UTILITAIRES
 
+/**
+ * Vérifie si l'utilisateur est connecté
+ */
+function isLoggedIn() {
+    return isset($_SESSION['user_id']);
+}
+
+/**
+ * Vérifie si l'utilisateur a un rôle spécifique
+ */
+function hasRole($role) {
+    return isLoggedIn() && isset($_SESSION['user_role']) && $_SESSION['user_role'] === $role;
+}
+
+/**
+ * Debug propre
+ */
 function debug($var) {
     if (DEBUG_MODE) {
-        echo '<pre style="background:#eee; padding:10px; border:1px solid #ccc;">';
+        echo '<pre style="background:#f4f4f4; padding:10px; border:1px solid #ccc; font-size:12px;">';
         print_r($var);
         echo '</pre>';
     }
 }
 
-
-
-function hasRole($role) {
-    if (!isLoggedIn()) return false;
-    return $_SESSION['user_role'] === $role;
-}
-
-// ---------------------------------------------------------
-// 4. PROTECTION CSRF (Phase 4)
-// ---------------------------------------------------------
-
+/**
+ * Sécurité CSRF
+ */
 function generateCSRFToken() {
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -80,7 +94,8 @@ function generateCSRFToken() {
 
 function verifyCSRFToken($token) {
     if (!isset($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-        die('Erreur de sécurité : Validation du token CSRF a échoué.');
+        header('HTTP/1.1 403 Forbidden');
+        die('Erreur de sécurité CSRF.');
     }
     return true;
 }
