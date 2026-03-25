@@ -20,6 +20,20 @@ $cartItemCount = getCartItemCount();
         <?php endforeach; ?>
     <?php endif; ?>
     <style>
+        /* --- FORCER LE FOOTER EN BAS (STICKY FOOTER) --- */
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Prend au minimum la hauteur de l'écran */
+        }
+        main {
+            flex: 1 0 auto; /* Permet au contenu principal de s'étirer pour pousser le footer */
+        }
+
         /* --- STYLE DU MENU DÉROULANT --- */
         .nav-links .dropdown {
             position: relative;
