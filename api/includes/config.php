@@ -35,7 +35,14 @@ try {
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+<<<<<<< HEAD
+        // Active le SSL (Obligatoire pour Aiven)
+        PDO::MYSQL_ATTR_SSL_CA       => DB_SSL_CA, 
+        // Garde la connexion ouverte pour accélérer les chargements (Persistance)
+        PDO::ATTR_PERSISTENT         => true,
+=======
         PDO::ATTR_EMULATE_PREPARES   => false,
+>>>>>>> bd070397593312fe9ea61abe4ac245172998cdc8
     ];
 
     // Activation du SSL pour Aiven / Vercel

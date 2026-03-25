@@ -40,14 +40,26 @@ $cart = getCart();
 // Récupération du solde Miams si connecté
 $miams = 0;
 $statut_miams = "";
+$color_miams = "var(--color-stone-gray)"; // Couleur par défaut (Niveau 1)
+
 if (isLoggedIn()) {
-    $stmtMiams = $pdo->prepare("SELECT solde_miams FROM Utilisateurs WHERE id_user = ?");
+    $stmtMiams = $pdo->prepare("SELECT solde_miams, total_miams_historique FROM Utilisateurs WHERE id_user = ?");
     $stmtMiams->execute([$_SESSION['user_id']]);
     $userMiams = $stmtMiams->fetch();
     $miams = $userMiams['solde_miams'] ?? 0;
-    if ($miams < 150) $statut_miams = "Débutant 🥉";
-    elseif ($miams < 500) $statut_miams = "Argent 🥈";
-    else $statut_miams = "Or 🥇";
+    $miams_historique = $userMiams['total_miams_historique'] ?? $miams;
+    
+    // Application des Paliers de Fidélité (D'après la doc)
+    if ($miams_historique < 1000) {
+        $statut_miams = "PETIT GRILLEUR";
+        $color_miams = "var(--color-stone-gray)"; // #BDBDBD
+    } elseif ($miams_historique < 3000) {
+        $statut_miams = "SAUCE CHEF";
+        $color_miams = "var(--color-grill-red)"; // #D32F2F
+    } else {
+        $statut_miams = "LÉGENDE DU STEAK";
+        $color_miams = "var(--color-fry-gold)"; // #FFC107
+    }
 }
 
 // Générer un token CSRF
@@ -161,23 +173,59 @@ include_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <?php if (isLoggedIn()): ?>
-                <div class="loyalty-box" style="background: #fffdf7; padding: 20px; border-radius: 8px; margin-top: 20px; border: 2px dashed var(--color-fry-gold);">
-                    <h3 style="color: var(--color-coal-black); margin-bottom: 10px;">🎁 Options Le Grand Miam Club</h3>
-                    <p>Votre solde : <strong><?= $miams ?> Miams</strong> (Statut : <?= $statut_miams ?>)</p>
+                <div class="loyalty-box" style="background: #fffdf7; padding: 20px; border-radius: 8px; margin-top: 20px; border: 3px solid <?= $color_miams ?>;">
+                    <h3 style="color: var(--color-coal-black); margin-bottom: 10px;">🥩 Le Grand Miam Club</h3>
+                    <p>Votre solde : <strong><?= $miams ?> Miams</strong> (Rang : <strong style="color: <?= $color_miams ?>;"><?= $statut_miams ?></strong>)</p>
                     
-                    <?php if ($miams >= 100): ?>
-                        <div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 4px;">
-                            <label style="font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 10px;">
-                                <input type="checkbox" name="use_miams" value="100" style="width: 20px; height: 20px;">
-                                Utiliser 100 Miams pour obtenir -10,00 € sur cette commande
+                    <?php if ($statut_miams === "SAUCE CHEF" || $statut_miams === "LÉGENDE DU STEAK"): ?>
+                        <div style="margin: 10px 0; padding: 10px; background: rgba(211, 47, 47, 0.1); border-left: 4px solid var(--color-grill-red); border-radius: 4px;">
+                            <p style="color: var(--color-grill-red); font-weight: bold; margin: 0;">🔥 Avantage Rang : Une portion de frites "Sweet Potato" offerte !</p>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($statut_miams === "LÉGENDE DU STEAK"): ?>
+                        <div style="margin: 10px 0; padding: 10px; background: var(--color-coal-black); border-left: 4px solid var(--color-fry-gold); border-radius: 4px;">
+                            <p style="color: var(--color-fry-gold); font-weight: bold; margin: 0;">👑 Avantage Ultime : -10% sur toute la carte & Livraison Prioritaire !</p>
+                        </div>
+                    <?php endif; ?>
+
+                    <div style="margin-top: 15px;">
+                        <p style="font-weight: bold; margin-bottom: 10px;">Le Shop (Échangez vos Miams) :</p>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <!-- Option 150 Miams -->
+                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 150 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 150 ? '1' : '0.5' ?>;">
+                                <input type="radio" name="use_miams" value="150" <?= $miams < 150 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
+                                <strong>150 Miams</strong> : Une Sauce Maison offerte (valeur 1.50 €) 🥫
+                            </label>
+                            
+                            <!-- Option 300 Miams -->
+                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 300 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 300 ? '1' : '0.5' ?>;">
+                                <input type="radio" name="use_miams" value="300" <?= $miams < 300 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
+                                <strong>300 Miams</strong> : Un Soft ou une Bière (25cl) (valeur 3.50 €) 🍺
+                            </label>
+
+                            <!-- Option 800 Miams -->
+                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 800 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 800 ? '1' : '0.5' ?>;">
+                                <input type="radio" name="use_miams" value="800" <?= $miams < 800 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
+                                <strong>800 Miams</strong> : Un Dessert (Cookie ou Profiterole) (valeur 8.00 €) 🍪
+                            </label>
+                            
+                            <!-- Option 1500 Miams -->
+                            <label style="cursor: pointer; padding: 10px; background: <?= $miams >= 1500 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; align-items: center; gap: 10px; opacity: <?= $miams >= 1500 ? '1' : '0.5' ?>;">
+                                <input type="radio" name="use_miams" value="1500" <?= $miams < 1500 ? 'disabled' : '' ?> style="width: 18px; height: 18px;">
+                                <strong>1500 Miams</strong> : Le Burger "Grand Miam" Offert (valeur 16.90 €) 🍔
+                            </label>
+                            
+                            <!-- Option Aucune (par défaut) -->
+                            <label style="cursor: pointer; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
+                                <input type="radio" name="use_miams" value="0" checked style="width: 18px; height: 18px;">
+                                Conserver mes Miams pour plus tard
                             </label>
                         </div>
-                    <?php else: ?>
-                        <p style="font-size: 0.95rem; color: #666; margin-top: 10px;"><em>Encore <strong><?= 100 - $miams ?> Miams</strong> pour débloquer votre première réduction de 10€ !</em></p>
-                    <?php endif; ?>
+                    </div>
                     
-                    <p style="font-size: 0.9rem; margin-top: 10px; color: var(--color-grill-red);">
-                        ✨ Cette commande va vous rapporter environ <strong><?= floor($cart['total'] * 10) ?> Miams</strong> !
+                    <p style="font-size: 0.95rem; margin-top: 15px; color: var(--color-grill-red);">
+                        ✨ En réglant cette commande, vous cumulerez <strong><?= floor($cart['total'] * 10) ?> Miams</strong> supplémentaires !
                     </p>
                 </div>
                 <?php endif; ?>

@@ -39,9 +39,16 @@ $user = $stmt->fetch();
 
 // Détermination du statut Miams
 $miams = $user['solde_miams'] ?? 0;
-if ($miams < 150) $statut_miams = "Débutant 🥉";
-elseif ($miams < 500) $statut_miams = "Argent 🥈";
-else $statut_miams = "Or 🥇";
+$miams_historique = $user['total_miams_historique'] ?? $miams;
+
+// Application des Paliers de Fidélité (D'après la doc)
+if ($miams_historique < 1000) {
+    $statut_miams = "PETIT GRILLEUR 🥉";
+} elseif ($miams_historique < 3000) {
+    $statut_miams = "SAUCE CHEF 🥈";
+} else {
+    $statut_miams = "LÉGENDE DU STEAK 🥇";
+}
 
 $currentPage = 'profil';
 $pageTitle = 'Mon Profil';
@@ -54,6 +61,7 @@ include_once __DIR__ . '/../includes/header.php';
         <div style="background: var(--color-sauce-cream); padding: 15px; border-left: 4px solid var(--color-fry-gold); margin-bottom: 20px;">
             <h3 style="margin-bottom: 5px;">Club Le Grand Miam</h3>
             <p>Solde Miams actuel : <strong><?= htmlspecialchars($miams) ?> 🍔</strong></p>
+            <p style="font-size: 0.9em; color: #666;">Total Miams cumulés (à vie) : <?= htmlspecialchars($miams_historique) ?></p>
             <p>Statut fidélité : <strong><?= $statut_miams ?></strong></p>
         </div>
         
