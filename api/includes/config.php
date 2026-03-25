@@ -28,6 +28,19 @@ $pass = getenv('DB_PASSWORD') ?: 'AVNS_PH3P24uM4D2Vg9YHMvZ';
 // Chemin vers le certificat SSL (indispensable pour Aiven)
 $ssl_ca = __DIR__ . '/ca.pem';
 
+// Si on est sur Vercel, on récupère le contenu du certificat depuis les variables d'environnement
+$ca_content = getenv('DB_SSL_CA');
+
+if ($ca_content) {
+    // Vercel autorise l'écriture dans le dossier temporaire /tmp
+    $ssl_ca = sys_get_temp_dir() . '/aiven_ca.pem';
+    
+    // On crée le fichier temporaire s'il n'existe pas déjà pour cette exécution
+    if (!file_exists($ssl_ca)) {
+        file_put_contents($ssl_ca, str_replace('\n', "\n", $ca_content));
+    }
+}
+
 // 4. CONNEXION À LA BASE DE DONNÉES
 try {
     $dsn = "mysql:host=$host;dbname=$db;port=$port;charset=utf8mb4";
