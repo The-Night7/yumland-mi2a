@@ -37,8 +37,10 @@ try {
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        // Active le SSL si tu as le fichier ca.pem
-        // PDO::MYSQL_ATTR_SSL_CA       => DB_SSL_CA, 
+        // Active le SSL (Obligatoire pour Aiven)
+        PDO::MYSQL_ATTR_SSL_CA       => DB_SSL_CA, 
+        // Garde la connexion ouverte pour accélérer les chargements (Persistance)
+        PDO::ATTR_PERSISTENT         => true,
     ];
 
     // LA CORRECTION EST ICI : Ajout de "new PDO"

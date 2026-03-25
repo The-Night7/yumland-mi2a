@@ -10,6 +10,10 @@ header('Content-Type: application/json');
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_produit = isset($_POST['id_produit']) ? (int)$_POST['id_produit'] : 0;
     $quantite = isset($_POST['quantite']) ? (int)$_POST['quantite'] : 1;
+    
+    // Récupération des options choisies par le client via le JS du front-end
+    $options = isset($_POST['options']) ? json_decode($_POST['options'], true) : [];
+    if (!is_array($options)) $options = [];
 
     if ($id_produit > 0) {
         // 1. Récupérer les informations du plat dans la base
@@ -24,11 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // 3. Chercher si le plat est déjà dans le panier pour juste augmenter la quantité
             $found = false;
             foreach ($_SESSION['cart']['items'] as &$item) {
-                if ((isset($item['id']) && $item['id'] == $id_produit) || 
-                    (isset($item['plat_id']) && $item['plat_id'] == $id_produit)) {
-                    $item['quantite'] += $quantite;
-                    $found = true;
-                    break;
+                // On vérifie que c'est le même ID ET les mêmes options exactes
+                $isSameProduct = ((isset($item['id']) && $item['id'] == $id_produit) || (isset($item['plat_id']) && $item['plat_id'] == $id_produit));
+                $hasSameOptions = (isset($item['options']) && $item['options'] == $options);
+
+                if ($isSameProduct && $hasSameOptions) {
+                     $item['quantite'] += $quantite;
+                     $found = true;
+                     break;
                 }
             }
 
@@ -41,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'prix_unitaire' => $plat['prix'],
                     'quantite' => $quantite,
                     'image' => $plat['image'],
-                    'options' => []
+                    'options' => $options
                 ];
             }
 

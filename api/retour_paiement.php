@@ -30,7 +30,12 @@ if ($control === $expected_control && $status === 'accepted' && $id_commande > 0
         $stmtPaiement = $pdo->prepare("INSERT INTO Paiements (id_commande, id_client, montant, cybank_transaction_id) VALUES (?, ?, ?, ?)");
         $stmtPaiement->execute([$id_commande, $_SESSION['user_id'] ?? 1, $montant, $transaction]);
 
-        // 3. Vider le panier
+        // 3. Ajouter les Miams au client (1€ = 10 Miams)
+        $miams_gagnes = floor($montant * 10);
+        $stmtMiams = $pdo->prepare("UPDATE Utilisateurs SET solde_miams = solde_miams + ?, total_miams_historique = total_miams_historique + ? WHERE id_user = ?");
+        $stmtMiams->execute([$miams_gagnes, $miams_gagnes, $_SESSION['user_id'] ?? 1]);
+
+        // 4. Vider le panier
         clearCart();
 
         header('Location: /api/client/commandes.php?success=commande_validee');

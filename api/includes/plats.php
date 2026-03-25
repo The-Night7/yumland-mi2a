@@ -16,7 +16,8 @@ function getPlatById($id) {
                 'prix' => $plat['prix'],
                 'image' => $plat['image_url'] ?? '',
                 'categorie' => $plat['categorie'] ?? '',
-                'description' => $plat['description'] ?? ''
+                'description' => $plat['description'] ?? '',
+                'options_config' => !empty($plat['options_config']) ? json_decode($plat['options_config'], true) : []
             ];
         }
     } catch (PDOException $e) {

@@ -26,9 +26,15 @@ $user_id = $_SESSION['user_id'];
 
 // 1. CRÉATION DE LA COMMANDE EN BASE D'ABORD (Statut 'En attente')
 try {
+    // On récupère l'adresse de l'utilisateur pour l'attacher à la commande
+    $stmtUser = $pdo->prepare("SELECT adresse FROM Utilisateurs WHERE id_user = ?");
+    $stmtUser->execute([$user_id]);
+    $user = $stmtUser->fetch();
+    $adresse_livraison = $user['adresse'] ?? 'Adresse non renseignée';
+
     // On insère la commande pour générer un VRAI id_trans (numéro de commande SQL)
-    $stmt = $pdo->prepare("INSERT INTO Commandes (id_client, prix_total, statut, paiement_statut) VALUES (?, ?, 'En attente', 'En cours de paiement')");
-    $stmt->execute([$user_id, $total]);
+    $stmt = $pdo->prepare("INSERT INTO Commandes (id_client, prix_total, statut, paiement_statut, adresse_livraison) VALUES (?, ?, 'En attente', 'En cours de paiement', ?)");
+    $stmt->execute([$user_id, $total, $adresse_livraison]);
     $id_commande = $pdo->lastInsertId();
 
     // On insère le contenu du panier
