@@ -11,18 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // Récupération du livreur connecté
-$livreur_id = $_SESSION['user_id'] ?? 9;
+$livreur_id = $_SESSION['user_id'] ?? null;
+if (!$livreur_id) {
+    $stmtLiv = $pdo->query("SELECT id_user FROM Utilisateurs WHERE role = 'Livreur' LIMIT 1");
+    $liv = $stmtLiv->fetch();
+    $livreur_id = $liv ? $liv['id_user'] : 9;
+}
 $mes_livraisons = getCommandesByLivreur($livreur_id);
 
-// 🛠️ FAKE COMMANDE : Si aucune commande, on en simule une pour valider l'interface
-if (empty($mes_livraisons)) {
-    $mes_livraisons[] = [
-        'id_commande' => '9999 (Démo)',
-        'adresse_livraison' => 'Avenue du Parc, 95000 Cergy',
-        'statut' => 'En livraison',
-        'prix_total' => 24.50
-    ];
-}
 ?>
 
 <section class="container" style="max-width: 600px; margin: 0 auto;">
@@ -50,7 +46,6 @@ if (empty($mes_livraisons)) {
                     🗺️ OUVRIR DANS MAPS
                 </a>
                 
-                <?php if ($livraison['id_commande'] !== '9999 (Démo)'): ?>
                 <form method="POST" style="margin: 0; display: flex; flex-direction: column; gap: 15px;">
                     <input type="hidden" name="action" value="terminee">
                     <input type="hidden" name="id_commande" value="<?= $livraison['id_commande'] ?>">
@@ -61,7 +56,6 @@ if (empty($mes_livraisons)) {
                         ❌ PROBLÈME DE LIVRAISON
                     </button>
                 </form>
-                <?php endif; ?>
             </div>
         </article>
     <?php endforeach; ?>
