@@ -55,22 +55,6 @@ try {
     }
 }
 
-// 5. FONCTIONS UTILITAIRES
-
-/**
- * Vérifie si l'utilisateur est connecté
- */
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
-
-/**
- * Vérifie si l'utilisateur a un rôle spécifique
- */
-function hasRole($role) {
-    return isLoggedIn() && isset($_SESSION['user_role']) && $_SESSION['user_role'] === $role;
-}
-
 /**
  * Debug propre
  */
