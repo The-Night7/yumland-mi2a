@@ -1,4 +1,6 @@
-<?php
+<?php 
+// Ajoutez cette ligne au tout début, juste avant require_once 'header.php'
+$currentPage = 'carte';   
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/plats.php';
@@ -15,7 +17,6 @@ if (isset($_SESSION['cart_message'])) {
 }
 
 // Définir la page courante pour le menu actif
-$currentPage = 'carte';
 $pageTitle = 'Notre Carte';
 
 // Récupérer les produits pour associer les boutons d'ajout au bon ID

@@ -16,17 +16,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $error = 'Erreur de sécurité, veuillez réessayer.';
     } else {
-        $username = $_POST['username'] ?? '';
+        // Le champ username a été supprimé car absent de la BDD
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
         $email = trim($_POST['email'] ?? '');
-        $nom = $_POST['nom'] ?? '';
-        $prenom = $_POST['prenom'] ?? '';
-        $adresse = $_POST['adresse'] ?? '';
-        $telephone = $_POST['telephone'] ?? '';
+        $nom = trim($_POST['nom'] ?? '');
+        $prenom = trim($_POST['prenom'] ?? '');
+        $adresse = trim($_POST['adresse'] ?? '');
+        $telephone = trim($_POST['telephone'] ?? '');
         
         // Validation des champs
-        if (empty($username) || empty($password) || empty($confirm_password) || empty($email) || empty($nom) || empty($prenom)) {
+        if (empty($password) || empty($confirm_password) || empty($email) || empty($nom) || empty($prenom)) {
             $error = 'Veuillez remplir tous les champs obligatoires.';
         } elseif ($password !== $confirm_password) {
             $error = 'Les mots de passe ne correspondent pas.';
@@ -35,9 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = 'Veuillez entrer une adresse email valide.';
         } else {
-            // Créer le nouvel utilisateur
+            // Préparer les données pour la fonction registerUser
             $userData = [
-                'username' => $username,
                 'password' => $password,
                 'email' => $email,
                 'nom' => $nom,
@@ -46,12 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'telephone' => $telephone
             ];
             
+            // Appel à la base de données
             $result = registerUser($userData);
             
             if ($result) {
                 $success = 'Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.';
             } else {
-                $error = 'Ce nom d\'utilisateur est déjà utilisé. Veuillez en choisir un autre.';
+                // Correction du message d'erreur pour correspondre au test SQL (email)
+                $error = 'Cette adresse email est déjà utilisée. Veuillez en choisir une autre ou vous connecter.';
             }
         }
     }
@@ -74,24 +75,19 @@ include_once __DIR__ . '/../includes/header.php';
             <h2>Créer un compte</h2>
             
             <?php if (!empty($error)): ?>
-                <div class="alert alert-danger">
+                <div class="alert alert-danger" style="color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
                     <?= htmlspecialchars($error) ?>
                 </div>
             <?php endif; ?>
             
             <?php if (!empty($success)): ?>
-                <div class="alert alert-success">
+                <div class="alert alert-success" style="color: green; padding: 10px; border: 1px solid green; margin-bottom: 15px;">
                     <?= htmlspecialchars($success) ?>
                     <p><a href="/api/pages/connexion.php">Se connecter</a></p>
                 </div>
             <?php else: ?>
                 <form action="/api/pages/inscription.php" method="post" class="auth-form">
                     <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
-                    
-                    <div class="form-group">
-                        <label for="username">Nom d'utilisateur *</label>
-                        <input type="text" id="username" name="username" required autocomplete="nickname">
-                    </div>
                     
                     <div class="form-row">
                         <div class="form-group">
@@ -124,19 +120,19 @@ include_once __DIR__ . '/../includes/header.php';
                     </div>
                     
                     <div class="form-group">
-                        <label for="adresse">Adresse</label>
-                        <textarea id="adresse" name="adresse" rows="2"></textarea>
+                        <label for="telephone">Téléphone</label>
+                        <input type="tel" id="telephone" name="telephone">
                     </div>
                     
                     <div class="form-group">
-                        <label for="telephone">Téléphone</label>
-                        <input type="tel" id="telephone" name="telephone">
+                        <label for="adresse">Adresse complète</label>
+                        <textarea id="adresse" name="adresse" rows="2"></textarea>
                     </div>
                     
                     <button type="submit" class="btn-primary">S'inscrire</button>
                 </form>
                 
-                <div class="auth-links">
+                <div class="auth-links" style="margin-top: 20px;">
                     <p>Déjà inscrit ? <a href="/api/pages/connexion.php">Se connecter</a></p>
                 </div>
             <?php endif; ?>
