@@ -100,30 +100,38 @@ $cartItemCount = getCartItemCount();
             <li><a href="/api/pages/carte.php" class="<?= $currentPage === 'carte' ? 'active' : '' ?>">La Carte</a></li>
             
             <?php if (isLoggedIn()): ?>
-                <!-- Menu déroulant pour utilisateur connecté -->
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle">
-                        <?= htmlspecialchars($_SESSION['user_name']) ?> 
-                        <span class="dropdown-icon">▼</span>
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="/api/client/profil.php">👤 Mon Profil</a></li>
-                        <li><a href="/api/client/commandes.php">📦 Mes Commandes</a></li>
-                        <?php if (hasRole('Administrateur')): ?>
-                            <li><a href="/api/admin/dashboard.php">🛡️ Administration</a></li>
-                        <?php elseif (hasRole('Restaurateur')): ?>
-                            <li><a href="/api/restaurateur/commandes.php">👨‍🍳 Écran Cuisine</a></li>
-                        <?php elseif (hasRole('Livreur')): ?>
-                            <li><a href="/api/livreur/livraisons.php">🛵 Mes Livraisons</a></li>
-                        <?php endif; ?>
-                        <li><a href="/api/logout.php">🚪 Déconnexion</a></li>
-                    </ul>
-                </li>
+                <?php if (hasRole('Restaurateur') || hasRole('Livreur')): ?>
+                    <!-- Menu éclaté en gros boutons pour le personnel (Tablette / Gants) -->
+                    <li><a href="/api/client/profil.php" style="font-size: 1.1rem; padding: 12px 18px; border: 2px solid var(--color-grey-light); border-radius: 8px;">👤 Profil</a></li>
+                    <?php if (hasRole('Restaurateur')): ?>
+                        <li><a href="/api/restaurateur/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; background: #e65100; color: white; border-radius: 8px; font-weight: bold;">👨‍🍳 Cuisine</a></li>
+                    <?php elseif (hasRole('Livreur')): ?>
+                        <li><a href="/api/livreur/livraisons.php" style="font-size: 1.1rem; padding: 12px 18px; background: #2e7d32; color: white; border-radius: 8px; font-weight: bold;">🛵 Courses</a></li>
+                    <?php endif; ?>
+                    <li><a href="/api/logout.php" style="font-size: 1.1rem; padding: 12px 18px; background: var(--color-primary); color: white; border-radius: 8px; font-weight: bold;">🚪 Quitter</a></li>
+                <?php else: ?>
+                    <!-- Menu déroulant classique pour Client et Administrateur -->
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle">
+                            <?= htmlspecialchars($_SESSION['user_name']) ?> 
+                            <span class="dropdown-icon">▼</span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/api/client/profil.php">👤 Mon Profil</a></li>
+                            <li><a href="/api/client/commandes.php">📦 Mes Commandes</a></li>
+                            <?php if (hasRole('Administrateur')): ?>
+                                <li><a href="/api/admin/dashboard.php">🛡️ Administration</a></li>
+                            <?php endif; ?>
+                            <li><a href="/api/logout.php">🚪 Déconnexion</a></li>
+                        </ul>
+                    </li>
+                <?php endif; ?>
             <?php else: ?>
                 <li><a href="/api/pages/connexion.php" class="btn-login">Mon Compte</a></li>
             <?php endif; ?>
             
-            <!-- Icône du panier avec compteur -->
+            <!-- Icône du panier avec compteur (Caché pour le personnel en service) -->
+            <?php if (!isLoggedIn() || (!hasRole('Restaurateur') && !hasRole('Livreur'))): ?>
             <li>
                 <a href="/api/panier.php" class="cart-icon">
                     🛒
@@ -132,6 +140,7 @@ $cartItemCount = getCartItemCount();
                     <?php endif; ?>
                 </a>
             </li>
+            <?php endif; ?>
         </ul>
     </nav>
 </header>
