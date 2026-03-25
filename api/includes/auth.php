@@ -56,4 +56,8 @@ function getUserById($id) {
     $stmt->execute([$id]);
     return $stmt->fetch() ?: null;
 }
+
+function hasRole($role) {
+    return isLoggedIn() && isset($_SESSION['user_role']) && $_SESSION['user_role'] === $role;
+}
 ?>
