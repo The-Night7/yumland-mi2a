@@ -24,20 +24,22 @@ updateCartTotal();
 $total = $_SESSION['cart']['total'];
 $user_id = $_SESSION['user_id'];
 
-// 1. CRÉATION DE LA COMMANDE EN BASE D'ABORD (Statut 'En attente')
 try {
-    // On récupère l'adresse de l'utilisateur pour l'attacher à la commande
+    // Démarrage d'une transaction pour garantir l'intégrité de la commande
+    $pdo->beginTransaction();
+
+    // Récupération de l'adresse de livraison par défaut du client
     $stmtUser = $pdo->prepare("SELECT adresse FROM Utilisateurs WHERE id_user = ?");
     $stmtUser->execute([$user_id]);
     $user = $stmtUser->fetch();
     $adresse_livraison = $user['adresse'] ?? 'Adresse non renseignée';
 
-    // On insère la commande pour générer un VRAI id_trans (numéro de commande SQL)
+    // Création de l'entête de la commande
     $stmt = $pdo->prepare("INSERT INTO Commandes (id_client, prix_total, statut, paiement_statut, adresse_livraison) VALUES (?, ?, 'En attente', 'En cours de paiement', ?)");
     $stmt->execute([$user_id, $total, $adresse_livraison]);
     $id_commande = $pdo->lastInsertId();
 
-    // On insère le contenu du panier
+    // Ajout de chaque article du panier dans les détails de la commande
     $stmtItem = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire, options_choisies) VALUES (?, ?, ?, ?, ?)");
     foreach ($_SESSION['cart']['items'] as $item) {
         $id_prod = $item['plat_id'] ?? $item['id'] ?? 1;
@@ -48,11 +50,14 @@ try {
         
         $stmtItem->execute([$id_commande, $id_prod, $item['quantite'], $item['prix_unitaire'], $opts_str]);
     }
+
+    $pdo->commit();
 } catch (Exception $e) {
+    $pdo->rollBack();
     die("Erreur de création de commande : " . $e->getMessage());
 }
 
-// Paramètres CYBank (Respect strict de la documentation)
+// Configuration de la passerelle de paiement CYBank
 $vendeur = "MI-2_A"; 
 $url_retour = "http://localhost:8000/api/retour_paiement.php";
 

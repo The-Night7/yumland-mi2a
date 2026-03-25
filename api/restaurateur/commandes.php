@@ -10,15 +10,6 @@ if (!isLoggedIn() || !hasRole('Restaurateur')) {
 
 // Traitement des actions (Changement de statut)
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
-    // Action pour générer une fausse commande de test
-    if ($_POST['action'] === 'demo') {
-            $pdo->exec("INSERT INTO Commandes (id_client, prix_total, statut, adresse_livraison) VALUES (1, 24.50, 'En attente', '12 Avenue du Parc, 95000 Cergy')");
-        $new_id = $pdo->lastInsertId();
-        $pdo->exec("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire, options_choisies) VALUES ($new_id, 1, 1, 15.90, 'Cuisson à point, Sauce BBQ')");
-        header('Location: /api/restaurateur/commandes.php');
-        exit;
-    }
-
     $id_commande = (int)$_POST['id_commande'];
     if ($_POST['action'] === 'preparer') {
         updateCommandeStatus($id_commande, 'En préparation');
@@ -93,9 +84,7 @@ include_once __DIR__ . '/../includes/header.php';
                     <h1>👨‍🍳 CUISINE - LE GRAND MIAM</h1>
                     <span class="resto-time" id="clock"><?= date('H:i:s') ?></span>
                 </div>
-                <div style="flex: 1; text-align: right;">
-                    <form method="POST" style="margin:0;"><input type="hidden" name="action" value="demo"><button type="submit" class="btn-primary" style="background:#ff6b00; border:none; padding:10px 15px; border-radius:5px; cursor:pointer; font-weight:bold; color:white; box-shadow: 0 2px 4px rgba(0,0,0,0.2);">+ Fausse Commande</button></form>
-                </div>
+                <div style="flex: 1;"></div>
             </div>
         </header>
         

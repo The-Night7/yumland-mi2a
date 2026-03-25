@@ -1,17 +1,16 @@
 <?php
 require_once __DIR__ . '/includes/config.php';
 require_once __DIR__ . '/includes/plats.php';
-// Inclusion des fonctions du panier s'il y en a
 require_once __DIR__ . '/includes/panier.php';
 
-// Indique que la réponse sera du JSON (pour le JavaScript)
+// Configuration de la réponse pour l'appel AJAX
 header('Content-Type: application/json');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_produit = isset($_POST['id_produit']) ? (int)$_POST['id_produit'] : 0;
     $quantite = isset($_POST['quantite']) ? (int)$_POST['quantite'] : 1;
     
-    // Récupération des options choisies par le client via le JS du front-end
+    // Parsing des options personnalisées (ex: cuisson, type de boisson)
     $options = [];
     if (isset($_POST['options'])) {
         if (is_array($_POST['options'])) {
@@ -22,19 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($id_produit > 0) {
-        // 1. Récupérer les informations du plat dans la base
         $plat = getPlatById($id_produit);
         
         if ($plat) {
-            // 2. Initialiser la session du panier si elle est vide
             if (!isset($_SESSION['cart'])) {
                 $_SESSION['cart'] = ['items' => [], 'total' => 0];
             }
 
-            // 3. Chercher si le plat est déjà dans le panier pour juste augmenter la quantité
+            // Vérifie si le plat existe déjà avec la même configuration exacte
             $found = false;
             foreach ($_SESSION['cart']['items'] as &$item) {
-                // On vérifie que c'est le même ID ET les mêmes options exactes
                 $isSameProduct = ((isset($item['id']) && $item['id'] == $id_produit) || (isset($item['plat_id']) && $item['plat_id'] == $id_produit));
                 $hasSameOptions = (isset($item['options']) && $item['options'] == $options);
 
@@ -45,9 +41,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // 4. Si c'est un nouveau plat, on l'ajoute au tableau
+            // Ajout du nouvel article
             if (!$found) {
-                // Ajustement du prix si une option contient un tarif (ex: "1L - 5.50 €")
+                // Extrait le prix dynamiquement si une option payante est sélectionnée
                 $prix_final = $plat['prix'];
                 if (!empty($options) && is_array($options)) {
                     foreach ($options as $opt) {
@@ -68,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
             }
 
-            // 5. Recalcul de sécurité du Total
+            // Mise à jour du total global
             if (function_exists('updateCartTotal')) {
                 updateCartTotal();
             } else {
@@ -79,7 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['cart']['total'] = $total;
             }
 
-            // 6. On renvoie le succès et le nouveau nombre d'articles
             $count = function_exists('getCartItemCount') ? getCartItemCount() : count($_SESSION['cart']['items']);
             echo json_encode(['success' => true, 'count' => $count]);
             exit;

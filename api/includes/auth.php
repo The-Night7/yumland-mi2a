@@ -13,6 +13,10 @@ function isAdmin() {
     return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrateur';
 }
 
+function hasRole($role) {
+    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === $role;
+}
+
 function logoutUser() {
     $_SESSION = array();
     session_destroy();
@@ -55,9 +59,5 @@ function getUserById($id) {
     $stmt = $pdo->prepare("SELECT * FROM Utilisateurs WHERE id_user = ?");
     $stmt->execute([$id]);
     return $stmt->fetch() ?: null;
-}
-
-function hasRole($role) {
-    return isLoggedIn() && isset($_SESSION['user_role']) && $_SESSION['user_role'] === $role;
 }
 ?>

@@ -22,29 +22,34 @@ $id_commande = (int)substr($transaction, 4);
 // On vérifie que la signature de sécurité est bonne avant toute chose !
 if ($control === $expected_control && $status === 'accepted' && $id_commande > 0) {
     try {
-        // 1. Mettre à jour la commande
+        // Sécurisation des opérations multiples via transaction SQL
+        $pdo->beginTransaction();
+
+        // Validation de la commande
         $stmt = $pdo->prepare("UPDATE Commandes SET statut = 'En préparation', paiement_statut = 'Payé', cybank_transaction = ? WHERE id_commande = ?");
         $stmt->execute([$transaction, $id_commande]);
         
-        // 2. Enregistrer le paiement
+        // Historisation de la transaction
         $stmtPaiement = $pdo->prepare("INSERT INTO Paiements (id_commande, id_client, montant, cybank_transaction_id) VALUES (?, ?, ?, ?)");
         $stmtPaiement->execute([$id_commande, $_SESSION['user_id'] ?? 1, $montant, $transaction]);
 
-        // 3. Ajouter les Miams au client (1€ = 10 Miams)
+        // Attribution des points de fidélité
         $miams_gagnes = floor($montant * 10);
         $stmtMiams = $pdo->prepare("UPDATE Utilisateurs SET solde_miams = solde_miams + ?, total_miams_historique = total_miams_historique + ? WHERE id_user = ?");
         $stmtMiams->execute([$miams_gagnes, $miams_gagnes, $_SESSION['user_id'] ?? 1]);
 
-        // 4. Vider le panier
+        $pdo->commit();
+
         clearCart();
 
         header('Location: /api/client/commandes.php?success=commande_validee');
         exit;
     } catch (Exception $e) {
+        $pdo->rollBack();
         die("Erreur lors de l'enregistrement : " . $e->getMessage());
     }
 } else {
-    // Si échec ou abandon, on passe la commande en annulée
+    // En cas d'échec du paiement, la commande passe en annulée
     if ($id_commande > 0) {
         $pdo->prepare("UPDATE Commandes SET statut = 'Annulée', paiement_statut = 'Échec' WHERE id_commande = ?")->execute([$id_commande]);
     }

@@ -18,6 +18,48 @@ $pageTitle = 'Connexion';
 include_once __DIR__ . '/../includes/header.php';
 ?>
 
+<style>
+    /* Styles spécifiques de la page d'authentification */
+    .auth-container {
+        background: white;
+        padding: 40px !important;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        border-top: 5px solid var(--color-primary, #d32f2f);
+    }
+    .auth-form .form-group input {
+        padding: 12px 15px;
+        font-size: 1.1rem;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+        width: 100%;
+        box-sizing: border-box;
+        transition: border-color 0.3s;
+    }
+    .auth-form .form-group input:focus {
+        border-color: var(--color-primary, #d32f2f);
+        outline: none;
+    }
+    .btn-login-modern {
+        width: 100%; 
+        padding: 15px; 
+        font-size: 1.2rem; 
+        font-weight: bold; 
+        border-radius: 8px; 
+        background: linear-gradient(135deg, var(--color-primary, #d32f2f), #b71c1c); 
+        color: white; 
+        border: none; 
+        cursor: pointer; 
+        transition: transform 0.2s, box-shadow 0.2s; 
+        box-shadow: 0 4px 10px rgba(211, 47, 47, 0.3);
+        margin-top: 15px;
+    }
+    .btn-login-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(211, 47, 47, 0.4);
+    }
+</style>
+
 <section class="auth-section">
     <div class="container">
         <div class="auth-container" style="max-width: 500px; margin: 0 auto;">
@@ -44,16 +86,15 @@ include_once __DIR__ . '/../includes/header.php';
                     <input type="password" id="password" name="password" required autocomplete="current-password">
                 </div>
                 
-                <button type="submit" class="btn-primary" style="width: 100%;">Se connecter</button>
+                <button type="submit" class="btn-login-modern">Se connecter 🔐</button>
             </form>
             
             <div class="auth-links" style="text-align: center; margin-top: 15px;">
                 <p>Pas encore de compte ? <a href="/api/pages/inscription.php">S'inscrire</a></p>
             </div>
 
-            <!-- ZONE DE TEST RAPIDE -->
             <div class="test-accounts card-style" style="margin-top: 30px; padding: 15px; background: var(--color-bg); border-left: 4px solid var(--color-primary);">
-                <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--color-secondary);">🧪 Remplissage rapide (Comptes JSON)</h3>
+                <h3 style="font-size: 1.1rem; margin-bottom: 10px; color: var(--color-secondary);">🧪 Accès rapides (Démo)</h3>
                 <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">Cliquez sur un profil pour auto-remplir les identifiants :</p>
                 
                 <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
@@ -76,15 +117,14 @@ include_once __DIR__ . '/../includes/header.php';
 </section>
 
 <script>
-// Fonction pour remplir automatiquement le formulaire
 function fillLogin(email, password) {
     document.getElementById('email').value = email;
     document.getElementById('password').value = password;
 }
 
-// Interception du formulaire pour utiliser l'API JSON de login.php
+// Soumission AJAX du formulaire de connexion
 document.getElementById('loginForm').addEventListener('submit', function(e) {
-    e.preventDefault(); // Empêcher le rechargement de la page
+    e.preventDefault();
     
     const formData = new FormData(this);
     const errorDiv = document.getElementById('login-error');
@@ -96,21 +136,8 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            // Redirection intelligente en fonction du rôle
-            switch(data.role) {
-                case 'Administrateur':
-                    window.location.href = '/api/admin/dashboard.php';
-                    break;
-                case 'Restaurateur':
-                    window.location.href = '/api/restaurateur/commandes.php';
-                    break;
-                case 'Livreur':
-                    window.location.href = '/api/livreur/livraisons.php';
-                    break;
-                default:
-                    window.location.href = '/api/index.php';
-                    break;
-            }
+            // Redirection unique vers l'accueil pour utiliser le menu déroulant
+            window.location.href = '/api/index.php';
         } else {
             errorDiv.style.display = 'block';
             errorDiv.textContent = data.message;
