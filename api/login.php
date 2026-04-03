@@ -24,6 +24,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérification sécurisée du mot de passe
         if ($user && password_verify($password, $user['mot_de_passe'])) {
             
+            // CORRECTION : Régénération de l'ID de session pour éviter la fixation de session
+            session_regenerate_id(true);
+            
             // Authentification réussie, initialisation de la session
             $_SESSION['user_id'] = $user['id_user'];
             $_SESSION['user_role'] = $user['role'];
@@ -34,10 +37,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 "message" => "Connexion réussie", 
                 "role" => $user['role']
             ]);
-            
         } else {
             echo json_encode(["success" => false, "message" => "Identifiants incorrects."]);
-        }
+    }
 
     } catch (PDOException $e) {
         echo json_encode(["success" => false, "message" => "Erreur du serveur."]);

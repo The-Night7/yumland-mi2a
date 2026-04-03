@@ -68,9 +68,10 @@ $montant = number_format($total, 2, '.', '');
 // On préfixe par MI2A et on complète avec des zéros (ex: MI2A00000028)
 $transaction = "MI2A" . str_pad($id_commande, 8, "0", STR_PAD_LEFT);
 
-// Calcul de la signature de sécurité (Control)
+// CORRECTION : Remplacement de md5() par hash('sha256', ...)
 $api_key = getAPIKey($vendeur);
-$control = md5($api_key . "#" . $transaction . "#" . $montant . "#" . $vendeur . "#" . $url_retour . "#");
+$string_to_hash = $api_key . "#" . $transaction . "#" . $montant . "#" . $vendeur . "#" . $url_retour . "#";
+$control = hash('sha256', $string_to_hash);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
