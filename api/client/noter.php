@@ -31,18 +31,20 @@ if (!$commande) {
 
 // Traitement de l'avis
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'noter') {
-    $note = isset($_POST['note']) ? (int)$_POST['note'] : 5;
+    $delivery_note = isset($_POST['delivery_note']) ? (int)$_POST['delivery_note'] : 0;
+    $food_note = isset($_POST['food_note']) ? (int)$_POST['food_note'] : 0;
     $commentaire = trim($_POST['commentaire'] ?? '');
 
     try {
-        // Enregistrement de l'avis dans la table Avis (si elle existe, sinon on la crée à la volée)
+        // Enregistrement de l'avis dans la table Avis (modifiée pour 2 notes)
         $tableExists = $pdo->query("SHOW TABLES LIKE 'Avis'")->rowCount() > 0;
         if (!$tableExists) {
             $pdo->exec("CREATE TABLE Avis (
                 id_avis INT AUTO_INCREMENT PRIMARY KEY,
                 id_commande INT NOT NULL,
                 id_client INT NOT NULL,
-                note INT NOT NULL,
+                note_livreur INT NOT NULL,
+                note_nourriture INT NOT NULL,
                 commentaire TEXT,
                 date_avis DATETIME DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE KEY unique_commande (id_commande)
@@ -50,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         }
         
         // Ajout ou mise à jour de l'avis
-        $stmtInsert = $pdo->prepare("INSERT INTO Avis (id_commande, id_client, note, commentaire) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE note = ?, commentaire = ?");
-        $stmtInsert->execute([$commande_id, $user_id, $note, $commentaire, $note, $commentaire]);
+        $stmtInsert = $pdo->prepare("INSERT INTO Avis (id_commande, id_client, note_livreur, note_nourriture, commentaire) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE note_livreur = ?, note_nourriture = ?, commentaire = ?");
+        $stmtInsert->execute([$commande_id, $user_id, $delivery_note, $food_note, $commentaire, $delivery_note, $food_note, $commentaire]);
         
         $message = "⭐ Merci pour votre retour ! Votre avis a été enregistré avec succès.";
     } catch (Exception $e) {
@@ -65,10 +67,43 @@ $pageTitle = 'Noter la commande #' . $commande_id;
 include_once __DIR__ . '/../includes/header.php';
 ?>
 
+<style>
+    .stars {
+        display: flex;
+        gap: 5px;
+        font-size: 2rem;
+        cursor: pointer;
+        color: #ccc; /* Étoiles vides */
+        margin-bottom: 20px;
+    }
+    .star.active {
+        color: #f39c12; /* Étoiles pleines (dorées) */
+    }
+    .form-group label {
+        display: block;
+        text-align: left;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+    .readonly-input {
+        width: 100%;
+        padding: 10px;
+        background-color: #f5f5f5;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        color: #555;
+    }
+    h3 {
+        margin-top: 15px;
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+    }
+</style>
+
 <section class="container form-page">
     <div class="form-container card-style">
-        <h2>📝 Évaluer la commande #<?= $commande_id ?></h2>
-        <p style="color: #666; margin-bottom: 20px;">Votre avis est précieux pour aider notre Chef à s'améliorer !</p>
+        <h2>📝 Évaluer la commande #<?= htmlspecialchars($commande_id) ?></h2>
+        <p style="color: #666; margin-bottom: 20px;">Comment s'est passé votre expérience "Grand Miam" ?</p>
         
         <?php if (!empty($message)): ?>
             <div class="alert alert-<?= $messageType ?>" style="margin-bottom: 20px;">
@@ -76,22 +111,89 @@ include_once __DIR__ . '/../includes/header.php';
             </div>
             <a href="/api/client/profil.php" class="btn-primary" style="display: block; text-align: center; background: var(--color-coal-black);">Retour au profil</a>
         <?php else: ?>
-            <form action="/api/client/noter.php" method="POST">
+            <form action="/api/client/noter.php" method="POST" id="rating-form">
                 <input type="hidden" name="action" value="noter">
-                <input type="hidden" name="commande_id" value="<?= $commande_id ?>">
+                <input type="hidden" name="commande_id" value="<?= htmlspecialchars($commande_id) ?>">
                 
                 <div class="form-group" style="margin-bottom: 15px;">
-                    <label for="note">Note sur 5 étoiles ⭐ :</label>
-                    <input type="number" id="note" name="note" min="1" max="5" value="5" required style="width: 100%; padding: 10px; font-size: 1.2rem;">
+                    <label for="order-id">Identifiant de la commande :</label>
+                    <input type="text" id="order-id" class="readonly-input" value="#CMD-<?= htmlspecialchars($commande_id) ?>" readonly>
                 </div>
+
+                <h3>Note du livreur :</h3>
+                <div class="stars" id="delivery-star-rating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="delivery-rating-value" name="delivery_note" value="0">
+
+                <h3>Note de la nourriture :</h3>
+                <div class="stars" id="food-star-rating">
+                    <span class="star" data-value="1">★</span>
+                    <span class="star" data-value="2">★</span>
+                    <span class="star" data-value="3">★</span>
+                    <span class="star" data-value="4">★</span>
+                    <span class="star" data-value="5">★</span>
+                </div>
+                <input type="hidden" id="food-rating-value" name="food_note" value="0">
+
                 <div class="form-group" style="margin-bottom: 25px;">
-                    <label for="commentaire">Commentaire (optionnel) :</label>
-                    <textarea id="commentaire" name="commentaire" rows="4" placeholder="Qu'avez-vous pensé de votre repas ?"></textarea>
+                    <label for="comment">Votre commentaire :</label>
+                    <textarea id="comment" name="commentaire" rows="4" style="width: 100%; padding: 10px;" placeholder="Le burger était-il assez chaud ? Le livreur sympa ?"></textarea>
                 </div>
+
                 <button type="submit" class="btn-primary" style="width: 100%;">Envoyer mon avis</button>
             </form>
         <?php endif; ?>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Fonction pour gérer le système d'étoiles
+        const setupStarRating = (containerId, hiddenInputId) => {
+            const stars = document.querySelectorAll(`#${containerId} .star`);
+            const ratingInput = document.getElementById(hiddenInputId);
+
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const value = parseInt(star.getAttribute('data-value'));
+                    ratingInput.value = value;
+
+                    // Mettre à jour visuellement les étoiles
+                    stars.forEach(s => {
+                        const sVal = parseInt(s.getAttribute('data-value'));
+                        if(sVal <= value) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        };
+
+        // Initialisation des deux systèmes de notation
+        setupStarRating('delivery-star-rating', 'delivery-rating-value');
+        setupStarRating('food-star-rating', 'food-rating-value');
+
+        // Validation avant l'envoi du formulaire
+        const ratingForm = document.getElementById('rating-form');
+        if (ratingForm) {
+            ratingForm.addEventListener('submit', (e) => {
+                const deliveryNote = document.getElementById('delivery-rating-value').value;
+                const foodNote = document.getElementById('food-rating-value').value;
+
+                if (deliveryNote == 0 || foodNote == 0) {
+                    e.preventDefault(); // Empêche l'envoi du formulaire
+                    alert("Veuillez sélectionner au moins une étoile pour le livreur et la nourriture.");
+                }
+            });
+        }
+    });
+</script>
 
 <?php include_once __DIR__ . '/../includes/footer.php'; ?>
