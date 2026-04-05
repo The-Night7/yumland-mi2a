@@ -52,12 +52,15 @@ Le projet est construit de manière modulaire, marquant l'évolution entre la co
 
 * **Phase 2 : Serveur et Base de Données (Back-End)**
   * **Début :** 22/02/2026 - commit `0c5ee9ca`
-  * **Fin :** 05/04/2026 - commit `c0d3718`
+  * **Fin :** 05/04/2026 - commit `2a3d045`
   
 * **Phase 3 : Interactivité et Requêtes Asynchrones**
-  * 
+  *  **Début :** XX/XX/2026 - commit ``
+  *  **Fin :** XX/XX/2026 - commit ``
 
 * **Phase 4 : Standardisation, Sécurité et Soutenance Finale**
+  *  **Début :** XX/XX/2026 - commit ``
+  *  **Fin :** XX/XX/2026 - commit ``
 
 ## � Organisation du Projet
 
