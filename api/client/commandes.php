@@ -2,10 +2,31 @@
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/commandes.php';
+require_once __DIR__ . '/../includes/panier.php';
 
 // Vérifier si l'utilisateur est connecté et est un client
 if (!isLoggedIn() || !hasRole('Client')) {
     redirect('/api/pages/connexion.php');
+}
+
+// Traitement de la re-commande
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'recommander') {
+    $id_commande = (int)$_POST['id_commande'];
+    // Vérifier que la commande appartient bien à l'utilisateur
+    $stmtCheck = $pdo->prepare("SELECT id_commande FROM Commandes WHERE id_commande = ? AND id_client = ?");
+    $stmtCheck->execute([$id_commande, $_SESSION['user_id']]);
+    if ($stmtCheck->fetch()) {
+        $stmtDetails = $pdo->prepare("SELECT id_produit, quantite, options_choisies FROM Contenu_Commandes WHERE id_commande = ?");
+        $stmtDetails->execute([$id_commande]);
+        $details = $stmtDetails->fetchAll();
+        
+        foreach ($details as $item) {
+            $options = json_decode($item['options_choisies'], true) ?: [];
+            addToCart($item['id_produit'], $item['quantite'], $options);
+        }
+        header('Location: /api/panier.php');
+        exit;
+    }
 }
 
 // Récupérer les commandes de l'utilisateur
@@ -66,9 +87,12 @@ include_once __DIR__ . '/../includes/header.php';
                                         <span class="item-name"><?= htmlspecialchars($detail['nom']) ?></span>
                                         <span class="item-quantity">x<?= $detail['quantite'] ?></span>
                                         <span class="item-price"><?= number_format($detail['prix_unitaire'] * $detail['quantite'], 2, ',', ' ') ?> €</span>
-                                        <?php if (!empty($detail['options_choisies'])): ?>
-                                            <span class="item-options">
-                                                Options: <?= htmlspecialchars($detail['options_choisies']) ?>
+                                        <?php 
+                                        $options = json_decode($detail['options_choisies'], true);
+                                        if (!empty($options)): 
+                                        ?>
+                                            <span class="item-options" style="display: block; font-size: 0.85em; color: var(--color-primary); margin-left: 15px;">
+                                                <em>↳ <?= htmlspecialchars(implode(', ', $options)) ?></em>
                                             </span>
                                         <?php endif; ?>
                                     </li>
@@ -76,11 +100,18 @@ include_once __DIR__ . '/../includes/header.php';
                             </ul>
                         </div>
                         
-                        <?php if ($commande['statut'] === 'Livrée'): ?>
-                            <div class="commande-actions">
-                                <a href="/api/client/noter.php?commande_id=<?= $commande['id_commande'] ?>" class="btn-secondary">Noter cette commande</a>
-                            </div>
-                        <?php endif; ?>
+                        <div class="commande-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                            <?php if ($commande['statut'] === 'Livrée'): ?>
+                                <a href="/api/client/noter.php?commande_id=<?= $commande['id_commande'] ?>" class="btn-secondary" style="padding: 10px 15px; border: 1px solid var(--color-coal-black); color: var(--color-coal-black); text-decoration: none; border-radius: 4px;">⭐ Noter</a>
+                            <?php endif; ?>
+                            <form method="POST" style="margin: 0;">
+                                <input type="hidden" name="action" value="recommander">
+                                <input type="hidden" name="id_commande" value="<?= $commande['id_commande'] ?>">
+                                <button type="submit" class="btn-primary" style="padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px;">
+                                    <i class="fas fa-sync-alt"></i> Recommander
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 <?php endforeach; ?>
             </div>

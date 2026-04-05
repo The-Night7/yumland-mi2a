@@ -9,6 +9,9 @@ define('APP_NAME', 'Le Grand Miam');
 define('APP_VERSION', '3.0');
 define('DEBUG_MODE', true); // Mettez à false une fois que tout fonctionne sur Vercel
 
+// Configuration du fuseau horaire (Heure de Paris)
+date_default_timezone_set('Europe/Paris');
+
 // 2. SÉCURITÉ ET SESSIONS
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
@@ -59,6 +62,10 @@ try {
     }
 
     $pdo = new PDO($dsn, $user, $pass, $options);
+    
+    // Synchroniser le fuseau horaire de MySQL avec celui de PHP
+    $offset = date('P'); // Ex: +01:00 (hiver) ou +02:00 (été)
+    $pdo->exec("SET time_zone = '$offset'");
 
 } catch (PDOException $e) {
     if (DEBUG_MODE) {

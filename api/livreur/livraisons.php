@@ -46,13 +46,19 @@ $mes_livraisons = getCommandesByLivreur($livreur_id);
                     🗺️ OUVRIR DANS MAPS
                 </a>
                 
+                <?php if (!empty($livraison['client_tel'])): ?>
+                <a href="tel:<?= htmlspecialchars($livraison['client_tel']) ?>" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #e67e22; text-align: center;">
+                    📞 APPELER LE CLIENT (<?= htmlspecialchars(strtoupper($livraison['client_nom'])) ?>)
+                </a>
+                <?php endif; ?>
+                
                 <form method="POST" style="margin: 0; display: flex; flex-direction: column; gap: 15px;">
                     <input type="hidden" name="action" value="terminee">
                     <input type="hidden" name="id_commande" value="<?= $livraison['id_commande'] ?>">
                     <button type="submit" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #2ecc71; border: none; cursor: pointer;">
                         ✅ MARQUER COMME LIVRÉE
                     </button>
-                    <button type="button" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: var(--color-coal-black); border: none; cursor: pointer;" onclick="alert('Contactez le support au 01 23 45 67 89')">
+                    <button type="button" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: var(--color-coal-black); border: none; cursor: pointer;" onclick="alert('Contactez le support :\n- Myriam Bensaid : 06 68 39 92 06\n- Sheryne Ouarghi : 06 17 67 77 02')">
                         ❌ PROBLÈME DE LIVRAISON
                     </button>
                 </form>

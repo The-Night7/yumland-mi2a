@@ -13,24 +13,28 @@ require_once __DIR__ . '/plats.php';
  */
 function getAllCommandes($status = null, $user_id = null, $order = 'ASC') {
     global $pdo;
-    $query = "SELECT * FROM Commandes WHERE 1=1";
+    // On joint la table Utilisateurs pour récupérer les infos client (nom, téléphone, etc.)
+    $query = "SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel 
+              FROM Commandes c 
+              LEFT JOIN Utilisateurs u ON c.id_client = u.id_user 
+              WHERE 1=1";
     $params = [];
     
     if ($status !== null) {
-        $query .= " AND statut = ?";
+        $query .= " AND c.statut = ?";
         $params[] = $status;
     }
     
     if ($user_id !== null) {
-        $query .= " AND id_client = ?";
+        $query .= " AND c.id_client = ?";
         $params[] = $user_id;
     }
     
     // Ajout du tri par date
     if (strtoupper($order) === 'DESC') {
-        $query .= " ORDER BY date_commande DESC";
+        $query .= " ORDER BY c.date_commande DESC";
     } else {
-        $query .= " ORDER BY date_commande ASC";
+        $query .= " ORDER BY c.date_commande ASC";
     }
 
     $stmt = $pdo->prepare($query);
@@ -45,10 +49,36 @@ function getAllCommandes($status = null, $user_id = null, $order = 'ASC') {
  */
 function getCommandeById($id) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT * FROM Commandes WHERE id_commande = ?");
+    $stmt = $pdo->prepare("
+        SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel 
+        FROM Commandes c
+        LEFT JOIN Utilisateurs u ON c.id_client = u.id_user
+        WHERE c.id_commande = ?
+    ");
     $stmt->execute([$id]);
     $commande = $stmt->fetch();
     return $commande ?: null;
+}
+
+/**
+ * Récupère les détails (contenu) d'une commande
+ * @param int $commande_id ID de la commande
+ * @return array Liste des plats, quantités et options de la commande
+ */
+function getCommandeDetails($commande_id) {
+    global $pdo;
+    try {
+        $stmt = $pdo->prepare("
+            SELECT cc.*, p.nom, p.image_url 
+            FROM Contenu_Commandes cc
+            LEFT JOIN Produits p ON cc.id_produit = p.id_produit
+            WHERE cc.id_commande = ?
+        ");
+        $stmt->execute([$commande_id]);
+        return $stmt->fetchAll();
+    } catch (PDOException $e) {
+        return [];
+    }
 }
 
 /**
@@ -127,7 +157,12 @@ function calculateTotal($details) {
 function getCommandesByLivreur($livreur_id) {
     global $pdo;
     try {
-        $stmt = $pdo->prepare("SELECT * FROM Commandes WHERE statut = 'En livraison' AND id_livreur = ?");
+        $stmt = $pdo->prepare("
+            SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel 
+            FROM Commandes c
+            LEFT JOIN Utilisateurs u ON c.id_client = u.id_user
+            WHERE c.statut = 'En livraison' AND c.id_livreur = ?
+        ");
         $stmt->execute([$livreur_id]);
         return $stmt->fetchAll();
     } catch (PDOException $e) {

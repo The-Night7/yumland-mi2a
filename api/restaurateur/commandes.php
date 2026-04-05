@@ -114,8 +114,11 @@ include_once __DIR__ . '/../includes/header.php';
                             ?>
                                 <li>
                                     <span class="item-qty"><?= $detail['quantite'] ?>x</span> <?= htmlspecialchars($detail['nom'] ?? 'Produit inconnu') ?>
-                                    <?php if (!empty($detail['options_choisies'])): ?>
-                                        <span class="item-opts">Info: <?= htmlspecialchars($detail['options_choisies']) ?></span>
+                                    <?php 
+                                    $options = json_decode($detail['options_choisies'], true);
+                                    if (!empty($options)): 
+                                    ?>
+                                        <span class="item-opts">Info: <?= htmlspecialchars(implode(', ', $options)) ?></span>
                                     <?php endif; ?>
                                 </li>
                             <?php endforeach; ?>
@@ -150,7 +153,15 @@ include_once __DIR__ . '/../includes/header.php';
                             $stmtDetails->execute([$cmd['id_commande']]);
                             foreach ($stmtDetails->fetchAll() as $detail):
                             ?>
-                                <li><span class="item-qty"><?= $detail['quantite'] ?>x</span> <?= htmlspecialchars($detail['nom'] ?? 'Produit inconnu') ?></li>
+                                <li>
+                                    <span class="item-qty"><?= $detail['quantite'] ?>x</span> <?= htmlspecialchars($detail['nom'] ?? 'Produit inconnu') ?>
+                                    <?php 
+                                    $options = json_decode($detail['options_choisies'], true);
+                                    if (!empty($options)): 
+                                    ?>
+                                        <span class="item-opts">Info: <?= htmlspecialchars(implode(', ', $options)) ?></span>
+                                    <?php endif; ?>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                         <form method="POST" style="margin:0;">

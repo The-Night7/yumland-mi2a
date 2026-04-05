@@ -22,9 +22,28 @@ $commandes = getAllCommandes();
                     </span>
                 </p>
                 
-                <!-- Simulation des détails (Dans la phase 3, on fera un JOIN avec Contenu_Commandes) -->
+                <!-- Affichage des détails réels de la commande -->
                 <div style="background: var(--color-sauce-cream); padding: 10px; border-radius: 4px; margin: 10px 0;">
-                    <em>Détails des plats à préparer...</em>
+                    <?php 
+                    $details = getCommandeDetails($cmd['id_commande']);
+                    if (!empty($details)): 
+                    ?>
+                        <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+                            <?php foreach ($details as $item): ?>
+                                <li style="margin-bottom: 5px;">
+                                    <strong><?= $item['quantite'] ?>x</strong> <?= htmlspecialchars($item['nom']) ?>
+                                    <?php 
+                                    $options = json_decode($item['options_choisies'], true);
+                                    if (!empty($options)) {
+                                        echo "<br><em style='font-size: 0.85em; color: var(--color-primary); margin-left: 20px;'>- " . htmlspecialchars(implode(', ', $options)) . "</em>";
+                                    }
+                                    ?>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <em>Aucun détail trouvé.</em>
+                    <?php endif; ?>
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">

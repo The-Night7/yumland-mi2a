@@ -10,23 +10,23 @@ $vendeur = $_GET['vendeur'] ?? '';
 $control = $_GET['control'] ?? '';
 
 // CYBank peut renvoyer 'status' (comme dans l'exemple) ou 'statut' (comme dans le texte doc)
-$status = $_GET['status'] ?? $_GET['statut'] ?? 'denied'; 
+$statut = $_GET['statut'] ?? $_GET['status'] ?? 'declined'; 
 
 // Vérification de la signature de sécurité (Hachage inverse)
 $api_key = getAPIKey($vendeur);
-$expected_control = md5($api_key . "#" . $transaction . "#" . $montant . "#" . $vendeur . "#" . $status . "#");
+$expected_control = md5($api_key . "#" . $transaction . "#" . $montant . "#" . $vendeur . "#" . $statut . "#");
 
 // Extraction de notre vrai numéro de commande (on retire les 4 premières lettres "MI2A")
 $id_commande = (int)substr($transaction, 4);
 
 // On vérifie que la signature de sécurité est bonne avant toute chose !
-if ($control === $expected_control && $status === 'accepted' && $id_commande > 0) {
+if ($control === $expected_control && $statut === 'accepted' && $id_commande > 0) {
     try {
         // Sécurisation des opérations multiples via transaction SQL
         $pdo->beginTransaction();
 
         // Validation de la commande
-        $stmt = $pdo->prepare("UPDATE Commandes SET statut = 'En préparation', paiement_statut = 'Payé', cybank_transaction = ? WHERE id_commande = ?");
+        $stmt = $pdo->prepare("UPDATE Commandes SET statut = 'En attente', paiement_statut = 'Payé', cybank_transaction = ? WHERE id_commande = ?");
         $stmt->execute([$transaction, $id_commande]);
         
         // Historisation de la transaction
