@@ -17,11 +17,13 @@
         <form id="optionsForm">
             <input type="hidden" id="modalProductId" name="id_produit" value="">
             <input type="hidden" id="modalPrixMiams" name="prix_miams" value="0">
+            <input type="hidden" id="modalCartIndex" name="cart_index" value="">
+            <input type="hidden" id="modalOptionsDispos" name="options_dispos" value="">
             <div id="optionsContainer" style="margin-top: 20px;"></div>
             
             <div style="display:flex; gap:10px; margin-top:25px;">
                 <button type="button" onclick="closeOptionsModal()" style="padding:12px; border:1px solid #ccc; background:#eee; border-radius:4px; cursor:pointer; font-weight:bold;">Annuler</button>
-                <button type="button" onclick="submitOptionsMenu()" class="btn-primary" style="flex:1; padding:12px;">Ajouter au panier 🛒</button>
+                <button type="button" id="btnSubmitModal" onclick="submitOptionsMenu()" class="btn-primary" style="flex:1; padding:12px;">Ajouter au panier 🛒</button>
             </div>
         </form>
     </div>
@@ -29,11 +31,16 @@
 
 <script>
     // Ouvre la fenêtre et génère les listes déroulantes
-    function showOptionsModal(productId, productName, optionsJsonString, prixMiams = 0) {
+    function showOptionsModal(productId, productName, optionsJsonString, prixMiams = 0, cartIndex = '') {
         document.getElementById('optionsModal').style.display = 'flex';
         document.getElementById('modalMenuTitle').innerText = prixMiams > 0 ? productName + " 🎁" : productName;
         document.getElementById('modalProductId').value = productId;
         document.getElementById('modalPrixMiams').value = prixMiams;
+        document.getElementById('modalCartIndex').value = cartIndex;
+        document.getElementById('modalOptionsDispos').value = optionsJsonString || '[]';
+        
+        // Changer le texte du bouton si c'est une modification
+        document.getElementById('btnSubmitModal').innerHTML = cartIndex !== '' ? '<i class="fas fa-sync"></i> Mettre à jour' : 'Ajouter au panier 🛒';
         
         let options = [];
         try { options = JSON.parse(optionsJsonString || '[]'); } catch(e) {}
@@ -78,6 +85,8 @@
         formData.append('id_produit', document.getElementById('modalProductId').value);
         formData.append('quantite', 1);
         formData.append('prix_miams', document.getElementById('modalPrixMiams').value);
+        formData.append('cart_index', document.getElementById('modalCartIndex').value);
+        formData.append('options_dispos', document.getElementById('modalOptionsDispos').value);
         
         // Envoi des options sous forme de tableau PHP (options[])
         optionsChoisies.forEach(opt => {

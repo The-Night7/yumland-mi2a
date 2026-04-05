@@ -12,55 +12,84 @@ if (isset($_GET['info']) && $_GET['info'] === 'editing' && isset($_SESSION['edit
     $message = '✏️ Vous modifiez actuellement la commande #' . $_SESSION['edit_commande_id'] . '. Ajustez vos plats et cliquez sur Enregistrer !';
 }
 
-// Action: Sauvegarder l'édition d'une commande
-if (isset($_GET['action']) && $_GET['action'] === 'save_edit' && isset($_SESSION['edit_commande_id'])) {
-    $id_commande = $_SESSION['edit_commande_id'];
-    $cart = getCart();
-    
-    if (!empty($cart['items'])) {
-        // Calcul de l'ancien total pour vérifier s'il y a une différence à payer
-        $stmt = $pdo->prepare("SELECT prix_total FROM Commandes WHERE id_commande = ? AND id_client = ?");
-        $stmt->execute([$id_commande, $_SESSION['user_id']]);
-        $old_total = $stmt->fetchColumn();
+// Action: Mettre à jour la quantité OU soumission via bouton Enregistrer/Payer/Checkout
+if (isset($_POST['action']) && ($_POST['action'] === 'update' || $_POST['action'] === 'save_edit' || $_POST['action'] === 'checkout')) {
+    // Vérifier le token CSRF
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $message = 'Erreur de sécurité, veuillez réessayer.';
+        // On bloque formellement la suite de l'exécution pour protéger la base de données
+        $_POST['action'] = ''; 
+    } else {
+        foreach ($_POST['quantite'] as $index => $quantite) {
+            $note = $_POST['note'][$index] ?? null;
+            updateCartQuantity($index, (int)$quantite, $note);
+        }
         
-        if ($old_total !== false && $cart['total'] > $old_total) {
-            // Différence à payer -> Redirection vers la passerelle de paiement
-            header('Location: /api/commander.php?mode=supplement');
+        if ($_POST['action'] === 'checkout') {
+            // Sauvegarde de l'adresse en session avant d'aller vers CYBank
+            $_SESSION['adresse_livraison_temp'] = trim($_POST['adresse_livraison'] ?? '');
+            header('Location: /api/commander.php');
             exit;
         }
         
-        // Si le prix est identique ou inférieur, on met à jour directement (sans paiement)
-        try {
-            $pdo->beginTransaction();
+        if ($_POST['action'] === 'update') {
+            $message = 'Le panier a été mis à jour.';
+        }
+    }
+}
+
+// Action: Sauvegarder l'édition d'une commande
+if ((isset($_GET['action']) && $_GET['action'] === 'save_edit') || (isset($_POST['action']) && $_POST['action'] === 'save_edit')) {
+    if (isset($_SESSION['edit_commande_id'])) {
+        $id_commande = $_SESSION['edit_commande_id'];
+        $cart = getCart(); // On rafraîchit le panier après l'update ci-dessus !
+        $adresse_livraison = trim($_POST['adresse_livraison'] ?? '');
+        
+        if (!empty($cart['items'])) {
+            // Calcul de l'ancien total pour vérifier s'il y a une différence à payer
+            $stmt = $pdo->prepare("SELECT prix_total FROM Commandes WHERE id_commande = ? AND id_client = ?");
+            $stmt->execute([$id_commande, $_SESSION['user_id']]);
+            $old_total = $stmt->fetchColumn();
             
-            // Mettre à jour le total de la commande
-            $stmt = $pdo->prepare("UPDATE Commandes SET prix_total = ? WHERE id_commande = ? AND id_client = ?");
-            $stmt->execute([$cart['total'], $id_commande, $_SESSION['user_id']]);
-            
-            // Vider les anciens plats
-            $pdo->prepare("DELETE FROM Contenu_Commandes WHERE id_commande = ?")->execute([$id_commande]);
-            
-            // Insérer les nouveaux plats
-            $stmtContenu = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire, options_choisies) VALUES (?, ?, ?, ?, ?)");
-            foreach ($cart['items'] as $item) {
-                $options = $item['options'] ?? [];
-                if (!empty($item['note'])) {
-                    $options[] = "📝 " . $item['note'];
+            if ($old_total !== false && $cart['total'] > $old_total) {
+                if (!empty($adresse_livraison)) {
+                    $pdo->prepare("UPDATE Commandes SET adresse_livraison = ? WHERE id_commande = ? AND id_client = ?")->execute([$adresse_livraison, $id_commande, $_SESSION['user_id']]);
                 }
-                $optionsJson = json_encode($options);
-                $id_produit = $item['plat_id'] ?? $item['id'];
-                $stmtContenu->execute([$id_commande, $id_produit, $item['quantite'], $item['prix_unitaire'], $optionsJson]);
+                // Différence à payer -> Redirection vers la passerelle de paiement
+                header('Location: /api/commander.php?mode=supplement');
+                exit;
             }
             
-            $pdo->commit();
-            clearCart();
-            unset($_SESSION['edit_commande_id']);
-            
-            header('Location: /api/client/commandes.php?success=commande_modifiee');
-            exit;
-        } catch (Exception $e) {
-            $pdo->rollBack();
-            $message = 'Erreur lors de la modification de la commande.';
+            // Si le prix est identique ou inférieur, on met à jour directement (sans paiement)
+            try {
+                $pdo->beginTransaction();
+                
+                $stmt = $pdo->prepare("UPDATE Commandes SET prix_total = ?, adresse_livraison = COALESCE(NULLIF(?, ''), adresse_livraison) WHERE id_commande = ? AND id_client = ?");
+                $stmt->execute([$cart['total'], $adresse_livraison, $id_commande, $_SESSION['user_id']]);
+                
+                $pdo->prepare("DELETE FROM Contenu_Commandes WHERE id_commande = ?")->execute([$id_commande]);
+                
+                $stmtContenu = $pdo->prepare("INSERT INTO Contenu_Commandes (id_commande, id_produit, quantite, prix_unitaire, options_choisies) VALUES (?, ?, ?, ?, ?)");
+                foreach ($cart['items'] as $item) {
+                    $options = $item['options'] ?? [];
+                    if (!empty($item['note'])) {
+                        $options[] = "📝 " . $item['note'];
+                    }
+                    $optionsJson = json_encode($options);
+                    $id_produit = $item['plat_id'] ?? $item['id'];
+                    $stmtContenu->execute([$id_commande, $id_produit, $item['quantite'], $item['prix_unitaire'], $optionsJson]);
+                }
+                
+                $pdo->commit();
+                clearCart();
+                unset($_SESSION['edit_commande_id']);
+                
+                header('Location: /api/client/commandes.php?success=commande_modifiee');
+                exit;
+            } catch (Exception $e) {
+                $pdo->rollBack();
+                $message = 'Erreur lors de la modification de la commande.';
+            }
         }
     }
 }
@@ -78,20 +107,6 @@ if (isset($_GET['action']) && $_GET['action'] === 'remove' && isset($_GET['index
     $index = (int)$_GET['index'];
     if (removeFromCart($index)) {
         $message = 'L\'article a été retiré du panier.';
-    }
-}
-
-// Action: Mettre à jour la quantité
-if (isset($_POST['action']) && $_POST['action'] === 'update') {
-    // Vérifier le token CSRF
-    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-        $message = 'Erreur de sécurité, veuillez réessayer.';
-    } else {
-        foreach ($_POST['quantite'] as $index => $quantite) {
-            $note = $_POST['note'][$index] ?? null;
-            updateCartQuantity($index, (int)$quantite, $note);
-        }
-        $message = 'Le panier a été mis à jour.';
     }
 }
 
@@ -231,7 +246,6 @@ include_once __DIR__ . '/includes/header.php';
             </div>
         <?php else: ?>
             <form action="/api/panier.php" method="post" class="cart-form">
-                <input type="hidden" name="action" value="update">
                 <input type="hidden" name="csrf_token" value="<?= $csrf_token ?>">
                 
                 <div class="cart-items">
@@ -258,8 +272,7 @@ include_once __DIR__ . '/includes/header.php';
                                         <div style="flex: 1;">
                                             <h3><?= htmlspecialchars($item['nom']) ?></h3>
                                             <?php 
-                                            $plat_origine = getPlatById($item['plat_id'] ?? $item['id']);
-                                            $options_dispos = $plat_origine && !empty($plat_origine['options_config']) ? json_encode($plat_origine['options_config']) : '[]';
+                                            $options_dispos = $item['options_dispos'] ?? '[]';
                                             ?>
                                             <?php if (!empty($item['options']) || $options_dispos !== '[]'): ?>
                                                 <p class="cart-item-options" style="font-size: 0.9em; color: #555; line-height: 1.5;">
@@ -278,14 +291,9 @@ include_once __DIR__ . '/includes/header.php';
                                     </td>
                                     <td><?= number_format($item['prix_unitaire'] * $item['quantite'], 2, ',', ' ') ?> €</td>
                                     <td style="vertical-align: middle;">
-                                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                                            <button type="submit" class="btn-update" style="padding: 8px; font-size: 0.85rem; width: 100%; display: flex; align-items: center; justify-content: center; gap: 5px;" title="Sauvegarder les modifications">
-                                                <i class="fas fa-save"></i> Maj
-                                            </button>
-                                            <a href="/api/panier.php?action=remove&index=<?= $index ?>" class="btn-remove" title="Retirer ce plat" style="text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 8px;">
-                                                <i class="fas fa-trash-alt"></i> Retirer
-                                            </a>
-                                        </div>
+                                        <a href="/api/panier.php?action=remove&index=<?= $index ?>" class="btn-remove" title="Retirer ce plat" style="text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 8px;">
+                                            <i class="fas fa-trash-alt"></i> Retirer
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -294,6 +302,24 @@ include_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <?php if (isLoggedIn()): ?>
+                <?php
+                $current_address = '';
+                if (isset($_SESSION['edit_commande_id'])) {
+                    $stmtAddr = $pdo->prepare("SELECT adresse_livraison FROM Commandes WHERE id_commande = ? AND id_client = ?");
+                    $stmtAddr->execute([$_SESSION['edit_commande_id'], $_SESSION['user_id']]);
+                    $current_address = $stmtAddr->fetchColumn() ?: '';
+                }
+                if (empty($current_address)) {
+                    $stmtAddr = $pdo->prepare("SELECT adresse FROM Utilisateurs WHERE id_user = ?");
+                    $stmtAddr->execute([$_SESSION['user_id']]);
+                    $current_address = $stmtAddr->fetchColumn() ?: '';
+                }
+                ?>
+                <div class="cart-address" style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
+                    <h3 style="margin-top: 0; color: var(--color-secondary); font-size: 1.2rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary);"></i> Adresse de livraison</h3>
+                    <textarea name="adresse_livraison" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--color-grey-light); border-radius: 4px; font-family: inherit; resize: vertical; margin-top: 10px; font-size: 1rem;" placeholder="Où devons-nous vous livrer ?"><?= htmlspecialchars($current_address) ?></textarea>
+                </div>
+                
                 <div class="loyalty-box" style="background: #fffdf7; padding: 20px; border-radius: 8px; margin-top: 20px; border: 3px solid <?= $color_miams ?>;">
                     <h3 style="color: var(--color-secondary); margin-bottom: 10px;">🥩 Le Grand Miam Club</h3>
                     <p>Miams disponibles : <strong><?= $miams_dispo ?> Miams</strong> (Rang : <strong style="color: <?= $color_miams ?>;"><?= $statut_miams ?></strong>)</p>
@@ -362,17 +388,15 @@ include_once __DIR__ . '/includes/header.php';
                     <div class="cart-actions">
                         <?php if (isset($_SESSION['edit_commande_id'])): ?>
                             <a href="/api/panier.php?action=cancel_edit" class="btn-clear">Annuler la modification</a>
-                            <button type="submit" class="btn-update" title="Recalculer">🔄 Maj</button>
-                        <?php if ($difference > 0): ?>
-                            <a href="/api/panier.php?action=save_edit" class="btn-checkout" style="background: #f39c12;">💳 Payer supplément (<?= number_format($difference, 2, ',', ' ') ?> €)</a>
-                        <?php else: ?>
-                            <a href="/api/panier.php?action=save_edit" class="btn-checkout" style="background: #2ecc71;">💾 Enregistrer</a>
-                        <?php endif; ?>
+                            <?php if ($difference > 0): ?>
+                                <button type="submit" name="action" value="save_edit" class="btn-checkout" style="background: #f39c12; border: none; cursor: pointer; color: white;">💳 Payer supplément (<?= number_format($difference, 2, ',', ' ') ?> €)</button>
+                            <?php else: ?>
+                                <button type="submit" name="action" value="save_edit" class="btn-checkout" style="background: #2ecc71; border: none; cursor: pointer; color: white;">💾 Enregistrer</button>
+                            <?php endif; ?>
                         <?php else: ?>
                             <a href="/api/panier.php?action=clear" class="btn-clear">Vider le panier</a>
-                            <button type="submit" class="btn-update" title="Recalculer">🔄 Maj</button>
                             <?php if (isLoggedIn()): ?>
-                                <a href="/api/commander.php" class="btn-checkout">Payer la commande 💳</a>
+                                <button type="submit" name="action" value="checkout" class="btn-checkout" style="border: none; cursor: pointer; color: white;">Payer la commande 💳</button>
                             <?php else: ?>
                                 <a href="/api/pages/connexion.php?error=must_login" class="btn-checkout" style="background: var(--color-primary); color: white;">Me connecter pour payer 🔒</a>
                             <?php endif; ?>

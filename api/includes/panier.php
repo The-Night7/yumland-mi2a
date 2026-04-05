@@ -52,7 +52,8 @@ function addToCart($plat_id, $quantite = 1, $options = []) {
             'prix_unitaire' => $plat['prix'],
             'quantite' => $quantite,
             'options' => $options,
-            'image' => $plat['image']
+            'image' => $plat['image'],
+            'options_dispos' => !empty($plat['options_config']) ? json_encode($plat['options_config']) : '[]'
         ];
     }
     

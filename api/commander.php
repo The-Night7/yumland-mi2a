@@ -64,10 +64,15 @@ try {
         unset($_SESSION['edit_commande_id']);
     } else {
         // Création standard d'une nouvelle commande
-        $stmtUser = $pdo->prepare("SELECT adresse FROM Utilisateurs WHERE id_user = ?");
-        $stmtUser->execute([$id_client]);
-        $user = $stmtUser->fetch();
-        $adresse_livraison = $user['adresse'] ?? '';
+        $adresse_livraison = $_SESSION['adresse_livraison_temp'] ?? '';
+        unset($_SESSION['adresse_livraison_temp']);
+        
+        if (empty($adresse_livraison)) {
+            $stmtUser = $pdo->prepare("SELECT adresse FROM Utilisateurs WHERE id_user = ?");
+            $stmtUser->execute([$id_client]);
+            $user = $stmtUser->fetch();
+            $adresse_livraison = $user['adresse'] ?? '';
+        }
 
         $stmt = $pdo->prepare("INSERT INTO Commandes (id_client, prix_total, statut, paiement_statut, date_commande, adresse_livraison) VALUES (?, ?, 'En attente', 'Non payé', NOW(), ?)");
         $stmt->execute([$id_client, $total_paye, $adresse_livraison]);
