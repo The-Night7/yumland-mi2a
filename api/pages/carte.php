@@ -494,7 +494,7 @@ function getPlatId($recherche, $produits) {
         <button class="btn-primary" style="margin-top: 10px;" 
                 data-id="<?= getPlatId("LUNCH EXPRESS", $tous_les_produits) ?>" 
                 data-nom="Formule LUNCH EXPRESS" 
-                data-options='[{"titre":"Plat","choix":["Burger Le Grand Miam","Le Pavé du Chef","Veggie Grill"]},{"titre":"Boisson","choix":["Coca-Cola (33cl)","Coca Zéro (33cl)","Fanta (33cl)","Sprite (33cl)","Ice Tea (33cl)","Verre de vin (12cl)","Café"]}]'
+                data-options='[{"titre":"Plat","choix":["Burger Le Grand Miam","Le Pavé du Chef","Veggie Grill"]},{"titre":"Cuisson (si viande)","choix":["Saignant","À point","Bien cuit","Sans objet (Veggie)"]},{"titre":"Préparation","choix":["Standard","Viande Halal","Sans objet"]},{"titre":"Boisson","choix":["Coca-Cola (33cl)","Coca Zéro (33cl)","Fanta (33cl)","Sprite (33cl)","Ice Tea (33cl)","Verre de vin (12cl)","Café"]}]'
                 onclick="openMenuModal(this)"><i class="fas fa-cart-plus"></i> Ajouter</button>
     </div>
     
@@ -520,7 +520,7 @@ function getPlatId($recherche, $produits) {
         <button class="btn-primary" style="margin-top: 10px;" 
                 data-id="<?= getPlatId("LITTLE COWBOY", $tous_les_produits) ?>" 
                 data-nom="Menu LITTLE COWBOY" 
-                data-options='[{"titre":"Plat","choix":["Mini Cheeseburger","Nuggets de Poulet"]},{"titre":"Accompagnement","choix":["Frites","Haricots verts"]},{"titre":"Dessert","choix":["Sundae Vanille Chocolat","Sundae Vanille Fraise","Compote de fruits"]},{"titre":"Boisson","choix":["Sirop à l&apos;eau","Jus de pomme"]}]'
+                data-options='[{"titre":"Plat","choix":["Mini Cheeseburger","Nuggets de Poulet"]},{"titre":"Viande","choix":["Standard","Halal"]},{"titre":"Accompagnement","choix":["Frites","Haricots verts"]},{"titre":"Dessert","choix":["Sundae Vanille Chocolat","Sundae Vanille Fraise","Compote de fruits"]},{"titre":"Boisson","choix":["Sirop à l&apos;eau","Jus de pomme"]}]'
                 onclick="openMenuModal(this)"><i class="fas fa-cart-plus"></i> Ajouter</button>
     </div>
     
@@ -554,7 +554,7 @@ function getPlatId($recherche, $produits) {
         <button class="btn-primary" style="margin-top: 10px;" 
                 data-id="<?= getPlatId("GRILL MASTER", $tous_les_produits) ?>" 
                 data-nom="Menu GRILL MASTER" 
-                data-options='[{"titre":"Entrée","choix":["Onion Rings","Os à Moelle","Œuf Mayo"]},{"titre":"Plat","choix":["Burger Le Grand Miam","Burger Cheesy Tower","Burger Montagnard","Burger Frenchy","BBQ Ribs","Magret de Canard","Le Pavé du Chef","Pavé de Saumon"]},{"titre":"Dessert","choix":["Cheesecake","Brioche Perdue","Coupe de Glace 3 boules"]},{"titre":"Boisson","choix":["Pinte de Bière","Coca-Cola (50cl)","Coca Zéro (50cl)","Fanta (50cl)","Sprite (50cl)","Ice Tea (50cl)"]}]'
+                data-options='[{"titre":"Entrée","choix":["Onion Rings","Os à Moelle","Œuf Mayo"]},{"titre":"Plat","choix":["Burger Le Grand Miam","Burger Cheesy Tower","Burger Montagnard","Burger Frenchy","BBQ Ribs","Magret de Canard","Le Pavé du Chef","Pavé de Saumon"]},{"titre":"Cuisson (si viande)","choix":["Bleu","Saignant","À point","Bien cuit","Sans objet"]},{"titre":"Préparation","choix":["Standard","Viande Halal","Sans objet"]},{"titre":"Dessert","choix":["Cheesecake","Brioche Perdue","Coupe de Glace 3 boules"]},{"titre":"Boisson","choix":["Pinte de Bière","Coca-Cola (50cl)","Coca Zéro (50cl)","Fanta (50cl)","Sprite (50cl)","Ice Tea (50cl)"]}]'
                 onclick="openMenuModal(this)"><i class="fas fa-cart-plus"></i> Ajouter</button>
     </div>
 </div>

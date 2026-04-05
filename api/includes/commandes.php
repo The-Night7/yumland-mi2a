@@ -14,7 +14,7 @@ require_once __DIR__ . '/plats.php';
 function getAllCommandes($status = null, $user_id = null, $order = 'ASC') {
     global $pdo;
     // On joint la table Utilisateurs pour récupérer les infos client (nom, téléphone, etc.)
-    $query = "SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel 
+    $query = "SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel, u.adresse AS client_adresse 
               FROM Commandes c 
               LEFT JOIN Utilisateurs u ON c.id_client = u.id_user 
               WHERE 1=1";
@@ -50,7 +50,7 @@ function getAllCommandes($status = null, $user_id = null, $order = 'ASC') {
 function getCommandeById($id) {
     global $pdo;
     $stmt = $pdo->prepare("
-        SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel 
+        SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel, u.adresse AS client_adresse 
         FROM Commandes c
         LEFT JOIN Utilisateurs u ON c.id_client = u.id_user
         WHERE c.id_commande = ?
@@ -158,7 +158,7 @@ function getCommandesByLivreur($livreur_id) {
     global $pdo;
     try {
         $stmt = $pdo->prepare("
-            SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel 
+            SELECT c.*, u.nom AS client_nom, u.prenom AS client_prenom, u.tel AS client_tel, u.adresse AS client_adresse 
             FROM Commandes c
             LEFT JOIN Utilisateurs u ON c.id_client = u.id_user
             WHERE c.statut = 'En livraison' AND c.id_livreur = ?

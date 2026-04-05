@@ -87,9 +87,10 @@ function removeFromCart($index) {
  * Met à jour la quantité d'un plat dans le panier
  * @param int $index Index de l'élément à mettre à jour
  * @param int $quantite Nouvelle quantité
+ * @param string|null $note Note spéciale ou instruction (optionnel)
  * @return bool Succès ou échec
  */
-function updateCartQuantity($index, $quantite) {
+function updateCartQuantity($index, $quantite, $note = null) {
     initCart();
     
     if (isset($_SESSION['cart']['items'][$index])) {
@@ -98,6 +99,9 @@ function updateCartQuantity($index, $quantite) {
         }
         
         $_SESSION['cart']['items'][$index]['quantite'] = $quantite;
+        if ($note !== null) {
+            $_SESSION['cart']['items'][$index]['note'] = trim($note);
+        }
         updateCartTotal();
         return true;
     }

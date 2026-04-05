@@ -66,10 +66,13 @@ $cartItemCount = getCartItemCount();
             padding: 10px 0;
             list-style: none;
             border: 1px solid #eee;
-            margin-top: 5px;
+            margin-top: 0; /* Suppression de la marge pour éviter que la souris sorte de la zone et ferme le menu */
         }
         .nav-links .dropdown:hover .dropdown-menu {
             display: block; /* Affiche le menu au survol */
+        }
+        .nav-links .dropdown-menu.show {
+            display: block !important; /* Force l'affichage au clic (notamment sur mobile) */
         }
         .nav-links .dropdown-menu li {
             width: 100%;
@@ -146,5 +149,27 @@ $cartItemCount = getCartItemCount();
         </ul>
     </nav>
 </header>
+
+<script>
+// Script pour rendre le menu déroulant persistant au clic (très utile sur mobile et tablette)
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdownToggle = document.querySelector('.dropdown-toggle');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
+    
+    if (dropdownToggle && dropdownMenu) {
+        dropdownToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            dropdownMenu.classList.toggle('show');
+        });
+        
+        // Ferme le menu si on clique en dehors
+        document.addEventListener('click', function(e) {
+            if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    }
+});
+</script>
 
 <main>

@@ -36,13 +36,14 @@ $mes_livraisons = getCommandesByLivreur($livreur_id);
     <?php foreach ($mes_livraisons as $livraison): ?>
         <article class="card-style" style="padding: 20px; text-align: left; margin-bottom: 20px;">
             <h2 style="font-size: 1.5rem; margin-bottom: 5px;">Commande #<?= $livraison['id_commande'] ?></h2>
+            <?php $adresse_a_afficher = !empty($livraison['adresse_livraison']) ? $livraison['adresse_livraison'] : (!empty($livraison['client_adresse']) ? $livraison['client_adresse'] : 'Adresse non spécifiée'); ?>
             <p style="font-size: 1.2rem; color: #555;">
-                📍 <?= htmlspecialchars($livraison['adresse_livraison'] ?? 'Adresse non spécifiée') ?>
+                📍 <?= htmlspecialchars($adresse_a_afficher) ?>
             </p>
             
             <!-- Boutons XXL (Hauteur mini 60px pour gants selon le README) -->
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 25px;">
-                <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($livraison['adresse_livraison'] ?? '') ?>" target="_blank" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #4285F4; text-align: center;">
+                <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($adresse_a_afficher) ?>" target="_blank" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #4285F4; text-align: center;">
                     🗺️ OUVRIR DANS MAPS
                 </a>
                 

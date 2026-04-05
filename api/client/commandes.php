@@ -9,6 +9,52 @@ if (!isLoggedIn() || !hasRole('Client')) {
     redirect('/api/pages/connexion.php');
 }
 
+// Traitement de l'annulation pour modification
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'modifier_panier') {
+    $id_commande = (int)$_POST['id_commande'];
+    
+    // Vérifier la commande (doit être "En attente")
+    $stmtCheck = $pdo->prepare("SELECT id_commande, prix_total, paiement_statut FROM Commandes WHERE id_commande = ? AND id_client = ? AND statut = 'En attente'");
+    $stmtCheck->execute([$id_commande, $_SESSION['user_id']]);
+    $cmdToEdit = $stmtCheck->fetch();
+    
+    if ($cmdToEdit) {
+        // 1. Remettre les plats dans le panier
+        $stmtDetails = $pdo->prepare("SELECT id_produit, quantite, options_choisies FROM Contenu_Commandes WHERE id_commande = ?");
+        $stmtDetails->execute([$id_commande]);
+        $details = $stmtDetails->fetchAll();
+        
+        clearCart(); // On vide le panier actuel
+        foreach ($details as $item) {
+            $options = json_decode($item['options_choisies'], true) ?: [];
+            $clean_options = [];
+            $note = '';
+            foreach ($options as $opt) {
+                if (preg_match('/^📝\s*(.*)$/u', $opt, $matches)) {
+                    $note = $matches[1];
+                } else {
+                    $clean_options[] = $opt;
+                }
+            }
+            
+            addToCart($item['id_produit'], $item['quantite'], $clean_options);
+            
+            if ($note !== '') {
+                $cart_keys = array_keys($_SESSION['cart']['items']);
+                $last_index = end($cart_keys);
+                $_SESSION['cart']['items'][$last_index]['note'] = $note;
+            }
+        }
+        
+        // 2. On enregistre en session qu'on est en train d'éditer cette commande
+        $_SESSION['edit_commande_id'] = $id_commande;
+        
+        // 3. Rediriger vers le panier pour qu'il puisse éditer librement
+        header('Location: /api/panier.php?info=editing');
+        exit;
+    }
+}
+
 // Traitement de la re-commande
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'recommander') {
     $id_commande = (int)$_POST['id_commande'];
@@ -46,6 +92,18 @@ include_once __DIR__ . '/../includes/header.php';
     <div class="container">
         <h1>Mes Commandes</h1>
         
+        <?php if (isset($_GET['success']) && $_GET['success'] === 'commande_validee'): ?>
+            <div class="alert alert-success" style="margin-bottom: 20px; color: green; border: 1px solid green; padding: 10px; background: #e8f5e9; border-radius: 4px;">
+                ✅ Votre commande a bien été validée et payée !
+            </div>
+        <?php endif; ?>
+        
+        <?php if (isset($_GET['success']) && $_GET['success'] === 'commande_modifiee'): ?>
+            <div class="alert alert-success" style="margin-bottom: 20px; color: green; border: 1px solid green; padding: 10px; background: #e8f5e9; border-radius: 4px;">
+                ✏️ Votre commande a été mise à jour avec succès ! Le Chef a reçu les modifications.
+            </div>
+        <?php endif; ?>
+        
         <?php if (empty($commandes)): ?>
             <div class="empty-commandes">
                 <p>Vous n'avez pas encore passé de commande.</p>
@@ -70,7 +128,7 @@ include_once __DIR__ . '/../includes/header.php';
                             </p>
                             <p><strong>Mode:</strong> <?= htmlspecialchars($commande['mode_retrait'] ?? 'Livraison') ?></p>
                             <?php if (($commande['mode_retrait'] ?? 'livraison') === 'livraison'): ?>
-                                <p><strong>Adresse:</strong> <?= htmlspecialchars($commande['adresse_livraison']) ?></p>
+                                <p><strong>Adresse:</strong> <?= htmlspecialchars(!empty($commande['adresse_livraison']) ? $commande['adresse_livraison'] : ($commande['client_adresse'] ?? 'Non spécifiée')) ?></p>
                             <?php endif; ?>
                             <p><strong>Montant:</strong> <?= number_format($commande['prix_total'], 2, ',', ' ') ?> €</p>
                         </div>
@@ -103,6 +161,16 @@ include_once __DIR__ . '/../includes/header.php';
                         </div>
                         
                         <div class="commande-actions" style="display: flex; gap: 10px; margin-top: 15px;">
+                            <?php if ($commande['statut'] === 'En attente'): ?>
+                                <form method="POST" style="margin: 0;" onsubmit="return confirm('Voulez-vous modifier cette commande ? Son contenu sera placé dans votre panier pour que vous puissiez l\'éditer librement.');">
+                                    <input type="hidden" name="action" value="modifier_panier">
+                                    <input type="hidden" name="id_commande" value="<?= $commande['id_commande'] ?>">
+                                    <button type="submit" class="btn-primary" style="padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 5px; background-color: #f39c12;">
+                                        <i class="fas fa-edit"></i> Modifier
+                                    </button>
+                                </form>
+                            <?php endif; ?>
+                            
                             <?php if ($commande['statut'] === 'Livrée'): ?>
                                 <a href="/api/client/noter.php?commande_id=<?= $commande['id_commande'] ?>" class="btn-secondary" style="padding: 10px 15px; border: 1px solid var(--color-coal-black); color: var(--color-coal-black); text-decoration: none; border-radius: 4px;">⭐ Noter</a>
                             <?php endif; ?>
