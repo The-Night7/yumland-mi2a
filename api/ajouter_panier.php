@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['cart'] = ['items' => [], 'total' => 0];
             }
 
-            // Vérifie si le plat existe déjà avec la même configuration exacte
+            // On vérifie si on n'a pas déjà ce plat EXACTEMENT avec les mêmes options (ex: 2 burgers saignants)
             $found = false;
             foreach ($_SESSION['cart']['items'] as &$item) {
                 $isSameProduct = ((isset($item['id']) && $item['id'] == $id_produit) || (isset($item['plat_id']) && $item['plat_id'] == $id_produit));
@@ -48,11 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $prix_final = $plat['prix'];
             
             if ($prix_miams > 0) {
-                $prix_final = 0; // C'est un cadeau !
+                // Si l'utilisateur paie en Miams, on force le prix à 0 pour ce produit
+                $prix_final = 0;
                 $options[] = "🎁 Cadeau Club (-" . $prix_miams . " Miams)";
             } else {
                 if (!empty($options) && is_array($options)) {
                     foreach ($options as $opt) {
+                        // Petite expression régulière pour extraire un éventuel supplément dans le texte (ex: "- 1.50 €")
                         if (preg_match('/-\s*([0-9]+[.,][0-9]{2})\s*€/', $opt, $matches)) {
                             $prix_final = (float)str_replace(',', '.', $matches[1]);
                         }

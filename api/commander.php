@@ -53,8 +53,12 @@ try {
 // ETAPE 2 : Préparation des données pour CY BANK
 // ==============================================================
 $vendeur = "MI-2_A"; // Code vendeur valide selon l'annexe (Groupe MI2A)
-$transaction = sprintf("MI2A%06d", $id_commande); // Prefix MI2A + padding pour atteindre 10 caractères
-$montant = number_format($total_paye, 2, '.', ''); // Format décimal strict avec point
+
+// La banque exige une transaction de 10 caractères mini. Le sprintf rajoute des 0 pour combler (ex: MI2A000014)
+$transaction = sprintf("MI2A%06d", $id_commande); 
+
+// Attention, la banque veut un point pour les décimales, pas de virgule. Le number_format sert à forcer ça.
+$montant = number_format($total_paye, 2, '.', '');
 
 // URL de retour une fois le paiement terminé
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";

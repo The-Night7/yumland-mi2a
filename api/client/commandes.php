@@ -12,7 +12,8 @@ if (!isLoggedIn() || !hasRole('Client')) {
 // Traitement de la re-commande
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'recommander') {
     $id_commande = (int)$_POST['id_commande'];
-    // Vérifier que la commande appartient bien à l'utilisateur
+    
+    // Par sécurité, on vérifie que le client tente bien de recommander SA propre commande
     $stmtCheck = $pdo->prepare("SELECT id_commande FROM Commandes WHERE id_commande = ? AND id_client = ?");
     $stmtCheck->execute([$id_commande, $_SESSION['user_id']]);
     if ($stmtCheck->fetch()) {
@@ -20,6 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $stmtDetails->execute([$id_commande]);
         $details = $stmtDetails->fetchAll();
         
+        // On boucle sur l'ancienne commande et on balance tout dans le panier actuel
         foreach ($details as $item) {
             $options = json_decode($item['options_choisies'], true) ?: [];
             addToCart($item['id_produit'], $item['quantite'], $options);

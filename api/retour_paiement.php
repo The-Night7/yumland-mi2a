@@ -12,14 +12,15 @@ $control = $_GET['control'] ?? '';
 // CYBank peut renvoyer 'status' (comme dans l'exemple) ou 'statut' (comme dans le texte doc)
 $statut = $_GET['statut'] ?? $_GET['status'] ?? 'declined'; 
 
-// Vérification de la signature de sécurité (Hachage inverse)
+// On recalcule la clé MD5 avec les données reçues. Si ça correspond à ce qu'envoie la banque,
+// c'est que l'URL n'a pas été trafiquée par un petit malin.
 $api_key = getAPIKey($vendeur);
 $expected_control = md5($api_key . "#" . $transaction . "#" . $montant . "#" . $vendeur . "#" . $statut . "#");
 
-// Extraction de notre vrai numéro de commande (on retire les 4 premières lettres "MI2A")
+// On vire le préfixe "MI2A" (4 lettres) pour retrouver notre vrai ID de BDD auto-incrémenté
 $id_commande = (int)substr($transaction, 4);
 
-// On vérifie que la signature de sécurité est bonne avant toute chose !
+// Vérification ultime : bonne signature + statut ok + ID cohérent
 if ($control === $expected_control && $statut === 'accepted' && $id_commande > 0) {
     try {
         // Sécurisation des opérations multiples via transaction SQL

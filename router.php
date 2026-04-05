@@ -1,5 +1,7 @@
 <?php
-// router.php : Simule EXACTEMENT le vercel.json pour le serveur PHP local
+// Ce fichier sert de "routeur local" quand on développe sur nos machines (avec php -S).
+// Il reproduit le comportement du vercel.json pour que le CSS, les images et les URLs
+// se comportent exactement pareil en local et en production sur Vercel.
 $path = parse_url($_SERVER["REQUEST_URI"], PHP_URL_PATH);
 
 // 1. Rediriger l'accueil (/) vers api/index.php

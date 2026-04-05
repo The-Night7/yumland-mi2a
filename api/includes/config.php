@@ -35,10 +35,10 @@ $ssl_ca = __DIR__ . '/ca.pem';
 $ca_content = getenv('DB_SSL_CA');
 
 if ($ca_content) {
-    // Vercel autorise l'écriture dans le dossier temporaire /tmp
+    // Astuce Vercel : Comme le système de fichiers de Vercel est en lecture seule,
+    // on est obligés de sauvegarder le certificat à la volée dans le dossier /tmp pour que PDO le trouve.
     $ssl_ca = sys_get_temp_dir() . '/aiven_ca.pem';
     
-    // On crée le fichier temporaire s'il n'existe pas déjà pour cette exécution
     if (!file_exists($ssl_ca)) {
         file_put_contents($ssl_ca, str_replace('\n', "\n", $ca_content));
     }
@@ -68,11 +68,25 @@ try {
     $pdo->exec("SET time_zone = '$offset'");
 
 } catch (PDOException $e) {
+    // Message d'erreur personnalisé en cas de mise en veille de la BDD Aiven (Plan Gratuit)
+    $errorMsg = '<div style="font-family: sans-serif; max-width: 600px; margin: 50px auto; padding: 30px; border: 3px solid #D32F2F; border-radius: 8px; background-color: #FDFBF7; color: #2D2D2D; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">';
+    $errorMsg .= '<h2 style="color: #D32F2F; margin-top: 0; text-transform: uppercase;">⚠️ Base de données en veille</h2>';
+    $errorMsg .= '<p style="font-size: 1.1rem; line-height: 1.5;">Notre application utilise un plan gratuit pour la base de données SQL. Celle-ci se désactive automatiquement après quelques jours d\'inactivité.</p>';
+    $errorMsg .= '<p style="font-size: 1.2rem;"><strong>Pas de panique, il faut simplement la réactiver !</strong></p>';
+    $errorMsg .= '<p>Veuillez nous envoyer un message pour que nous puissions la relancer immédiatement :</p>';
+    $errorMsg .= '<div style="background: white; padding: 15px; border-radius: 6px; margin: 20px 0; border: 1px solid #eee; text-align: left; display: inline-block;">';
+    $errorMsg .= '<p style="margin: 5px 0;">📞 <strong>Myriam Bensaid</strong> : 06 68 39 92 06</p>';
+    $errorMsg .= '<p style="margin: 5px 0;">📞 <strong>Sheryne Ouarghi</strong> : 06 17 67 77 02</p>';
+    $errorMsg .= '<p style="margin: 10px 0 0 0; font-size: 0.9em; color: #666; font-style: italic;">(Ou contactez-nous via Teams / Mail de l\'école)</p>';
+    $errorMsg .= '</div>';
+    
     if (DEBUG_MODE) {
-        die("Erreur critique de connexion : " . $e->getMessage());
-    } else {
-        die("Erreur de connexion au serveur de données. Veuillez réessayer plus tard.");
+        $errorMsg .= '<hr style="margin-top: 20px; border: 0; border-top: 1px solid #ccc;">';
+        $errorMsg .= '<p style="font-size: 0.8rem; color: #666; text-align: left;"><strong>Erreur technique :</strong> ' . htmlspecialchars($e->getMessage()) . '</p>';
     }
+    $errorMsg .= '</div>';
+    
+    die($errorMsg);
 }
 
 /**
