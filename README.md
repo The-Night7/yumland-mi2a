@@ -1,13 +1,13 @@
 # 🥩 Le Grand Miam - Steakhouse & Grillades Premium
 
 ## 📖 Principe du Projet
-**Le Grand Miam** est une application web de restauration conçue pour une chaîne spécialisée dans les grillades. Le projet vise à offrir une solution numérique complète couvrant tout le cycle de vie d'une commande, de la prise de décision du client à la validation finale par le livreur. 
+"Le Grand Miam" est une application web complète pour une chaîne de restaurants de type "Steakhouse". Le projet offre une solution numérique multi-rôles qui couvre l'ensemble du parcours client et du flux opérationnel, de la consultation de la carte jusqu'à la livraison.
 
-L'application repose sur une architecture multi-utilisateurs où chaque interface est optimisée pour son terminal de destination (Desktop, Tablette ou Mobile).
+L'application repose sur une architecture dynamique PHP/MySQL où chaque interface (Client, Restaurateur, Livreur, Admin) est optimisée pour son terminal de destination (Desktop, Tablette ou Mobile).
 
 ---
 
-## 👥 L'Équipe (Groupe MI2A)
+## 👥 L'Équipe (Groupe MI-2A)
 * **Myriam BENSAÏD** : The-Night7
 * **Sheryne OUARGHI-MHIRI** : Souarghi
 * **Kylian VANDEL** : Kylian-19
@@ -18,93 +18,76 @@ L'application repose sur une architecture multi-utilisateurs où chaque interfac
 
 ### 👤 Profil Client
 * **Menu Dynamique** : Consultation de la carte avec distinction des plats (Bœuf, Porc, Végétarien, Halal).
-* **Système de Fidélité "Le Grand Miam Club"** : Accumulation de points (**Miams**) convertibles en produits offerts (1 € dépensé = 10 Miams).
-* **Espace Membre** : Gestion des informations personnelles, historique de commandes et suivi du solde de points.
+* **Panier d'Achat Interactif** : Ajout de produits avec gestion des options (cuisson, suppléments).
+* **Paiement Sécurisé** : Intégration de la passerelle de paiement externe **CYBank** fournie par l'école.
+* **Club de Fidélité "Le Grand Miam"** : Accumulation de points ("Miams") à chaque commande, avec une boutique dédiée pour les échanger contre des produits gratuits.
+* **Espace Personnel** : Gestion du profil, consultation de l'historique des commandes avec possibilité de "Recommander" en un clic.
 
-### 🍱 Profil Restaurateur (Tablette)
-* **Flux de Commandes** : Réception et mise à jour du statut des commandes en cuisine (En préparation / Prête).
-* **Inventaire** : Gestion simplifiée de la disponibilité des plats en temps réel.
+### 👨‍🍳 Profil Restaurateur (Optimisé Tablette)
+* **Tableau de Bord "Kanban"** : Visualisation des commandes en temps réel sur 3 colonnes (En attente, En préparation, Prête).
+* **Gestion des Statuts** : Passage simple et rapide d'une commande à l'étape suivante.
+* **Détail des Commandes** : Affichage clair des plats et de leurs options (ex: cuisson de la viande).
 
-### 🚴 Profil Livreur (Mobile)
-* **Interface Haute Visibilité** : Design conçu pour la lecture en extérieur (forts contrastes sur fond crème).
-* **Ergonomie "Gants"** : Zones de toucher élargies (minimum 60px) pour une manipulation sans retirer d'équipement.
-* **Suivi Logistique** : Gestion des étapes de livraison de la récupération au client final.
+### 🚴 Profil Livreur (Optimisé Mobile)
+* **Interface Haute Visibilité** : Design "Mode Nuit" et forts contrastes pour une lecture en extérieur.
+* **Ergonomie "Gants"** : Boutons surdimensionnés (hauteur > 60px) pour une manipulation facile.
+* **Logistique Simplifiée** : Accès direct à Google Maps pour la navigation et bouton d'appel du client.
 
-### 🔑 Profil Administrateur (Desktop)
-* **Gestion Globale** : Supervision des comptes utilisateurs et maintenance de la plateforme.
+### 🛡️ Profil Administrateur (Desktop)
+* **Tableau de Bord Complet** : Supervision de tous les utilisateurs, commandes et produits de la plateforme.
 
+## 🏗️ Architecture Technique
+*   **Langage Back-End** : PHP 8
+*   **Base de Données** : MySQL (hébergée sur Aiven)
+*   **Hébergement** : Vercel (avec configuration `vercel.json` pour le routing)
+*   **Développement Local** : Serveur PHP interne avec un `router.php` simulant l'environnement Vercel.
+*   **Paiement** : Interface externe CYBank (plateforme-smc.fr).
 
-## 📁 Organisation du Projet
-
-### 📅 Calendrier et Phases de Développement
-Le projet est construit de manière modulaire, marquant l'évolution entre la **Phase 1 (Statique / Front-End)** et la **Phase 2 (Dynamique / Back-End avec PHP & MySQL)**.
+## 📅 Calendrier et Phases de Développement
+Le projet est construit de manière modulaire, marquant l'évolution entre la conception initiale et le développement dynamique.
 
 * **Phase 1 : Conception Graphique et Intégration Statique (Front-End)**
-  * **Début :** 27/01/2026 - 9f9547b
-  * **Fin :** 22/02/2026 - bab7de5
+  * **Début :** 27/01/2026 - commit `9f9547b`
+  * **Fin :** 22/02/2026 - commit `bab7de5`
 
 * **Phase 2 : Serveur et Base de Données (Back-End)**
-  * **Début :** 22/02/2026 - 0c5ee9ca
+  * **Début :** 22/02/2026 - commit `0c5ee9ca`
+  * **Fin :** 05/04/2026 - commit `c0d3718`
   
 * **Phase 3 : Interactivité et Requêtes Asynchrones**
+  * 
 
 * **Phase 4 : Standardisation, Sécurité et Soutenance Finale**
 
-
-### Le dépôt est organisé de manière modulaire :
+## � Organisation du Projet
 
 ```text
 📦 yumland-mi2a
-├── 📂 api/                        # (Préparation Phase 2) Scripts serveur PHP
-│   └── 📄 index.php             # Point d'entrée de notre future API
-├── 📂 consigne/                   # Documents et cahiers des charges officiels
-├── 📂 data/                       # Données statiques de test (Mock)
-│   └── 📄 user.json             # Simulation de la base de données (Phase 1)
-├── 📂 docs/                       # Livrables et documents de conception de l'équipe
-│   ├── 📄 Charte_graphique.pdf  # UI/UX, choix des couleurs (Rouge Grill, Noir Charbon...)
-│   ├── 📄 Compte Rendu MI2.pdf  # Répartition des tâches au sein de l'équipe
-│   └── 📄 Programme de fidélité.pdf # Concept d'innovation "Le Grand Miam Club"
-├── 📂 public/                     # Ressources Front-End accessibles au client
-│   ├── 📂 css/
-│   │   ├── 📄 style.css         # Feuille de style principale commune
-│   │   └── 📄 dark-mode.css     # Gestion du thème sombre (Innovation ergonomique)
-├── 📂 api/                        # (Phase 2) Scripts serveur PHP & Logique Back-End
-│   ├── 📂 admin/                # Espace Administrateur (Gestion des utilisateurs)
-│   ├── 📂 client/               # Espace Client connecté (Profil, Historique)
-│   ├── 📂 includes/             # Configuration SQL (config.php, auth.php, commandes.php)
-│   ├── 📂 livreur/              # Espace Livreur dynamique
-│   ├── 📂 pages/                # Vues dynamiques générées en PHP (carte, inscription...)
-│   ├── 📂 restaurateur/         # Interface de la cuisine pour la gestion des statuts
+├── 📂 api/                        # Cœur de l'application PHP
+│   ├── 📂 admin/                # Scripts pour le tableau de bord Admin
+│   ├── 📂 client/               # Scripts pour l'espace Client (profil, commandes...)
+│   ├── 📂 includes/             # Fichiers de configuration et fonctions partagées (config, auth, BDD...)
+│   ├── 📂 livreur/              # Interface dynamique du Livreur
+│   ├── 📂 obsolete/             # Anciens fichiers de la Phase 1
+│   ├── 📂 pages/                # Pages PHP principales (carte, connexion, inscription...)
+│   ├── 📂 restaurateur/         # Interface dynamique de la Cuisine
+│   ├── 📄 ajouter_panier.php    # Endpoint AJAX pour le panier
+│   ├── 📄 commander.php         # Processus de commande et redirection vers CYBank
 │   ├── 📄 index.php             # Page d'accueil dynamique
-│   ├── 📄 init_db.php           # Script de création automatique des tables MySQL
-│   └── 📄 migrate_data.php      # Script de transition des JSON (Phase 1) vers SQL
-├── 📂 data/                       # (Phase 1) Anciens fichiers JSON simulant la BDD
-├── 📂 docs/                       # Livrables et documents de conception
-├── 📂 public/                     # Ressources Front-End (Design et Interactivité)
-│   ├── 📂 css/                  # Styles partagés (style.css, dark-mode.css)
-│   ├── 📂 html/
-│   │   ├── 📄 admin.html        # Interface Administrateur (Optimisée Desktop)
-│   │   ├── 📄 carte.html        # Consultation du menu avec filtres
-│   │   ├── 📄 connexion.html    # Authentification
-│   │   ├── 📄 inscription.html  # Création de compte client
-│   │   ├── 📄 livreur.html      # Interface Livreur (Mobile, gros boutons pour gants, fort contraste)
-│   │   ├── 📄 mentions.html     # Mentions légales
-│   │   ├── 📄 notation.html     # Retour d'expérience client
-│   │   ├── 📄 profil.html       # Gestion du compte et des adresses
-│   │   └── 📄 restaurateur.html # Interface Cuisine/Restaurateur (Optimisée Tablette)
+│   ├── 📄 init_db.php           # Script de création des tables SQL
+│   ├── 📄 login.php             # Endpoint AJAX pour la connexion
+│   ├── 📄 retour_paiement.php    # Endpoint de retour de CYBank
+│   └── ...
+├── 📂 consigne/                   # Documents du cahier des charges
+├── 📂 docs/                       # Livrables (Charte graphique, CR...)
+├── 📂 public/                     # Ressources Front-End (CSS, JS, images)
+│   ├── 📂 css/
 │   ├── 📂 images/
-│   │   ├── 📂 logo/             # Identité visuelle du restaurant
-│   │   └── 📂 nourriture/       # Assets visuels des plats (Burger, Entrecôte...)
 │   └── 📂 js/
-│       └── 📄 auth-client.js    # (Préparation Phase 3) Scripts d'interactivité dynamique
-├── 📄 index.html                  # Page d'accueil racine (Vitrine principale)
-├── 📄 vercel.json                 # Configuration pour le déploiement continu
-└── 📄 README.md                   # Présentation du projet et guide de démarrage
-│   │   └── ...                  # (Phase 1) Anciennes interfaces 100% statiques
-│   ├── 📂 images/               # Assets visuels (logo, plats)
-│   └── 📂 js/                   # (Phase 3) Scripts d'interactivité (AJAX, recherche)
-├── 📄 router.php                  # Routeur natif PHP simulant un serveur de production
-└── 📄 README.md                   # Présentation du projet et guide
+├── 📄 .gitignore
+├── 📄 README.md                   # Ce fichier
+├── 📄 router.php                  # Routeur pour le développement local (simule Vercel)
+└── 📄 vercel.json                 # Configuration de déploiement pour Vercel
 ```
 
 ## ⚙️ Prérequis (Phase 2)
@@ -157,10 +140,5 @@ Dans le dossier racine du projet (là où se trouve `router.php`), lancez le ser
 php -S localhost:8000 router.php
 ```
 *(Laissez ce terminal ouvert en arrière-plan pendant la navigation)*
-
-### 5. Initialisation finale
-Rendez-vous dans votre navigateur et visitez ces adresses dans l'ordre pour générer la structure :
-1. **Création des tables SQL :** http://localhost:8000/api/init_db.php
-2. **Migration des données Phase 1 (Optionnel) :** http://localhost:8000/api/migrate_data.php
 
 Projet réalisé dans le cadre de l'UE Sciences - Module Informatique 4 - CY Tech - 2025/2026.
