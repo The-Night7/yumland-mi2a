@@ -77,6 +77,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
+// Traitement de la modification d'adresse de livraison
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'modifier_adresse') {
+    $id_commande = (int)$_POST['id_commande'];
+    $nouvelle_adresse = trim($_POST['nouvelle_adresse'] ?? '');
+    
+    if (!empty($nouvelle_adresse)) {
+        // Vérifier que la commande appartient au client et n'est pas encore en livraison
+        $stmtCheck = $pdo->prepare("SELECT id_commande FROM Commandes WHERE id_commande = ? AND id_client = ? AND statut NOT IN ('En livraison', 'Livrée', 'Annulée')");
+        $stmtCheck->execute([$id_commande, $_SESSION['user_id']]);
+        
+        if ($stmtCheck->fetch()) {
+            $stmtUpdate = $pdo->prepare("UPDATE Commandes SET adresse_livraison = ? WHERE id_commande = ?");
+            $stmtUpdate->execute([$nouvelle_adresse, $id_commande]);
+            header('Location: /api/client/commandes.php?success=adresse_modifiee');
+            exit;
+        }
+    }
+}
+
 // Récupérer les commandes de l'utilisateur
 $commandes = getAllCommandes(null, $_SESSION['user_id'], 'DESC');
 
@@ -104,6 +123,12 @@ include_once __DIR__ . '/../includes/header.php';
             </div>
         <?php endif; ?>
         
+        <?php if (isset($_GET['success']) && $_GET['success'] === 'adresse_modifiee'): ?>
+            <div class="alert alert-success" style="margin-bottom: 20px; color: green; border: 1px solid green; padding: 10px; background: #e8f5e9; border-radius: 4px;">
+                📍 L'adresse de livraison a été mise à jour avec succès !
+            </div>
+        <?php endif; ?>
+        
         <?php if (empty($commandes)): ?>
             <div class="empty-commandes">
                 <p>Vous n'avez pas encore passé de commande.</p>
@@ -128,7 +153,24 @@ include_once __DIR__ . '/../includes/header.php';
                             </p>
                             <p><strong>Mode:</strong> <?= htmlspecialchars($commande['mode_retrait'] ?? 'Livraison') ?></p>
                             <?php if (($commande['mode_retrait'] ?? 'livraison') === 'livraison'): ?>
-                                <p><strong>Adresse:</strong> <?= htmlspecialchars(!empty($commande['adresse_livraison']) ? $commande['adresse_livraison'] : ($commande['client_adresse'] ?? 'Non spécifiée')) ?></p>
+                                <div style="margin-bottom: 10px;">
+                                    <strong>Adresse:</strong> 
+                                    <span id="display-addr-<?= $commande['id_commande'] ?>"><?= htmlspecialchars(!empty($commande['adresse_livraison']) ? $commande['adresse_livraison'] : ($commande['client_adresse'] ?? 'Non spécifiée')) ?></span>
+                                    
+                                    <?php if (!in_array($commande['statut'], ['En livraison', 'Livrée', 'Annulée'])): ?>
+                                        <button type="button" id="btn-edit-addr-<?= $commande['id_commande'] ?>" onclick="document.getElementById('form-edit-addr-<?= $commande['id_commande'] ?>').style.display='block'; this.style.display='none'; document.getElementById('display-addr-<?= $commande['id_commande'] ?>').style.display='none';" style="background: none; border: none; color: var(--color-primary); cursor: pointer; text-decoration: underline; font-size: 0.9em; padding: 0 5px;">✏️ Modifier</button>
+                                        
+                                        <form id="form-edit-addr-<?= $commande['id_commande'] ?>" method="POST" style="display: none; margin-top: 5px;">
+                                            <input type="hidden" name="action" value="modifier_adresse">
+                                            <input type="hidden" name="id_commande" value="<?= $commande['id_commande'] ?>">
+                                            <div style="display: flex; gap: 5px;">
+                                                <input type="text" name="nouvelle_adresse" value="<?= htmlspecialchars(!empty($commande['adresse_livraison']) ? $commande['adresse_livraison'] : ($commande['client_adresse'] ?? '')) ?>" required style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit;">
+                                                <button type="submit" style="padding: 6px 12px; background: #2ecc71; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">OK</button>
+                                                <button type="button" onclick="document.getElementById('form-edit-addr-<?= $commande['id_commande'] ?>').style.display='none'; document.getElementById('btn-edit-addr-<?= $commande['id_commande'] ?>').style.display='inline-block'; document.getElementById('display-addr-<?= $commande['id_commande'] ?>').style.display='inline';" style="padding: 6px 12px; background: #95a5a6; color: white; border: none; border-radius: 4px; cursor: pointer;">Annuler</button>
+                                            </div>
+                                        </form>
+                                    <?php endif; ?>
+                                </div>
                             <?php endif; ?>
                             <p><strong>Montant:</strong> <?= number_format($commande['prix_total'], 2, ',', ' ') ?> €</p>
                         </div>
