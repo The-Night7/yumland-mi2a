@@ -90,27 +90,17 @@ async function toggleBlock(userId, btn) {
                                         </span>
                                     </td>
                                     <td>
-                                        <span class="status-badge status-active">
-                                            Actif
+                                        <span id="statut-<?= $user['id_user'] ?>" class="status-badge">
+                                            <?= htmlspecialchars($user['statut'] ?? 'Actif') ?>
                                         </span>
                                     </td>
                                     <td class="actions">
-                                        <!-- Ces boutons sont visuels uniquement pour la Phase 2 -->
                                         <button class="btn-edit" title="Modifier" disabled>✏️</button>
-                                        <?php if (true): // En attendant la gestion du statut SQL ?>
-                                            <span id="statut-<?= $user['id_user'] ?>" class="status-badge">
-                                                <?= htmlspecialchars($user['statut'] ?? 'Actif') ?>
-                                            </span>
-
-                                            // Dans la colonne Actions :
-                                            <button 
+                                        <button
                                                 onclick="toggleBlock(<?= $user['id_user'] ?>, this)"
                                                 class="<?= ($user['statut'] ?? '') === 'Bloqué' ? 'btn-activate' : 'btn-block' ?>">
                                                 <?= ($user['statut'] ?? '') === 'Bloqué' ? '🔓 Débloquer' : '🔒 Bloquer' ?>
                                             </button>
-                                        <?php else: ?>
-                                            <button class="btn-activate" title="Activer" disabled>✅</button>
-                                        <?php endif; ?>
                                         <button class="btn-delete" title="Supprimer" disabled>🗑️</button>
                                     </td>
                                 </tr>
