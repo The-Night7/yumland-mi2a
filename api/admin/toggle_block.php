@@ -4,8 +4,14 @@
 header('Content-Type: application/json');
 session_start();
 
+// 🔍 DEBUG TEMPORAIRE — à supprimer après
+error_log("SESSION DUMP: " . print_r($_SESSION, true)); // TODO: Enlever car c'est juste pour du debug, si j'oublie fais le Sheryne, si on a toute les deux oublié c'est une feature pour faciliter la correction ^^
+
+
 // Vérification : seul un admin peut appeler cet endpoint
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Administrateur') {
+$role = $_SESSION['role'] ?? $_SESSION['user_role'] ?? $_SESSION['type'] ?? '';
+
+if (!isset($_SESSION['user_id']) || $role !== 'Administrateur') {
     echo json_encode(['success' => false, 'message' => 'Accès refusé.']);
     exit;
 }
