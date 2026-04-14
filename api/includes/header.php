@@ -182,7 +182,7 @@ $cartItemCount = getCartItemCount();
             </li>
             <?php endif; ?>
             <li>
-                <button id="toggle-dark-mode" style="background:none; border:1px solid #ccc; border-radius:20px; padding:5px 12px; cursor:pointer;">
+                <button id="toggle-dark-mode" style="background:none; border:1px solid #ccc; border-radius:20px; padding:5px 12px; cursor:pointer; font-size:0.9rem;">
                     🌙 Mode Sombre
                 </button>
             </li>
