@@ -71,26 +71,29 @@ include_once __DIR__ . '/../includes/header.php';
             </div>
         <?php endif; ?>
 
-        <form action="/api/client/profil.php" method="POST">
+        <form action="/api/client/profil.php" method="POST" id="profile-form">
             <input type="hidden" name="action" value="update_profile">
             
             <div class="form-group" style="margin-bottom: 15px;">
                 <label for="nom">Nom :</label>
-                <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($user['nom'] ?? '') ?>" required>
+                <input type="text" data-field="nom" value="<?= htmlspecialchars($user['nom'] ?? '') ?>" disabled>
             </div>
             <div class="form-group" style="margin-bottom: 15px;">
                 <label for="prenom">Prénom :</label>
-                <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($user['prenom'] ?? '') ?>">
+                <input type="text" data-field="prenom" value="<?= htmlspecialchars($user['prenom'] ?? '') ?>" disabled>
             </div>
             <div class="form-group" style="margin-bottom: 15px;">
                 <label for="tel">Téléphone :</label>
-                <input type="text" id="tel" name="tel" value="<?= htmlspecialchars($user['tel'] ?? '') ?>">
+                <input type="text" data-field="tel" value="<?= htmlspecialchars($user['tel'] ?? '') ?>" disabled>
             </div>
             <div class="form-group" style="margin-bottom: 25px;">
                 <label for="adresse">Adresse de livraison par défaut :</label>
-                <textarea id="adresse" name="adresse" rows="3"><?= htmlspecialchars($user['adresse'] ?? '') ?></textarea>
+                <input type="text" data-field="adresse" value="<?= htmlspecialchars($user['adresse'] ?? '') ?>" disabled>
             </div>
-            <button type="submit" class="btn-primary" style="width: 100%;">Enregistrer les modifications</button>
+            <div id="profil-message"></div>
+            <button type="button" id="btn-edit-profil">✏️ Modifier</button>
+            <button type="submit" id="btn-save-profil" style="display:none">💾 Enregistrer</button>
+            <button type="button" id="btn-cancel-profil" style="display:none">❌ Annuler</button>
         </form>
     </div>
 </section>

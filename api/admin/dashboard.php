@@ -19,6 +19,25 @@ $pageTitle = 'Administration';
 include_once __DIR__ . '/../includes/header.php';
 ?>
 
+<script defer>
+async function toggleBlock(userId, btn) {
+  const response = await fetch('/api/admin/toggle_block.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ id_user: userId })
+  });
+  const data = await response.json();
+  if (data.success) {
+    const badge = document.querySelector(`#statut-${userId}`);
+    if (badge) badge.textContent = data.new_statut;
+    btn.textContent = data.new_statut === 'Bloqué' ? '🔓 Débloquer' : '🔒 Bloquer';
+    btn.classList.toggle('btn-danger', data.new_statut === 'Bloqué');
+  } else {
+    alert(data.message);
+  }
+}
+</script>
+
 <section class="admin-section">
     <div class="container">
         <h1>Tableau de bord administrateur</h1>

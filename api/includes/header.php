@@ -4,6 +4,18 @@ require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/panier.php';
 
+// Vérifier si l'utilisateur connecté est bloqué
+if (isset($_SESSION['user_id'])) {
+    $stmt = $pdo->prepare("SELECT statut FROM Utilisateurs WHERE id_user = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $u = $stmt->fetch();
+    if ($u && $u['statut'] === 'Bloqué') {
+        session_destroy();
+        header('Location: /api/connexion.php?msg=compte_bloque');
+        exit;
+    }
+}
+
 // Récupérer le nombre d'articles dans le panier
 $cartItemCount = getCartItemCount();
 ?>
@@ -92,6 +104,7 @@ $cartItemCount = getCartItemCount();
             padding-left: 25px; /* Petit effet de décalage au survol */
         }
     </style>
+    <script defer src="/js/script.js"></script>
 </head>
 <body>
 
