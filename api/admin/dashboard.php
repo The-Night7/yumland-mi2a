@@ -98,7 +98,16 @@ async function toggleBlock(userId, btn) {
                                         <!-- Ces boutons sont visuels uniquement pour la Phase 2 -->
                                         <button class="btn-edit" title="Modifier" disabled>✏️</button>
                                         <?php if (true): // En attendant la gestion du statut SQL ?>
-                                            <button class="btn-block" title="Bloquer" disabled>🚫</button>
+                                            <span id="statut-<?= $user['id_user'] ?>" class="status-badge">
+                                                <?= htmlspecialchars($user['statut'] ?? 'Actif') ?>
+                                            </span>
+
+                                            // Dans la colonne Actions :
+                                            <button 
+                                                onclick="toggleBlock(<?= $user['id_user'] ?>, this)"
+                                                class="<?= ($user['statut'] ?? '') === 'Bloqué' ? 'btn-activate' : 'btn-block' ?>">
+                                                <?= ($user['statut'] ?? '') === 'Bloqué' ? '🔓 Débloquer' : '🔒 Bloquer' ?>
+                                            </button>
                                         <?php else: ?>
                                             <button class="btn-activate" title="Activer" disabled>✅</button>
                                         <?php endif; ?>

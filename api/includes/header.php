@@ -105,6 +105,28 @@ $cartItemCount = getCartItemCount();
         }
     </style>
     <script defer src="/js/script.js"></script>
+    <script defer>
+        // Script pour rendre le menu déroulant persistant au clic (très utile sur mobile et tablette)
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            
+            if (dropdownToggle && dropdownMenu) {
+                dropdownToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    dropdownMenu.classList.toggle('show');
+                });
+                
+                // Ferme le menu si on clique en dehors
+                document.addEventListener('click', function(e) {
+                    if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                        dropdownMenu.classList.remove('show');
+                    }
+                });
+            }
+        });
+    </script>
+    <script defer src="/js/form-validation.js"></script>
 </head>
 <body>
 
@@ -159,30 +181,13 @@ $cartItemCount = getCartItemCount();
                 </a>
             </li>
             <?php endif; ?>
+            <li>
+                <button id="toggle-dark-mode" style="background:none; border:1px solid #ccc; border-radius:20px; padding:5px 12px; cursor:pointer;">
+                    🌙 Mode Sombre
+                </button>
+            </li>
         </ul>
     </nav>
 </header>
-
-<script>
-// Script pour rendre le menu déroulant persistant au clic (très utile sur mobile et tablette)
-document.addEventListener('DOMContentLoaded', function() {
-    const dropdownToggle = document.querySelector('.dropdown-toggle');
-    const dropdownMenu = document.querySelector('.dropdown-menu');
-    
-    if (dropdownToggle && dropdownMenu) {
-        dropdownToggle.addEventListener('click', function(e) {
-            e.preventDefault();
-            dropdownMenu.classList.toggle('show');
-        });
-        
-        // Ferme le menu si on clique en dehors
-        document.addEventListener('click', function(e) {
-            if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                dropdownMenu.classList.remove('show');
-            }
-        });
-    }
-});
-</script>
 
 <main>

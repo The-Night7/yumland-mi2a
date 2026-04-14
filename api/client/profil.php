@@ -54,6 +54,7 @@ $currentPage = 'profil';
 $pageTitle = 'Mon Profil';
 include_once __DIR__ . '/../includes/header.php';
 ?>
+<script src="/js/profil.js" defer></script>
 
 <section class="container form-page">
     <div class="form-container card-style">
@@ -92,7 +93,7 @@ include_once __DIR__ . '/../includes/header.php';
             </div>
             <div id="profil-message"></div>
             <button type="button" id="btn-edit-profil">✏️ Modifier</button>
-            <button type="submit" id="btn-save-profil" style="display:none">💾 Enregistrer</button>
+            <button type="button" id="btn-save-profil" style="display:none">💾 Enregistrer</button>
             <button type="button" id="btn-cancel-profil" style="display:none">❌ Annuler</button>
         </form>
     </div>
