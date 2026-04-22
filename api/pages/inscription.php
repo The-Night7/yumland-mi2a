@@ -30,8 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'Veuillez remplir tous les champs obligatoires.';
         } elseif ($password !== $confirm_password) {
             $error = 'Les mots de passe ne correspondent pas.';
-        } elseif (strlen($password) < 6) {
-            $error = 'Le mot de passe doit contenir au moins 6 caractères.';
+        } elseif (strlen($password) < 8) {
+            $error = 'Le mot de passe doit contenir au moins 8 caractères.';
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $error = 'Veuillez entrer une adresse email valide.';
         } else {
@@ -110,7 +110,7 @@ include_once __DIR__ . '/../includes/header.php';
                         <div class="form-group">
                             <label for="password">Mot de passe *</label>
                             <input type="password" id="password" name="password" required autocomplete="new-password">
-                            <small>Minimum 6 caractères</small>
+                            <small id="pwd-counter" style="color: #888;">0 / 8 — minimum 8 caractères</small>
                         </div>
                         
                         <div class="form-group">
