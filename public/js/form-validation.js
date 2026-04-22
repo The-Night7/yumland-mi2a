@@ -56,6 +56,18 @@ document.addEventListener("DOMContentLoaded", () => {
       if (len > max) input.value = input.value.substring(0, max);
     });
   });
+  
+  // ── Compteur de caractères mot de passe ──────────────────
+  const pwdInput   = document.getElementById("password");
+  const pwdCounter = document.getElementById("pwd-counter");
+
+  if (pwdInput && pwdCounter) {
+    pwdInput.addEventListener("input", () => { // Déclenche la fonction à chaque fois que l'utilisateur tape un caractère dans le champ
+      const len = pwdInput.value.length; // Compte le nombre de cractère actuellement dans le champ
+      pwdCounter.textContent = len + " / 8" + (len < 8 ? " — minimum 8 caractères" : "");
+      pwdCounter.style.color  = len === 0 ? "#888" : len < 8 ? "#e74c3c" : "#27ae60"; // Change la couleur en fonction du nombre de caractère(s)
+    });
+  }
 
   // ── Validation Formulaire Inscription ────────────────────
   const inscriptionForm = document.getElementById("inscription-form");
