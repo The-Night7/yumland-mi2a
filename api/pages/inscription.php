@@ -112,8 +112,11 @@ include_once __DIR__ . '/../includes/header.php';
                                 <button type="button" class="toggle-password" data-target="password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; font-size: 1.2rem;">👁️</button>
                             </div>
                             <small id="pwd-counter" style="color: #888;">0 / 8 — minimum 8 caractères</small>
+                            <div id="pwd-strength-bar" style="margin-top: 6px; height: 5px; border-radius: 3px; background: #e0e0e0; overflow: hidden; display: none;">
+                                <div id="pwd-strength-fill" style="height: 100%; width: 0%; border-radius: 3px; transition: width 0.3s ease, background-color 0.3s ease;"></div>
+                            </div>
+                            <small id="pwd-strength-label" style="display: none; font-size: 0.78rem; margin-top: 3px;"></small>
                         </div>
-                        
                         <div class="form-group">
                             <label for="confirm_password">Confirmer le mot de passe *</label>
                             <div style="position: relative;">
