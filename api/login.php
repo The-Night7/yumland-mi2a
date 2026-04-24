@@ -24,7 +24,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Vérification sécurisée du mot de passe
         if ($user && password_verify($password, $user['mot_de_passe'])) {
             
-            // CORRECTION : Régénération de l'ID de session pour éviter la fixation de session
+            // Vérification si le compte est bloqué
+            if (($user['statut'] ?? '') === 'Bloqué') {
+                echo json_encode(["success" => false, "message" => "🛑 Votre compte a été suspendu par un administrateur."]);
+                exit;
+            }
+            
+            // Sécurité : on renouvelle l'ID de session pour éviter les failles
             session_regenerate_id(true);
             
             // Authentification réussie, initialisation de la session

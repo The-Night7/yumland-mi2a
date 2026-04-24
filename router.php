@@ -30,8 +30,7 @@ if (preg_match('/^\/js\/(.*)$/', $path, $matches)) {
     }
 }
 
-// 4. NOUVEAU : Rediriger intelligemment les clics vers le dossier /api/
-// Si on clique sur un lien vers un fichier .php (ex: /pages/carte.php)
+// 4. Redirection automatique vers le dossier /api/ si on clique sur un lien .php
 if (preg_match('/^\/(.*\.php)$/', $path, $matches)) {
     $chemin_demande = $matches[1];
     

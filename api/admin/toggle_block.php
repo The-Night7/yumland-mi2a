@@ -45,11 +45,9 @@ try {
     $stmt = $pdo->prepare("UPDATE Utilisateurs SET statut = ? WHERE id_user = ?");
     $stmt->execute([$newStatut, $cible_id]);
 
-    // ── Kill session de l'utilisateur bloqué ──────────────
-    // On stocke les utilisateurs bloqués dans une table de sessions révoquées
-    // OU on utilise un flag en base que chaque page vérifie (méthode simple)
-    // Ici on utilise la méthode "flag en base" : chaque page PHP vérifie le statut
-    // => Rien de plus à faire ici car header.php doit vérifier le statut à chaque requête
+    // Pas besoin de détruire la session manuellement ici : 
+    // le header.php vérifie le statut de l'utilisateur à chaque chargement de page
+    // et s'occupera de le déconnecter automatiquement s'il a été bloqué.
 
     echo json_encode([
         'success'    => true,

@@ -11,13 +11,17 @@ if (isset($_SESSION['user_id'])) {
     $u = $stmt->fetch();
     if ($u && $u['statut'] === 'Bloqué') {
         session_destroy();
-        header('Location: /api/connexion.php?msg=compte_bloque');
+        header('Location: /api/pages/connexion.php?error=compte_bloque');
         exit;
     }
 }
 
 // Récupérer le nombre d'articles dans le panier
 $cartItemCount = getCartItemCount();
+
+// Lecture des cookies d'accessibilité côté serveur (évite l'effet de flash blanc au chargement)
+$themeClass = (isset($_COOKIE['theme']) && $_COOKIE['theme'] === 'dark') ? 'dark-mode' : '';
+$fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dyslexic-mode' : '';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -26,15 +30,18 @@ $cartItemCount = getCartItemCount();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? $pageTitle . ' | ' . APP_NAME : APP_NAME ?></title>
     <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/dark-mode.css">
     <!-- Intégration de FontAwesome pour des icônes professionnelles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Intégration de la police OpenDyslexic pour l'accessibilité -->
+    <link href="https://fonts.cdnfonts.com/css/opendyslexic" rel="stylesheet">
     <?php if (isset($additionalCss)): ?>
         <?php foreach ($additionalCss as $css): ?>
             <link rel="stylesheet" href="<?= $css ?>">
         <?php endforeach; ?>
     <?php endif; ?>
     <style>
-        /* --- FORCER LE FOOTER EN BAS (STICKY FOOTER) --- */
+        /* Permet au footer de toujours rester collé en bas de l'écran */
         html, body {
             height: 100%;
             margin: 0;
@@ -42,13 +49,13 @@ $cartItemCount = getCartItemCount();
         body {
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Prend au minimum la hauteur de l'écran */
+            min-height: 100vh;
         }
         main {
-            flex: 1 0 auto; /* Permet au contenu principal de s'étirer pour pousser le footer */
+            flex: 1 0 auto;
         }
 
-        /* --- STYLE DU MENU DÉROULANT --- */
+        /* Design du menu déroulant (Avatar client) */
         .nav-links .dropdown {
             position: relative;
             display: inline-block;
@@ -103,6 +110,14 @@ $cartItemCount = getCartItemCount();
             color: var(--color-primary, #d32f2f);
             padding-left: 25px; /* Petit effet de décalage au survol */
         }
+        
+        /* --- MODE DYSLEXIE (Accessibilité) --- */
+        .dyslexic-mode *:not(i):not(.fas):not(.fa):not(.far) {
+            font-family: 'OpenDyslexic', 'Comic Sans MS', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif !important;
+            letter-spacing: 0.05em !important;
+            word-spacing: 0.1em !important;
+            line-height: 1.6 !important;
+        }
     </style>
     <script defer src="/js/script.js"></script>
     <script defer>
@@ -124,11 +139,29 @@ $cartItemCount = getCartItemCount();
                     }
                 });
             }
+            
+            // Gestion des boutons d'accessibilité
+            const btnDark = document.getElementById('toggle-dark-mode');
+            const btnDyslexic = document.getElementById('toggle-dyslexic-mode');
+
+            if (btnDark) {
+                btnDark.addEventListener('click', function() {
+                    document.body.classList.toggle('dark-mode');
+                    document.cookie = "theme=" + (document.body.classList.contains('dark-mode') ? "dark" : "light") + "; path=/; max-age=31536000";
+                });
+            }
+
+            if (btnDyslexic) {
+                btnDyslexic.addEventListener('click', function() {
+                    document.body.classList.toggle('dyslexic-mode');
+                    document.cookie = "font=" + (document.body.classList.contains('dyslexic-mode') ? "dyslexic" : "standard") + "; path=/; max-age=31536000";
+                });
+            }
         });
     </script>
     <script defer src="/js/form-validation.js"></script>
 </head>
-<body>
+<body class="<?= trim($themeClass . ' ' . $fontClass) ?>">
 
 <header>
     <nav>
@@ -181,9 +214,12 @@ $cartItemCount = getCartItemCount();
                 </a>
             </li>
             <?php endif; ?>
-            <li>
-                <button id="toggle-dark-mode" style="background:none; border:1px solid #ccc; border-radius:20px; padding:5px 12px; cursor:pointer; font-size:0.9rem;">
-                    🌙 Mode Sombre
+            <li style="display:flex; flex-direction:column; gap:5px; align-items:flex-end;">
+                <button id="toggle-dark-mode" style="background:none; border:1px solid var(--color-grey-light); border-radius:20px; padding:4px 10px; cursor:pointer; font-size:0.8rem; color: inherit;">
+                    🌓 Mode Sombre
+                </button>
+                <button id="toggle-dyslexic-mode" style="background:none; border:1px solid var(--color-grey-light); border-radius:20px; padding:4px 10px; cursor:pointer; font-size:0.8rem; color: inherit;">
+                    👁️ Dyslexie
                 </button>
             </li>
         </ul>

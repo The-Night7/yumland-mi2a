@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
         $error = 'Erreur de sécurité, veuillez réessayer.';
     } else {
-        // Le champ username a été supprimé car absent de la BDD
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
         $email = trim($_POST['email'] ?? '');
@@ -51,7 +50,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($result) {
                 $success = 'Votre compte a été créé avec succès. Vous pouvez maintenant vous connecter.';
             } else {
-                // Correction du message d'erreur pour correspondre au test SQL (email)
                 $error = 'Cette adresse email est déjà utilisée. Veuillez en choisir une autre ou vous connecter.';
             }
         }
@@ -109,13 +107,19 @@ include_once __DIR__ . '/../includes/header.php';
                     <div class="form-row">
                         <div class="form-group">
                             <label for="password">Mot de passe *</label>
-                            <input type="password" id="password" name="password" required autocomplete="new-password">
+                            <div style="position: relative;">
+                                <input type="password" id="password" name="password" required autocomplete="new-password" style="width: 100%; padding-right: 40px;">
+                                <button type="button" class="toggle-password" data-target="password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; font-size: 1.2rem;">👁️</button>
+                            </div>
                             <small id="pwd-counter" style="color: #888;">0 / 8 — minimum 8 caractères</small>
                         </div>
                         
                         <div class="form-group">
                             <label for="confirm_password">Confirmer le mot de passe *</label>
-                            <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password">
+                            <div style="position: relative;">
+                                <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" style="width: 100%; padding-right: 40px;">
+                                <button type="button" class="toggle-password" data-target="confirm_password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; font-size: 1.2rem;">👁️</button>
+                            </div>
                         </div>
                     </div>
                     
@@ -139,6 +143,23 @@ include_once __DIR__ . '/../includes/header.php';
         </div>
     </div>
 </section>
+
+<script>
+// Script pour afficher/masquer les mots de passe
+document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            this.textContent = '🙈'; // Oeil fermé
+        } else {
+            input.type = 'password';
+            this.textContent = '👁️'; // Oeil ouvert
+        }
+    });
+});
+</script>
 
 <?php
 // Inclure le footer

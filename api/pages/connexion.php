@@ -83,7 +83,10 @@ include_once __DIR__ . '/../includes/header.php';
                 
                 <div class="form-group">
                     <label for="password">Mot de passe</label>
-                    <input type="password" id="password" name="password" required autocomplete="current-password">
+                    <div style="position: relative;">
+                        <input type="password" id="password" name="password" required autocomplete="current-password" style="width: 100%; padding-right: 40px;">
+                        <button type="button" class="toggle-password" data-target="password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; font-size: 1.2rem;">👁️</button>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn-login-modern">Se connecter 🔐</button>
@@ -147,6 +150,21 @@ document.getElementById('loginForm').addEventListener('submit', function(e) {
         console.error(err);
         errorDiv.style.display = 'block';
         errorDiv.textContent = "Erreur de connexion au serveur.";
+    });
+});
+
+// Script pour afficher/masquer le mot de passe
+document.querySelectorAll('.toggle-password').forEach(button => {
+    button.addEventListener('click', function() {
+        const targetId = this.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        if (input.type === 'password') {
+            input.type = 'text';
+            this.textContent = '🙈'; // Oeil fermé
+        } else {
+            input.type = 'password';
+            this.textContent = '👁️'; // Oeil ouvert
+        }
     });
 });
 </script>

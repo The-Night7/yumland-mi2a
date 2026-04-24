@@ -16,7 +16,7 @@ date_default_timezone_set('Europe/Paris');
 if (session_status() === PHP_SESSION_NONE) {
     ini_set('session.cookie_httponly', 1);
     ini_set('session.use_only_cookies', 1);
-    // Sur Vercel (HTTPS), décommentez la ligne suivante :
+    // Penser à décommenter cette ligne lors du passage en HTTPS sur Vercel :
     // ini_set('session.cookie_secure', 1); 
     session_start();
 }
@@ -35,8 +35,7 @@ $ssl_ca = __DIR__ . '/ca.pem';
 $ca_content = getenv('DB_SSL_CA');
 
 if ($ca_content) {
-    // Astuce Vercel : Comme le système de fichiers de Vercel est en lecture seule,
-    // on est obligés de sauvegarder le certificat à la volée dans le dossier /tmp pour que PDO le trouve.
+    // Vercel étant en lecture seule, on stocke le certificat SSL de la BDD temporairement dans /tmp
     $ssl_ca = sys_get_temp_dir() . '/aiven_ca.pem';
     
     if (!file_exists($ssl_ca)) {
