@@ -21,8 +21,17 @@ if (empty($cart['items'])) {
     redirect('/api/panier.php');
 }
 
-$total_paye = $cart['total'];
 $id_client = $_SESSION['user_id'];
+
+// Application du statut LÉGENDE DU STEAK (-10%)
+$stmtMiams = $pdo->prepare("SELECT total_miams_historique FROM Utilisateurs WHERE id_user = ?");
+$stmtMiams->execute([$id_client]);
+$miams_historique = $stmtMiams->fetchColumn() ?: 0;
+if ($miams_historique >= 3000) {
+    $cart['total'] = $cart['total'] * 0.90;
+}
+
+$total_paye = $cart['total'];
 
 // ==============================================================
 // ETAPE 1 : Sauvegarde de la commande "En attente" dans la BDD

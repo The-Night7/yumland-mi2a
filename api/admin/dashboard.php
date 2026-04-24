@@ -110,7 +110,7 @@ async function toggleBlock(userId, btn) {
                 </div>
                 
                 <div class="admin-note">
-                    <p>Note: Les fonctionnalités de modification, blocage et suppression seront disponibles dans la Phase 3.</p>
+                    <p>Note: La modification et la suppression définitives des comptes seront implémentées lors de la Phase 4.</p>
                 </div>
             </div>
         </div>

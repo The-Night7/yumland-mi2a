@@ -46,6 +46,14 @@ if ((isset($_GET['action']) && $_GET['action'] === 'save_edit') || (isset($_POST
         $adresse_livraison = trim($_POST['adresse_livraison'] ?? '');
         
         if (!empty($cart['items'])) {
+            // Application du statut LÉGENDE DU STEAK (-10%)
+            $stmtMiams = $pdo->prepare("SELECT total_miams_historique FROM Utilisateurs WHERE id_user = ?");
+            $stmtMiams->execute([$_SESSION['user_id']]);
+            $miams_historique = $stmtMiams->fetchColumn() ?: 0;
+            if ($miams_historique >= 3000) {
+                $cart['total'] = $cart['total'] * 0.90;
+            }
+
             // Calcul de l'ancien total pour vérifier s'il y a une différence à payer
             $stmt = $pdo->prepare("SELECT prix_total FROM Commandes WHERE id_commande = ? AND id_client = ?");
             $stmt->execute([$id_commande, $_SESSION['user_id']]);
@@ -119,6 +127,36 @@ if (isset($_GET['action']) && $_GET['action'] === 'clear') {
 // Récupérer le contenu du panier
 $cart = getCart();
 
+$subtotal = $cart['total'];
+$discount = 0;
+
+// Récupération du solde Miams si connecté
+$miams = 0;
+$statut_miams = "";
+$color_miams = "var(--color-stone-gray)"; // Couleur par défaut (Niveau 1)
+
+if (isLoggedIn()) {
+    $stmtMiams = $pdo->prepare("SELECT solde_miams, total_miams_historique FROM Utilisateurs WHERE id_user = ?");
+    $stmtMiams->execute([$_SESSION['user_id']]);
+    $userMiams = $stmtMiams->fetch();
+    $miams = $userMiams['solde_miams'] ?? 0;
+    $miams_historique = $userMiams['total_miams_historique'] ?? $miams;
+    
+    // Application des Paliers de Fidélité (D'après la doc)
+    if ($miams_historique < 1000) {
+        $statut_miams = "PETIT GRILLEUR";
+        $color_miams = "var(--color-grey-light)"; // #BDBDBD
+    } elseif ($miams_historique < 3000) {
+        $statut_miams = "SAUCE CHEF";
+        $color_miams = "var(--color-primary)"; // #D32F2F
+    } else {
+        $statut_miams = "LÉGENDE DU STEAK";
+        $color_miams = "var(--color-accent)"; // #FFC107
+        $discount = $subtotal * 0.10;
+        $cart['total'] = $subtotal - $discount;
+    }
+}
+
 // Calcul de la différence si on est en train de modifier une commande
 $difference = 0;
 if (isset($_SESSION['edit_commande_id'])) {
@@ -150,31 +188,6 @@ foreach($produits_db as $p) { if(stripos($p['nom'], 'Sauce') !== false) $id_sauc
 foreach($produits_db as $p) { if(stripos($p['nom'], 'Sodas') !== false || stripos($p['nom'], 'Boisson') !== false) $id_boisson = $p['id_produit']; }
 foreach($produits_db as $p) { if(stripos($p['nom'], 'Cookie') !== false || stripos($p['nom'], 'Dessert') !== false) $id_dessert = $p['id_produit']; }
 foreach($produits_db as $p) { if(stripos($p['nom'], 'Grand Miam') !== false) $id_burger = $p['id_produit']; }
-
-// Récupération du solde Miams si connecté
-$miams = 0;
-$statut_miams = "";
-$color_miams = "var(--color-stone-gray)"; // Couleur par défaut (Niveau 1)
-
-if (isLoggedIn()) {
-    $stmtMiams = $pdo->prepare("SELECT solde_miams, total_miams_historique FROM Utilisateurs WHERE id_user = ?");
-    $stmtMiams->execute([$_SESSION['user_id']]);
-    $userMiams = $stmtMiams->fetch();
-    $miams = $userMiams['solde_miams'] ?? 0;
-    $miams_historique = $userMiams['total_miams_historique'] ?? $miams;
-    
-    // Application des Paliers de Fidélité (D'après la doc)
-    if ($miams_historique < 1000) {
-        $statut_miams = "PETIT GRILLEUR";
-        $color_miams = "var(--color-grey-light)"; // #BDBDBD
-    } elseif ($miams_historique < 3000) {
-        $statut_miams = "SAUCE CHEF";
-        $color_miams = "var(--color-primary)"; // #D32F2F
-    } else {
-        $statut_miams = "LÉGENDE DU STEAK";
-        $color_miams = "var(--color-accent)"; // #FFC107
-    }
-}
 
 // Calcul du solde prévisionnel en soustrayant ceux du panier
 $miams_dispo = max(0, $miams - $miams_used);
@@ -287,7 +300,7 @@ include_once __DIR__ . '/includes/header.php';
                                     </td>
                                     <td><?= number_format($item['prix_unitaire'], 2, ',', ' ') ?> €</td>
                                     <td>
-                                        <input type="number" name="quantite[<?= $index ?>]" value="<?= $item['quantite'] ?>" min="1" max="10" class="quantity-input">
+                                        <input type="number" name="quantite[<?= $index ?>]" value="<?= $item['quantite'] ?>" min="1" max="10" class="quantity-input" onchange="document.getElementById('btn-update-cart').click();">
                                     </td>
                                     <td><?= number_format($item['prix_unitaire'] * $item['quantite'], 2, ',', ' ') ?> €</td>
                                     <td style="vertical-align: middle;">
@@ -382,10 +395,17 @@ include_once __DIR__ . '/includes/header.php';
                 <div class="cart-summary">
                     <div class="cart-total">
                         <p>Total de la commande</p>
-                        <strong><?= number_format($cart['total'], 2, ',', ' ') ?> €</strong>
+                        <?php if ($discount > 0): ?>
+                            <div style="color: #666; text-decoration: line-through; font-size: 1.1rem;"><?= number_format($subtotal, 2, ',', ' ') ?> €</div>
+                            <strong style="color: var(--color-primary);"><?= number_format($cart['total'], 2, ',', ' ') ?> €</strong>
+                            <p style="color: var(--color-success); font-size: 0.9rem; margin-top: 5px;">✨ Remise LÉGENDE DU STEAK (-10%) appliquée !</p>
+                        <?php else: ?>
+                            <strong><?= number_format($cart['total'], 2, ',', ' ') ?> €</strong>
+                        <?php endif; ?>
                     </div>
                     
                     <div class="cart-actions">
+                        <button type="submit" name="action" value="update" id="btn-update-cart" class="btn-update" style="margin-right: auto;">🔄 Actualiser</button>
                         <?php if (isset($_SESSION['edit_commande_id'])): ?>
                             <a href="/api/panier.php?action=cancel_edit" class="btn-clear">Annuler la modification</a>
                             <?php if ($difference > 0): ?>

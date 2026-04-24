@@ -49,9 +49,10 @@
         container.innerHTML = '';
         
         options.forEach((opt, index) => {
-            let html = `<div style="margin-bottom: 15px;">
+            let conditionAttr = opt.condition ? `data-condition='${JSON.stringify(opt.condition).replace(/'/g, "&#39;")}'` : '';
+            let html = `<div class="modal-option-group" ${conditionAttr} style="margin-bottom: 15px;">
                 <label style="font-weight:bold; display:block; margin-bottom:5px; color:var(--color-secondary);">${opt.titre} :</label>
-                <select class="option-select" style="width:100%; padding:10px; border:1px solid var(--color-grey-light); border-radius:4px; font-family:inherit;" required>
+                <select class="option-select" data-titre="${opt.titre}" onchange="updateConditionalOptions()" style="width:100%; padding:10px; border:1px solid var(--color-grey-light); border-radius:4px; font-family:inherit;" required>
                     <option value="">-- Sélectionnez votre choix --</option>`;
             opt.choix.forEach(choix => {
                 html += `<option value="${opt.titre}: ${choix}">${choix}</option>`;
@@ -59,10 +60,49 @@
             html += `</select></div>`;
             container.innerHTML += html;
         });
+        
+        // Force la vérification des conditions dès l'ouverture
+        setTimeout(updateConditionalOptions, 0);
     }
     
     function closeOptionsModal() {
         document.getElementById('optionsModal').style.display = 'none';
+    }
+    
+    // Masque ou affiche les options en fonction du plat sélectionné
+    function updateConditionalOptions() {
+        let currentSelections = {};
+        
+        document.querySelectorAll('.option-select').forEach(select => {
+            if (!select.disabled && select.value !== "") {
+                let parts = select.value.split(': ');
+                parts.shift(); // Enlève le préfixe
+                currentSelections[select.dataset.titre] = parts.join(': '); 
+            }
+        });
+
+        document.querySelectorAll('.modal-option-group').forEach(group => {
+            let conditionStr = group.getAttribute('data-condition');
+            
+            if (conditionStr && conditionStr !== 'undefined') {
+                let condition = JSON.parse(conditionStr);
+                let isVisible = true;
+                
+                for (let key in condition) {
+                    if (!currentSelections[key] || !condition[key].includes(currentSelections[key])) {
+                        isVisible = false;
+                    }
+                }
+                
+                group.style.display = isVisible ? 'block' : 'none';
+                
+                let select = group.querySelector('select');
+                if (select) {
+                    select.disabled = !isVisible;
+                    if (!isVisible) select.value = ""; // Remet le select à vide s'il est masqué
+                }
+            }
+        });
     }
 
     // Envoie les données au panier
@@ -72,8 +112,10 @@
         let valid = true;
         
         selects.forEach(sel => {
-            if(sel.value === "") valid = false;
-            else optionsChoisies.push(sel.value);
+            if (!sel.disabled) { // Seulement si le select n'est pas caché
+                if(sel.value === "") valid = false;
+                else optionsChoisies.push(sel.value);
+            }
         });
         
         if(!valid) {
