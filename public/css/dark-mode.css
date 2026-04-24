@@ -17,6 +17,16 @@ body.dark-mode nav {
     box-shadow: 0 4px 20px rgba(0,0,0,0.8) !important; /* Ombre plus marquée */
 }
 
+/* Menu Déroulant */
+body.dark-mode .dropdown-menu {
+    background-color: #1a1a1a !important;
+    border: 1px solid #333 !important;
+}
+body.dark-mode .dropdown-menu li a:hover {
+    background-color: #333 !important;
+    color: var(--color-accent) !important;
+}
+
 body.dark-mode .logo-text {
     color: #ffffff !important;
 }
@@ -41,6 +51,14 @@ body.dark-mode .menu-formule,
 body.dark-mode .delivery-card,
 body.dark-mode .order-card,
 body.dark-mode .form-container,
+body.dark-mode .auth-container,
+body.dark-mode .empty-cart,
+body.dark-mode .cart-summary,
+body.dark-mode .cart-address,
+body.dark-mode .loyalty-box,
+body.dark-mode .redirect-container,
+body.dark-mode .column,
+body.dark-mode #optionsModal > div,
 body.dark-mode .legal-nav,
 body.dark-mode .legal-content,
 body.dark-mode .info-box,
@@ -60,6 +78,12 @@ body.dark-mode h4,
 body.dark-mode .text-highlight,
 body.dark-mode .delivery-total {
     color: var(--color-accent) !important;
+}
+
+/* Textes secondaires avec couleurs en ligne qui bloquent le dark mode */
+body.dark-mode p[style*="color: #666"],
+body.dark-mode p[style*="color: #555"] {
+    color: #aaa !important;
 }
 
 body.dark-mode a {
@@ -132,6 +156,20 @@ body.dark-mode .btn-validate {
     background-color: #2E7D32 !important; /* Vert foncé */
     color: white !important;
     border: none !important;
+}
+
+/* Fixs Panier, Fidélité & Cuisine */
+body.dark-mode .loyalty-box div[style*="background"] {
+    background-color: #2c2c2c !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+body.dark-mode .loyalty-box div[style*="background"] strong {
+    color: var(--color-accent) !important;
+}
+body.dark-mode .item-qty {
+    background-color: #333 !important;
+    color: #fff !important;
 }
 
 /* Bouton Toggle Mode Nuit */
