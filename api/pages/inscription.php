@@ -107,9 +107,9 @@ include_once __DIR__ . '/../includes/header.php';
                     <div class="form-row">
                         <div class="form-group">
                             <label for="password">Mot de passe *</label>
-                            <div style="position: relative;">
-                                <input type="password" id="password" name="password" required autocomplete="new-password" style="width: 100%; padding-right: 40px;">
-                                <button type="button" class="toggle-password" data-target="password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; font-size: 1.2rem;">👁️</button>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="password" id="password" name="password" required autocomplete="new-password" style="flex: 1;">
+                                <button type="button" class="toggle-password" data-target="password">👁️</button>
                             </div>
                             <small id="pwd-counter" style="color: #888;">0 / 8 — minimum 8 caractères</small>
                             <div id="pwd-strength-bar" style="margin-top: 6px; height: 5px; border-radius: 3px; background: #e0e0e0; overflow: hidden; display: none;">
@@ -119,9 +119,9 @@ include_once __DIR__ . '/../includes/header.php';
                         </div>
                         <div class="form-group">
                             <label for="confirm_password">Confirmer le mot de passe *</label>
-                            <div style="position: relative;">
-                                <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" style="width: 100%; padding-right: 40px;">
-                                <button type="button" class="toggle-password" data-target="confirm_password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; padding: 0; font-size: 1.2rem;">👁️</button>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <input type="password" id="confirm_password" name="confirm_password" required autocomplete="new-password" style="flex: 1;">
+                                <button type="button" class="toggle-password" data-target="confirm_password">👁️</button>
                             </div>
                         </div>
                     </div>
@@ -204,7 +204,7 @@ include_once __DIR__ . '/../includes/header.php';
     });
 })();
 
-// Script pour afficher/masquer les mots de passe
+// Script pour afficher / masquer les mots de passe
 document.querySelectorAll('.toggle-password').forEach(button => {
     button.addEventListener('click', function() {
         const targetId = this.getAttribute('data-target');
