@@ -148,6 +148,62 @@ include_once __DIR__ . '/../includes/header.php';
 </section>
 
 <script>
+    // Script évaluation de la force du mot de passe
+(function () {
+    const input   = document.getElementById('password');
+    const counter = document.getElementById('pwd-counter');
+    const bar     = document.getElementById('pwd-strength-bar');
+    const fill    = document.getElementById('pwd-strength-fill');
+    const label   = document.getElementById('pwd-strength-label');
+
+    const levels = [
+        { min: 0,   max: 25,  color: '#D32F2F', text: '❌ Très faible', textColor: '#D32F2F' },
+        { min: 26,  max: 50,  color: '#FF7043', text: '⚠️ Faible',      textColor: '#FF7043' },
+        { min: 51,  max: 75,  color: '#FFC107', text: '🔶 Moyen',       textColor: '#e6a800' },
+        { min: 76,  max: 99,  color: '#8BC34A', text: '✅ Fort',        textColor: '#558B2F' },
+        { min: 100, max: 100, color: '#4CAF50', text: '🔒 Très fort',   textColor: '#2E7D32' },
+    ];
+
+    function getScore(pwd) { // Calcul du score de fiabilité du mot de passe
+        if (!pwd) return 0;
+        let score = 0;
+        if (pwd.length >= 8)  score += 20;
+        if (pwd.length >= 12) score += 10;
+        if (pwd.length >= 16) score += 10;
+        if (/[a-z]/.test(pwd))        score += 10;
+        if (/[A-Z]/.test(pwd))        score += 20;
+        if (/[0-9]/.test(pwd))        score += 15;
+        if (/[^a-zA-Z0-9]/.test(pwd)) score += 25;
+        if (/^[a-zA-Z]+$/.test(pwd))  score -= 10;
+        if (/^[0-9]+$/.test(pwd))     score -= 15;
+        return Math.max(0, Math.min(100, score));
+    }
+
+    input.addEventListener('input', function () { // Mise à jour de l'affichage à chaque frappe
+        const pwd   = this.value;
+        const len   = pwd.length;
+        const score = getScore(pwd);
+
+        counter.textContent = len + ' / 8 — minimum 8 caractères';
+        counter.style.color = len >= 8 ? '#4CAF50' : '#888';
+
+        if (len === 0) {
+            bar.style.display   = 'none';
+            label.style.display = 'none';
+            return;
+        }
+
+        bar.style.display   = 'block';
+        label.style.display = 'block';
+        fill.style.width    = score + '%';
+
+        const level = levels.find(l => score >= l.min && score <= l.max) || levels[0]; // Affichage de la barre adapté au mot de pase
+        fill.style.backgroundColor = level.color;
+        label.textContent          = level.text;
+        label.style.color          = level.textColor;
+    });
+})();
+
 // Script pour afficher/masquer les mots de passe
 document.querySelectorAll('.toggle-password').forEach(button => {
     button.addEventListener('click', function() {
