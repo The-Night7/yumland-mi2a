@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . '/../includes/config.php';
-require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/commandes.php';
 
 // Traitement de l'action de livraison
@@ -9,6 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     header('Location: /api/livreur/livraisons.php');
     exit;
 }
+
+// On inclut le header APRÈS le traitement PHP pour éviter l'erreur d'affichage (l'écran noir)
+require_once __DIR__ . '/../includes/header.php';
 
 // Récupération du livreur connecté
 $livreur_id = $_SESSION['user_id'] ?? null;
@@ -42,12 +44,12 @@ $mes_livraisons = getCommandesByLivreur($livreur_id);
             
             <!-- Boutons XXL (Hauteur mini 60px pour gants selon le README) -->
             <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 25px;">
-                <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($adresse_a_afficher) ?>" target="_blank" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #4285F4; text-align: center;">
+                <a href="https://www.google.com/maps/search/?api=1&query=<?= urlencode($adresse_a_afficher) ?>" target="_blank" class="btn btn-livreur btn-map">
                     🗺️ OUVRIR DANS MAPS
                 </a>
                 
                 <?php if (!empty($livraison['client_tel'])): ?>
-                <a href="tel:<?= htmlspecialchars($livraison['client_tel']) ?>" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #e67e22; text-align: center;">
+                <a href="tel:<?= htmlspecialchars($livraison['client_tel']) ?>" class="btn btn-livreur" style="background: #e67e22; color: white;">
                     📞 APPELER LE CLIENT (<?= htmlspecialchars(strtoupper($livraison['client_nom'])) ?>)
                 </a>
                 <?php endif; ?>
@@ -55,10 +57,10 @@ $mes_livraisons = getCommandesByLivreur($livreur_id);
                 <form method="POST" style="margin: 0; display: flex; flex-direction: column; gap: 15px;">
                     <input type="hidden" name="action" value="terminee">
                     <input type="hidden" name="id_commande" value="<?= $livraison['id_commande'] ?>">
-                    <button type="submit" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: #2ecc71; border: none; cursor: pointer;">
+                    <button type="submit" class="btn btn-livreur btn-deliver" style="border: none;">
                         ✅ MARQUER COMME LIVRÉE
                     </button>
-                    <button type="button" class="btn-primary" style="padding: 20px; font-size: 1.2rem; font-weight: bold; background: var(--color-coal-black); border: none; cursor: pointer;" onclick="alert('Contactez le support :\n- Myriam Bensaid : 06 68 39 92 06\n- Sheryne Ouarghi : 06 17 67 77 02')">
+                    <button type="button" class="btn btn-livreur btn-problem" style="border: none;" onclick="alert('Contactez le support :\n- Myriam Bensaid : 06 68 39 92 06\n- Sheryne Ouarghi : 06 17 67 77 02')">
                         ❌ PROBLÈME DE LIVRAISON
                     </button>
                 </form>

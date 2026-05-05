@@ -11,19 +11,19 @@
 </footer>
 
 <!-- Modal de sélection des Options de Menus -->
-<div id="optionsModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center;">
-    <div style="background:var(--color-bg); padding:30px; border-radius:8px; max-width:500px; width:90%; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
-        <h2 id="modalMenuTitle" style="color:var(--color-primary); margin-top:0;">Composez votre menu</h2>
+<div id="optionsModal" class="modal-overlay">
+    <div class="modal-container">
+        <h2 id="modalMenuTitle" class="modal-title">Composez votre menu</h2>
         <form id="optionsForm">
             <input type="hidden" id="modalProductId" name="id_produit" value="">
             <input type="hidden" id="modalPrixMiams" name="prix_miams" value="0">
             <input type="hidden" id="modalCartIndex" name="cart_index" value="">
             <input type="hidden" id="modalOptionsDispos" name="options_dispos" value="">
-            <div id="optionsContainer" style="margin-top: 20px;"></div>
+            <div id="optionsContainer" class="modal-options-container"></div>
             
-            <div style="display:flex; gap:10px; margin-top:25px;">
-                <button type="button" onclick="closeOptionsModal()" style="padding:12px; border:1px solid #ccc; background:#eee; border-radius:4px; cursor:pointer; font-weight:bold;">Annuler</button>
-                <button type="button" id="btnSubmitModal" onclick="submitOptionsMenu()" class="btn-primary" style="flex:1; padding:12px;">Ajouter au panier 🛒</button>
+            <div class="modal-actions">
+                <button type="button" onclick="closeOptionsModal()" class="btn-cancel">Annuler</button>
+                <button type="button" id="btnSubmitModal" onclick="submitOptionsMenu()" class="btn-primary btn-modal-submit">Ajouter au panier 🛒</button>
             </div>
         </form>
     </div>
@@ -50,9 +50,9 @@
         
         options.forEach((opt, index) => {
             let conditionAttr = opt.condition ? `data-condition='${JSON.stringify(opt.condition).replace(/'/g, "&#39;")}'` : '';
-            let html = `<div class="modal-option-group" ${conditionAttr} style="margin-bottom: 15px;">
-                <label style="font-weight:bold; display:block; margin-bottom:5px; color:var(--color-secondary);">${opt.titre} :</label>
-                <select class="option-select" data-titre="${opt.titre}" onchange="updateConditionalOptions()" style="width:100%; padding:10px; border:1px solid var(--color-grey-light); border-radius:4px; font-family:inherit;" required>
+            let html = `<div class="modal-option-group" ${conditionAttr}>
+                <label class="modal-option-label">${opt.titre} :</label>
+                <select class="option-select modal-option-select" data-titre="${opt.titre}" onchange="updateConditionalOptions()" required>
                     <option value="">-- Sélectionnez votre choix --</option>`;
             opt.choix.forEach(choix => {
                 html += `<option value="${opt.titre}: ${choix}">${choix}</option>`;
@@ -149,6 +149,7 @@
 </script>
 
 <script src="/public/js/script.js"></script>
+<script src="/public/js/cookie-consent.js"></script>
 <?php if (isset($additionalJs)): ?>
     <?php foreach ($additionalJs as $js): ?>
         <script src="<?= $js ?>"></script>

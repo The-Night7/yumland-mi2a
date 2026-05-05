@@ -4,7 +4,7 @@ require_once __DIR__ . '/includes/header.php';
 ?>
 
 <section id="hero">
-    <div class="container flex-row" style="align-items: center; justify-content: center; text-align: center;">
+    <div class="container flex-row hero-container">
         <div class="hero-content">
             <h1>Grand par le goût, géant par l'appétit.</h1>
             <p>Le spécialiste de la viande grillée et des burgers XXL.</p>
@@ -30,7 +30,7 @@ require_once __DIR__ . '/includes/header.php';
 </section>
 
 <!-- Zone de recherche (Style App Mobile) -->
-<section id="home-search" class="container" style="margin-top: -30px; position: relative; z-index: 10;">
+<section id="home-search" class="container home-search-section">
     <div class="search-wrapper">
         <input type="text" id="homeSearchInput" class="search-input" placeholder="Rechercher un plat (ex: Burger, Entrecôte...)" onkeyup="filterDishes()">
     </div>
@@ -38,10 +38,10 @@ require_once __DIR__ . '/includes/header.php';
 
 <section id="galerie">
     <div class="container">
-        <h2 style="text-align: center; margin-bottom: 20px;"><i class="fas fa-star"></i> Nos Incontournables</h2>
+        <h2 class="gallery-title"><i class="fas fa-star"></i> Nos Incontournables</h2>
 
         <!-- Message si aucun résultat -->
-        <div id="no-results" style="display: none; text-align: center; padding: 20px; color: #666;">
+        <div id="no-results" class="no-results-msg">
             <p>Aucun plat ne correspond à votre recherche. <i class="fas fa-frown"></i></p>
         </div>
 

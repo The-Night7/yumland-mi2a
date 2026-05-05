@@ -19,7 +19,12 @@ $message = '';
 $messageType = 'success';
 
 // Vérifier que la commande existe, appartient à l'utilisateur et est terminée
-$stmt = $pdo->prepare("SELECT * FROM Commandes WHERE id_commande = ? AND id_client = ? AND statut = 'Livrée'");
+$stmt = $pdo->prepare("SELECT c.*, 
+        (SELECT GROUP_CONCAT(CONCAT(cc.quantite, 'x ', p.nom) SEPARATOR ', ')
+         FROM Contenu_Commandes cc 
+         JOIN Produits p ON cc.id_produit = p.id_produit 
+         WHERE cc.id_commande = c.id_commande) AS plats_commandes
+    FROM Commandes c WHERE id_commande = ? AND id_client = ? AND statut = 'Livrée'");
 $stmt->execute([$commande_id, $user_id]);
 $commande = $stmt->fetch();
 
@@ -34,6 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $delivery_note = isset($_POST['delivery_note']) ? (int)$_POST['delivery_note'] : 0;
     $food_note = isset($_POST['food_note']) ? (int)$_POST['food_note'] : 0;
     $commentaire = trim($_POST['commentaire'] ?? '');
+    
+    // Calcul de la note globale
+    $note_globale = round(($delivery_note + $food_note) / 2);
 
     try {
         // Enregistrement de l'avis dans la table Avis (modifiée pour 2 notes)
@@ -43,17 +51,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 id_avis INT AUTO_INCREMENT PRIMARY KEY,
                 id_commande INT NOT NULL,
                 id_client INT NOT NULL,
-                note_livreur INT NOT NULL,
-                note_nourriture INT NOT NULL,
+                note_globale INT,
+                note_livreur INT,
+                note_nourriture INT,
                 commentaire TEXT,
                 date_avis DATETIME DEFAULT CURRENT_TIMESTAMP,
                 UNIQUE KEY unique_commande (id_commande)
             )");
+            $pdo->exec("DROP TABLE IF EXISTS Evaluations");
+        } else {
+            try {
+                $pdo->exec("ALTER TABLE Avis ADD COLUMN note_globale INT AFTER id_client");
+            } catch (Exception $e) {
+                // La colonne existe déjà
+            }
+            $pdo->exec("DROP TABLE IF EXISTS Evaluations");
         }
         
         // Ajout ou mise à jour de l'avis
-        $stmtInsert = $pdo->prepare("INSERT INTO Avis (id_commande, id_client, note_livreur, note_nourriture, commentaire) VALUES (?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE note_livreur = ?, note_nourriture = ?, commentaire = ?");
-        $stmtInsert->execute([$commande_id, $user_id, $delivery_note, $food_note, $commentaire, $delivery_note, $food_note, $commentaire]);
+        $stmtInsert = $pdo->prepare("INSERT INTO Avis (id_commande, id_client, note_globale, note_livreur, note_nourriture, commentaire) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE note_globale = ?, note_livreur = ?, note_nourriture = ?, commentaire = ?");
+        $stmtInsert->execute([$commande_id, $user_id, $note_globale, $delivery_note, $food_note, $commentaire, $note_globale, $delivery_note, $food_note, $commentaire]);
         
         $message = "⭐ Merci pour votre retour ! Votre avis a été enregistré avec succès.";
     } catch (Exception $e) {
@@ -105,6 +122,11 @@ include_once __DIR__ . '/../includes/header.php';
         <h2>📝 Évaluer la commande #<?= htmlspecialchars($commande_id) ?></h2>
         <p style="color: #666; margin-bottom: 20px;">Comment s'est passé votre expérience "Grand Miam" ?</p>
         
+        <div style="background: #fffdf7; padding: 15px; border-radius: 8px; border-left: 4px solid var(--color-primary); margin-bottom: 20px; font-size: 0.9rem;">
+            <strong><i class="far fa-calendar-alt"></i> Commande du <?= date('d/m/Y à H:i', strtotime($commande['date_commande'])) ?></strong><br>
+            <span style="color: #555;"><i class="fas fa-utensils"></i> Plats : <?= htmlspecialchars($commande['plats_commandes']) ?></span>
+        </div>
+
         <?php if (!empty($message)): ?>
             <div class="alert alert-<?= $messageType ?>" style="margin-bottom: 20px;">
                 <?= htmlspecialchars($message) ?>

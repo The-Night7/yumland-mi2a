@@ -5,7 +5,7 @@ try {
     // 1. On vide la base de données (commandes et utilisateurs)
     $pdo->exec("DELETE FROM Contenu_Commandes");
     $pdo->exec("DELETE FROM Paiements");
-    $pdo->exec("DELETE FROM Evaluations");
+    $pdo->exec("DELETE FROM Avis");
     $pdo->exec("DELETE FROM Commandes");
     $pdo->exec("DELETE FROM Utilisateurs");
 

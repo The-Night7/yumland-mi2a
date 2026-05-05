@@ -108,7 +108,7 @@ Pour faire fonctionner l'application dynamique en local (spécialement sous Wind
 Ouvrez votre terminal WSL (Ubuntu) et installez les paquets nécessaires :
 ```bash
 sudo apt update
-sudo apt install php php-mysql mysql-server
+sudo apt install php php-mysql
 ```
 
 Démarrez ensuite le service MySQL (indispensable sous WSL à chaque redémarrage) :

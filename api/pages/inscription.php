@@ -10,6 +10,15 @@ if (isLoggedIn()) {
 $error = '';
 $success = '';
 
+// Valeurs par défaut pour le pré-remplissage
+$nom_val = '';
+$prenom_val = '';
+$email_val = '';
+$telephone_val = '';
+$rue_val = '';
+$cp_val = '';
+$ville_val = '';
+
 // Traitement du formulaire d'inscription
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Vérifier le token CSRF
@@ -18,30 +27,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $password = $_POST['password'] ?? '';
         $confirm_password = $_POST['confirm_password'] ?? '';
-        $email = trim($_POST['email'] ?? '');
-        $nom = trim($_POST['nom'] ?? '');
-        $prenom = trim($_POST['prenom'] ?? '');
-        $adresse = trim($_POST['adresse'] ?? '');
-        $telephone = trim($_POST['telephone'] ?? '');
+        
+        // Récupération pour pré-remplissage et traitement
+        $email_val = trim($_POST['email'] ?? '');
+        $nom_val = trim($_POST['nom'] ?? '');
+        $prenom_val = trim($_POST['prenom'] ?? '');
+        $telephone_val = trim($_POST['telephone'] ?? '');
+        $rue_val = trim($_POST['rue'] ?? '');
+        $cp_val = trim($_POST['code_postal'] ?? '');
+        $ville_val = trim($_POST['ville'] ?? '');
         
         // Validation des champs
-        if (empty($password) || empty($confirm_password) || empty($email) || empty($nom) || empty($prenom)) {
+        if (empty($password) || empty($confirm_password) || empty($email_val) || empty($nom_val) || empty($prenom_val) || empty($rue_val) || empty($cp_val) || empty($ville_val)) {
             $error = 'Veuillez remplir tous les champs obligatoires.';
         } elseif ($password !== $confirm_password) {
             $error = 'Les mots de passe ne correspondent pas.';
         } elseif (strlen($password) < 8) {
             $error = 'Le mot de passe doit contenir au moins 8 caractères.';
-        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        } elseif (!filter_var($email_val, FILTER_VALIDATE_EMAIL)) {
             $error = 'Veuillez entrer une adresse email valide.';
         } else {
             // Préparer les données pour la fonction registerUser
             $userData = [
                 'password' => $password,
-                'email' => $email,
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'adresse' => $adresse,
-                'telephone' => $telephone
+                'email' => $email_val,
+                'nom' => $nom_val,
+                'prenom' => $prenom_val,
+                'telephone' => $telephone_val,
+                'rue' => $rue_val,
+                'code_postal' => $cp_val,
+                'ville' => $ville_val
             ];
             
             // Appel à la base de données
@@ -90,18 +105,18 @@ include_once __DIR__ . '/../includes/header.php';
                     <div class="form-row">
                         <div class="form-group">
                             <label for="nom">Nom *</label>
-                            <input type="text" id="nom" name="nom" required>
+                            <input type="text" id="nom" name="nom" value="<?= htmlspecialchars($nom_val) ?>" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="prenom">Prénom *</label>
-                            <input type="text" id="prenom" name="prenom" required>
+                            <input type="text" id="prenom" name="prenom" value="<?= htmlspecialchars($prenom_val) ?>" required>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="email">Email *</label>
-                        <input type="email" id="email" name="email" required autocomplete="username">
+                        <input type="email" id="email" name="email" value="<?= htmlspecialchars($email_val) ?>" required autocomplete="username">
                     </div>
                     
                     <div class="form-row">
@@ -128,12 +143,23 @@ include_once __DIR__ . '/../includes/header.php';
                     
                     <div class="form-group">
                         <label for="telephone">Téléphone</label>
-                        <input type="tel" id="telephone" name="telephone">
+                        <input type="tel" id="telephone" name="telephone" value="<?= htmlspecialchars($telephone_val) ?>">
                     </div>
                     
                     <div class="form-group">
-                        <label for="adresse">Adresse complète</label>
-                        <textarea id="adresse" name="adresse" rows="2"></textarea>
+                        <label for="rue">Rue / Numéro *</label>
+                        <input type="text" id="rue" name="rue" value="<?= htmlspecialchars($rue_val) ?>" required>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="code_postal">Code Postal *</label>
+                            <input type="text" id="code_postal" name="code_postal" value="<?= htmlspecialchars($cp_val) ?>" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="ville">Ville *</label>
+                            <input type="text" id="ville" name="ville" value="<?= htmlspecialchars($ville_val) ?>" required>
+                        </div>
                     </div>
                     
                     <button type="submit" class="btn-primary">S'inscrire</button>

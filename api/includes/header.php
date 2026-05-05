@@ -171,11 +171,13 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
         <ul class="nav-links">
             <li><a href="/api/index.php" class="<?= $currentPage === 'home' ? 'active' : '' ?>">Accueil</a></li>
             <li><a href="/api/pages/carte.php" class="<?= $currentPage === 'carte' ? 'active' : '' ?>">La Carte</a></li>
+            <li><a href="/api/pages/avis.php" class="<?= $currentPage === 'avis' ? 'active' : '' ?>">Avis</a></li>
             
             <?php if (isLoggedIn()): ?>
                 <?php if (hasRole('Restaurateur') || hasRole('Livreur')): ?>
                     <!-- Menu éclaté en gros boutons pour le personnel (Tablette / Gants) -->
                     <li><a href="/api/client/profil.php" style="font-size: 1.1rem; padding: 12px 18px; border: 2px solid var(--color-grey-light); border-radius: 8px;"><i class="fas fa-user-circle"></i> Profil</a></li>
+                    <li><a href="/api/client/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; border: 2px solid var(--color-grey-light); border-radius: 8px;"><i class="fas fa-box-open"></i> Achats</a></li>
                     <?php if (hasRole('Restaurateur')): ?>
                         <li><a href="/api/restaurateur/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; background: #e65100; color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-fire-burner"></i> Cuisine</a></li>
                     <?php elseif (hasRole('Livreur')): ?>
@@ -203,8 +205,7 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
                 <li><a href="/api/pages/connexion.php" class="btn-login">Mon Compte</a></li>
             <?php endif; ?>
             
-            <!-- Icône du panier avec compteur (Caché pour le personnel en service) -->
-            <?php if (!isLoggedIn() || (!hasRole('Restaurateur') && !hasRole('Livreur'))): ?>
+            <!-- Icône du panier avec compteur -->
             <li>
                 <a href="/api/panier.php" class="cart-icon">
                     <i class="fas fa-shopping-cart" style="font-size: 1.2rem;"></i>
@@ -213,7 +214,6 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
                     <?php endif; ?>
                 </a>
             </li>
-            <?php endif; ?>
             <li style="display:flex; flex-direction:column; gap:5px; align-items:flex-end;">
                 <button id="toggle-dark-mode" style="background:none; border:1px solid var(--color-grey-light); border-radius:20px; padding:4px 10px; cursor:pointer; font-size:0.8rem; color: inherit;">
                     🌓 Mode Sombre

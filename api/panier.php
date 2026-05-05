@@ -203,41 +203,6 @@ $pageTitle = 'Mon Panier';
 include_once __DIR__ . '/includes/header.php';
 ?>
 
-<style>
-    /* Amélioration de l'interface du Panier */
-    .cart-table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.05); border-radius: 8px; overflow: hidden; }
-    .cart-table th { background: var(--color-secondary); color: var(--color-bg); padding: 15px; text-align: left; }
-    .cart-table td { padding: 15px; border-bottom: 1px solid #eee; vertical-align: middle; }
-    .cart-item-info { display: flex; align-items: center; }
-    .cart-item-image { width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px; background: #eee; }
-    .cart-item-info h3 { margin: 0 0 5px 0; font-size: 1.2rem; color: var(--color-secondary); }
-    .quantity-input { width: 60px; padding: 8px; border: 1px solid var(--color-grey-light); border-radius: 4px; text-align: center; font-size: 1.1rem; }
-    .btn-remove { color: var(--color-primary); font-weight: bold; text-decoration: none; padding: 5px 10px; border-radius: 4px; border: 1px solid var(--color-primary); transition: all 0.3s; }
-    .btn-remove:hover { background: var(--color-primary); color: white; }
-    
-    .cart-summary { background: var(--color-bg); padding: 25px; border-radius: 8px; margin-top: 30px; border: 2px solid var(--color-accent); display: flex; justify-content: space-between; align-items: center; }
-    .cart-total { text-align: left; }
-    .cart-total p { font-size: 1.2rem; margin: 0; }
-    .cart-actions { display: flex; align-items: center; gap: 15px; }
-    .cart-total strong { color: var(--color-primary); font-size: 2.2rem; display: block; margin-top: 5px; }
-    
-    .btn-checkout { background: var(--color-accent); color: var(--color-secondary); font-size: 1.2rem; padding: 15px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: transform 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-    .btn-checkout:hover { transform: scale(1.05); background: #FFD54F; }
-    .btn-update { background: var(--color-secondary); color: white; padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; }
-    .btn-clear { color: var(--color-grey-light); text-decoration: underline; }
-    
-    .empty-cart { text-align: center; padding: 50px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-    .empty-cart p { font-size: 1.5rem; color: var(--color-grey-light); margin-bottom: 20px; }
-    
-    /* Mobile */
-    @media (max-width: 768px) {
-        .cart-summary { flex-direction: column; text-align: center; gap: 20px; }
-        .cart-actions { flex-direction: column; width: 100%; }
-        .btn-checkout, .btn-update { width: 100%; text-align: center; }
-        .cart-table th:nth-child(2), .cart-table td:nth-child(2) { display: none; } /* Cacher prix unitaire sur mobile */
-    }
-</style>
-
 <section class="cart-section">
     <div class="container">
         <h1>Mon Panier</h1>
@@ -250,12 +215,12 @@ include_once __DIR__ . '/includes/header.php';
         
         <?php if (empty($cart['items'])): ?>
             <div class="empty-cart">
-                <div style="font-size: 4rem; margin-bottom: 20px;">🛒</div>
+                <div class="empty-cart-icon">🛒</div>
                 <p>Votre panier est tristement vide...</p>
                 <?php if (isset($_SESSION['edit_commande_id'])): ?>
-                    <a href="/api/panier.php?action=cancel_edit" class="btn-primary" style="background: var(--color-coal-black); padding: 15px 30px; font-size: 1.2rem; margin-right: 10px;">Annuler la modification</a>
+                    <a href="/api/panier.php?action=cancel_edit" class="btn-primary btn-cancel-edit">Annuler la modification</a>
                 <?php endif; ?>
-                <a href="/api/pages/carte.php" class="btn-primary" style="padding: 15px 30px; font-size: 1.2rem;">Découvrir la carte</a>
+                <a href="/api/pages/carte.php" class="btn-primary btn-discover">Découvrir la carte</a>
             </div>
         <?php else: ?>
             <form action="/api/panier.php" method="post" class="cart-form">
@@ -269,7 +234,7 @@ include_once __DIR__ . '/includes/header.php';
                                 <th>Prix unitaire</th>
                                 <th>Quantité</th>
                                 <th>Total</th>
-                                <th style="text-align: center; min-width: 110px;">Actions</th>
+                                <th class="cart-actions-header">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -278,24 +243,24 @@ include_once __DIR__ . '/includes/header.php';
                                     <td class="cart-item-info">
                                         <?php if(!empty($item['image'])): ?>
                                             <img src="<?= str_starts_with($item['image'], '/') ? htmlspecialchars($item['image']) : '/' . htmlspecialchars($item['image']) ?>" alt="<?= htmlspecialchars($item['nom']) ?>" class="cart-item-image" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                            <div class="cart-item-image fallback-img" style="display:none; align-items:center; justify-content:center; font-size: 2rem; background: #eee;">🍔</div>
+                                            <div class="cart-item-image fallback-img" style="display:none;">🍔</div>
                                         <?php else: ?>
-                                            <div class="cart-item-image fallback-img" style="display:flex; align-items:center; justify-content:center; font-size: 2rem; background: #eee;">🍔</div>
+                                            <div class="cart-item-image fallback-img" style="display:flex;">🍔</div>
                                         <?php endif; ?>
-                                        <div style="flex: 1;">
+                                        <div class="cart-item-details">
                                             <h3><?= htmlspecialchars($item['nom']) ?></h3>
                                             <?php 
                                             $options_dispos = $item['options_dispos'] ?? '[]';
                                             ?>
                                             <?php if (!empty($item['options']) || $options_dispos !== '[]'): ?>
-                                                <p class="cart-item-options" style="font-size: 0.9em; color: #555; line-height: 1.5;">
+                                                <p class="cart-item-options-text">
                                                     Options: <?= !empty($item['options']) ? htmlspecialchars(is_array($item['options']) ? implode(', ', $item['options']) : $item['options']) : 'Aucune' ?>
                                                     <?php if ($options_dispos !== '[]'): ?>
-                                                        <br><button type="button" onclick="showOptionsModal(<?= $item['plat_id'] ?? $item['id'] ?>, '<?= htmlspecialchars($item['nom'], ENT_QUOTES) ?>', '<?= htmlspecialchars($options_dispos, ENT_QUOTES) ?>', 0, <?= $index ?>)" style="background: none; border: none; color: var(--color-primary); cursor: pointer; text-decoration: underline; padding: 0; margin-top: 5px; font-size: 0.95em; font-weight: bold;"><i class="fas fa-edit"></i> Modifier les choix du menu</button>
+                                                        <br><button type="button" onclick="showOptionsModal(<?= $item['plat_id'] ?? $item['id'] ?>, '<?= htmlspecialchars($item['nom'], ENT_QUOTES) ?>', '<?= htmlspecialchars($options_dispos, ENT_QUOTES) ?>', 0, <?= $index ?>)" class="btn-edit-options"><i class="fas fa-edit"></i> Modifier les choix du menu</button>
                                                     <?php endif; ?>
                                                 </p>
                                             <?php endif; ?>
-                                            <textarea name="note[<?= $index ?>]" placeholder="Modifications (ex: sans cornichons, changer Coca en Sprite...)" style="width: 100%; padding: 8px; border: 1px solid var(--color-grey-light); border-radius: 4px; margin-top: 8px; font-family: inherit; font-size: 0.85rem; resize: vertical; min-height: 40px;"><?= htmlspecialchars($item['note'] ?? '') ?></textarea>
+                                            <textarea name="note[<?= $index ?>]" placeholder="Modifications (ex: sans cornichons, changer Coca en Sprite...)" class="cart-note"><?= htmlspecialchars($item['note'] ?? '') ?></textarea>
                                         </div>
                                     </td>
                                     <td><?= number_format($item['prix_unitaire'], 2, ',', ' ') ?> €</td>
@@ -303,8 +268,8 @@ include_once __DIR__ . '/includes/header.php';
                                         <input type="number" name="quantite[<?= $index ?>]" value="<?= $item['quantite'] ?>" min="1" max="10" class="quantity-input" onchange="document.getElementById('btn-update-cart').click();">
                                     </td>
                                     <td><?= number_format($item['prix_unitaire'] * $item['quantite'], 2, ',', ' ') ?> €</td>
-                                    <td style="vertical-align: middle;">
-                                        <a href="/api/panier.php?action=remove&index=<?= $index ?>" class="btn-remove" title="Retirer ce plat" style="text-align: center; display: flex; align-items: center; justify-content: center; gap: 5px; padding: 8px;">
+                                    <td class="cart-action-cell">
+                                        <a href="/api/panier.php?action=remove&index=<?= $index ?>" class="btn-remove btn-remove-wrapper" title="Retirer ce plat">
                                             <i class="fas fa-trash-alt"></i> Retirer
                                         </a>
                                     </td>
@@ -328,65 +293,65 @@ include_once __DIR__ . '/includes/header.php';
                     $current_address = $stmtAddr->fetchColumn() ?: '';
                 }
                 ?>
-                <div class="cart-address" style="background: white; padding: 20px; border-radius: 8px; margin-top: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05);">
-                    <h3 style="margin-top: 0; color: var(--color-secondary); font-size: 1.2rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary);"></i> Adresse de livraison</h3>
-                    <textarea name="adresse_livraison" rows="2" style="width: 100%; padding: 10px; border: 1px solid var(--color-grey-light); border-radius: 4px; font-family: inherit; resize: vertical; margin-top: 10px; font-size: 1rem;" placeholder="Où devons-nous vous livrer ?"><?= htmlspecialchars($current_address) ?></textarea>
+                <div class="cart-address cart-address-box">
+                    <h3 class="cart-address-title"><i class="fas fa-map-marker-alt" style="color: var(--color-primary);"></i> Adresse de livraison</h3>
+                    <textarea name="adresse_livraison" rows="2" class="cart-address-input" placeholder="Où devons-nous vous livrer ?"><?= htmlspecialchars($current_address) ?></textarea>
                 </div>
                 
-                <div class="loyalty-box" style="background: #fffdf7; padding: 20px; border-radius: 8px; margin-top: 20px; border: 3px solid <?= $color_miams ?>;">
-                    <h3 style="color: var(--color-secondary); margin-bottom: 10px;">🥩 Le Grand Miam Club</h3>
+                <div class="loyalty-box" style="border: 3px solid <?= $color_miams ?>;">
+                    <h3 class="loyalty-title">🥩 Le Grand Miam Club</h3>
                     <p>Miams disponibles : <strong><?= $miams_dispo ?> Miams</strong> (Rang : <strong style="color: <?= $color_miams ?>;"><?= $statut_miams ?></strong>)</p>
                     
                     <?php if ($statut_miams === "SAUCE CHEF" || $statut_miams === "LÉGENDE DU STEAK"): ?>
-                        <div style="margin: 10px 0; padding: 10px; background: rgba(211, 47, 47, 0.1); border-left: 4px solid var(--color-primary); border-radius: 4px;">
-                            <p style="color: var(--color-primary); font-weight: bold; margin: 0;">🔥 Avantage Rang : Une portion de frites "Sweet Potato" offerte !</p>
+                        <div class="loyalty-benefit-tier1">
+                            <p>🔥 Avantage Rang : Une portion de frites "Sweet Potato" offerte !</p>
                         </div>
                     <?php endif; ?>
                     <?php if ($statut_miams === "LÉGENDE DU STEAK"): ?>
-                        <div style="margin: 10px 0; padding: 10px; background: var(--color-secondary); border-left: 4px solid var(--color-accent); border-radius: 4px;">
-                            <p style="color: var(--color-accent); font-weight: bold; margin: 0;">👑 Avantage Ultime : -10% sur toute la carte & Livraison Prioritaire !</p>
+                        <div class="loyalty-benefit-tier2">
+                            <p>👑 Avantage Ultime : -10% sur toute la carte & Livraison Prioritaire !</p>
                         </div>
                     <?php endif; ?>
 
-                    <div style="margin-top: 15px;">
-                        <p style="font-weight: bold; margin-bottom: 10px;">Le Shop (Échangez vos Miams) :</p>
+                    <div class="loyalty-shop">
+                        <p class="shop-title">Le Shop (Échangez vos Miams) :</p>
                         
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <div class="shop-items">
                             <!-- Option 150 Miams -->
-                            <div style="padding: 10px; background: <?= $miams_dispo >= 150 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 150 ? '1' : '0.5' ?>;">
+                            <div class="shop-item" style="background: <?= $miams_dispo >= 150 ? '#e8f5e9' : '#f5f5f5' ?>; opacity: <?= $miams_dispo >= 150 ? '1' : '0.5' ?>;">
                                 <div><strong>150 Miams</strong> : Une Sauce Maison offerte 🥫</div>
-                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                <button type="button" class="btn-primary shop-item-btn" 
                                     onclick="showOptionsModal(<?= $id_sauce ?>, 'Sauce Maison', '[{&quot;titre&quot;:&quot;Choix&quot;,&quot;choix&quot;:[&quot;Sauce BBQ&quot;,&quot;Sauce Béarnaise&quot;,&quot;Sauce au Poivre&quot;,&quot;Sauce Roquefort&quot;,&quot;Moutarde Ancienne&quot;]}]', 150)" 
                                     <?= $miams_dispo < 150 ? 'disabled' : '' ?>>Obtenir</button>
                             </div>
                             
                             <!-- Option 300 Miams -->
-                            <div style="padding: 10px; background: <?= $miams_dispo >= 300 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 300 ? '1' : '0.5' ?>;">
+                            <div class="shop-item" style="background: <?= $miams_dispo >= 300 ? '#e8f5e9' : '#f5f5f5' ?>; opacity: <?= $miams_dispo >= 300 ? '1' : '0.5' ?>;">
                                 <div><strong>300 Miams</strong> : Un Soft ou une Bière (25cl) 🍺</div>
-                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                <button type="button" class="btn-primary shop-item-btn" 
                                     onclick="showOptionsModal(<?= $id_boisson ?>, 'Boisson Offerte', '[{&quot;titre&quot;:&quot;Choix&quot;,&quot;choix&quot;:[&quot;Coca-Cola (33cl)&quot;,&quot;Sprite (33cl)&quot;,&quot;Ice Tea (25cl)&quot;,&quot;Bière Blonde (25cl)&quot;,&quot;Bière IPA (25cl)&quot;]}]', 300)" 
                                     <?= $miams_dispo < 300 ? 'disabled' : '' ?>>Obtenir</button>
                             </div>
 
                             <!-- Option 800 Miams -->
-                            <div style="padding: 10px; background: <?= $miams_dispo >= 800 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 800 ? '1' : '0.5' ?>;">
+                            <div class="shop-item" style="background: <?= $miams_dispo >= 800 ? '#e8f5e9' : '#f5f5f5' ?>; opacity: <?= $miams_dispo >= 800 ? '1' : '0.5' ?>;">
                                 <div><strong>800 Miams</strong> : Un Dessert au choix 🍪</div>
-                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                <button type="button" class="btn-primary shop-item-btn" 
                                     onclick="showOptionsModal(<?= $id_dessert ?>, 'Dessert Offert', '[{&quot;titre&quot;:&quot;Choix&quot;,&quot;choix&quot;:[&quot;Cookie Skillet&quot;,&quot;Cheesecake NY&quot;,&quot;Brioche Perdue&quot;]}]', 800)" 
                                     <?= $miams_dispo < 800 ? 'disabled' : '' ?>>Obtenir</button>
                             </div>
                             
                             <!-- Option 1500 Miams -->
-                            <div style="padding: 10px; background: <?= $miams_dispo >= 1500 ? '#e8f5e9' : '#f5f5f5' ?>; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; opacity: <?= $miams_dispo >= 1500 ? '1' : '0.5' ?>;">
+                            <div class="shop-item" style="background: <?= $miams_dispo >= 1500 ? '#e8f5e9' : '#f5f5f5' ?>; opacity: <?= $miams_dispo >= 1500 ? '1' : '0.5' ?>;">
                                 <div><strong>1500 Miams</strong> : Le Burger "Grand Miam" 🍔</div>
-                                <button type="button" class="btn-primary" style="padding: 5px 15px; font-size: 0.9rem;" 
+                                <button type="button" class="btn-primary shop-item-btn" 
                                     onclick="showOptionsModal(<?= $id_burger ?>, 'Burger Grand Miam', '[{&quot;titre&quot;:&quot;Viande&quot;,&quot;choix&quot;:[&quot;Bœuf Limousin&quot;,&quot;Bœuf (Halal)&quot;,&quot;Poulet Croustillant&quot;,&quot;Galette Veggie&quot;]},{&quot;titre&quot;:&quot;Cuisson&quot;,&quot;choix&quot;:[&quot;Saignant&quot;,&quot;À point&quot;,&quot;Bien cuit&quot;]}]', 1500)" 
                                     <?= $miams_dispo < 1500 ? 'disabled' : '' ?>>Obtenir</button>
                             </div>
                         </div>
                     </div>
                     
-                    <p style="font-size: 0.95rem; margin-top: 15px; color: var(--color-primary);">
+                    <p class="loyalty-earn-info">
                         ✨ En réglant cette commande, vous cumulerez <strong><?= floor($cart['total'] * 10) ?> Miams</strong> supplémentaires !
                     </p>
                 </div>
@@ -396,29 +361,29 @@ include_once __DIR__ . '/includes/header.php';
                     <div class="cart-total">
                         <p>Total de la commande</p>
                         <?php if ($discount > 0): ?>
-                            <div style="color: #666; text-decoration: line-through; font-size: 1.1rem;"><?= number_format($subtotal, 2, ',', ' ') ?> €</div>
-                            <strong style="color: var(--color-primary);"><?= number_format($cart['total'], 2, ',', ' ') ?> €</strong>
-                            <p style="color: var(--color-success); font-size: 0.9rem; margin-top: 5px;">✨ Remise LÉGENDE DU STEAK (-10%) appliquée !</p>
+                            <div class="discount-old-price"><?= number_format($subtotal, 2, ',', ' ') ?> €</div>
+                            <strong class="discount-new-price"><?= number_format($cart['total'], 2, ',', ' ') ?> €</strong>
+                            <p class="discount-info">✨ Remise LÉGENDE DU STEAK (-10%) appliquée !</p>
                         <?php else: ?>
                             <strong><?= number_format($cart['total'], 2, ',', ' ') ?> €</strong>
                         <?php endif; ?>
                     </div>
                     
                     <div class="cart-actions">
-                        <button type="submit" name="action" value="update" id="btn-update-cart" class="btn-update" style="margin-right: auto;">🔄 Actualiser</button>
+                        <button type="submit" name="action" value="update" id="btn-update-cart" class="btn-update btn-update-cart-action">🔄 Actualiser</button>
                         <?php if (isset($_SESSION['edit_commande_id'])): ?>
                             <a href="/api/panier.php?action=cancel_edit" class="btn-clear">Annuler la modification</a>
                             <?php if ($difference > 0): ?>
-                                <button type="submit" name="action" value="save_edit" class="btn-checkout" style="background: #f39c12; border: none; cursor: pointer; color: white;">💳 Payer supplément (<?= number_format($difference, 2, ',', ' ') ?> €)</button>
+                                <button type="submit" name="action" value="save_edit" class="btn-checkout btn-pay-supplement">💳 Payer supplément (<?= number_format($difference, 2, ',', ' ') ?> €)</button>
                             <?php else: ?>
-                                <button type="submit" name="action" value="save_edit" class="btn-checkout" style="background: #2ecc71; border: none; cursor: pointer; color: white;">💾 Enregistrer</button>
+                                <button type="submit" name="action" value="save_edit" class="btn-checkout btn-save-edit">💾 Enregistrer</button>
                             <?php endif; ?>
                         <?php else: ?>
                             <a href="/api/panier.php?action=clear" class="btn-clear">Vider le panier</a>
                             <?php if (isLoggedIn()): ?>
-                                <button type="submit" name="action" value="checkout" class="btn-checkout" style="border: none; cursor: pointer; color: white;">Payer la commande 💳</button>
+                                <button type="submit" name="action" value="checkout" class="btn-checkout btn-pay-order">Payer la commande 💳</button>
                             <?php else: ?>
-                                <a href="/api/pages/connexion.php?error=must_login" class="btn-checkout" style="background: var(--color-primary); color: white;">Me connecter pour payer 🔒</a>
+                                <a href="/api/pages/connexion.php?error=must_login" class="btn-checkout btn-login-pay">Me connecter pour payer 🔒</a>
                             <?php endif; ?>
                         <?php endif; ?>
                     </div>
