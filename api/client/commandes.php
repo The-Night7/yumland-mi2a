@@ -4,8 +4,8 @@ require_once __DIR__ . '/../includes/auth.php';
 require_once __DIR__ . '/../includes/commandes.php';
 require_once __DIR__ . '/../includes/panier.php';
 
-// Vérifier si l'utilisateur est connecté et est un client
-if (!isLoggedIn() || !hasRole('Client')) {
+// Vérifier si l'utilisateur est connecté
+if (!isLoggedIn()) {
     redirect('/api/pages/connexion.php');
 }
 

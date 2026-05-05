@@ -29,7 +29,6 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? $pageTitle . ' | ' . APP_NAME : APP_NAME ?></title>
-    <link rel="icon" href="/public/images/logo/logo-le-grand-miam.png">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dark-mode.css">
     <!-- Intégration de FontAwesome pour des icônes professionnelles -->
@@ -175,33 +174,28 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
             <li><a href="/api/pages/avis.php" class="<?= $currentPage === 'avis' ? 'active' : '' ?>">Avis</a></li>
             
             <?php if (isLoggedIn()): ?>
-                <?php if (hasRole('Restaurateur') || hasRole('Livreur')): ?>
-                    <!-- Menu éclaté en gros boutons pour le personnel (Tablette / Gants) -->
-                    <li><a href="/api/client/profil.php" style="font-size: 1.1rem; padding: 12px 18px; border: 2px solid var(--color-grey-light); border-radius: 8px;"><i class="fas fa-user-circle"></i> Profil</a></li>
-                    <li><a href="/api/client/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; border: 2px solid var(--color-grey-light); border-radius: 8px;"><i class="fas fa-box-open"></i> Achats</a></li>
-                    <?php if (hasRole('Restaurateur')): ?>
-                        <li><a href="/api/restaurateur/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; background: #e65100; color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-fire-burner"></i> Cuisine</a></li>
-                    <?php elseif (hasRole('Livreur')): ?>
-                        <li><a href="/api/livreur/livraisons.php" style="font-size: 1.1rem; padding: 12px 18px; background: #2e7d32; color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-motorcycle"></i> Courses</a></li>
-                    <?php endif; ?>
-                    <li><a href="/api/logout.php" style="font-size: 1.1rem; padding: 12px 18px; background: var(--color-primary); color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-sign-out-alt"></i> Quitter</a></li>
-                <?php else: ?>
-                    <!-- Menu déroulant classique pour Client et Administrateur -->
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle">
-                            <?= htmlspecialchars($_SESSION['user_name']) ?> 
-                            <span class="dropdown-icon">▼</span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/api/client/profil.php"><i class="fas fa-user"></i> Mon Profil</a></li>
-                            <li><a href="/api/client/commandes.php"><i class="fas fa-box-open"></i> Mes Commandes</a></li>
-                            <?php if (hasRole('Administrateur')): ?>
-                                <li><a href="/api/admin/dashboard.php"><i class="fas fa-shield-alt"></i> Administration</a></li>
-                            <?php endif; ?>
-                            <li><a href="/api/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
-                        </ul>
-                    </li>
+                <!-- Boutons d'accès rapide pour le Staff -->
+                <?php if (hasRole('Restaurateur')): ?>
+                    <li><a href="/api/restaurateur/commandes.php" style="font-size: 1.1rem; padding: 12px 18px; background: #e65100; color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-fire-burner"></i> Cuisine</a></li>
+                <?php elseif (hasRole('Livreur')): ?>
+                    <li><a href="/api/livreur/livraisons.php" style="font-size: 1.1rem; padding: 12px 18px; background: #2e7d32; color: white; border-radius: 8px; font-weight: bold;"><i class="fas fa-motorcycle"></i> Courses</a></li>
                 <?php endif; ?>
+                
+                <!-- Menu déroulant classique pour TOUS -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        <?= htmlspecialchars($_SESSION['user_name']) ?> 
+                        <span class="dropdown-icon">▼</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="/api/client/profil.php"><i class="fas fa-user"></i> Mon Profil</a></li>
+                        <li><a href="/api/client/commandes.php"><i class="fas fa-box-open"></i> Mes Commandes</a></li>
+                        <?php if (hasRole('Administrateur')): ?>
+                            <li><a href="/api/admin/dashboard.php"><i class="fas fa-shield-alt"></i> Administration</a></li>
+                        <?php endif; ?>
+                        <li><a href="/api/logout.php"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                    </ul>
+                </li>
             <?php else: ?>
                 <li><a href="/api/pages/connexion.php" class="btn-login">Mon Compte</a></li>
             <?php endif; ?>

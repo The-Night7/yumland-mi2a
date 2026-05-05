@@ -148,6 +148,26 @@
     }
 </script>
 
+<!-- Bouton Retour en Haut -->
+<button id="backToTop" class="back-to-top" title="Retour en haut">
+    <i class="fas fa-arrow-up"></i>
+</button>
+<script>
+    const backToTopBtn = document.getElementById("backToTop");
+    if (backToTopBtn) {
+        window.addEventListener("scroll", () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.add("visible");
+            } else {
+                backToTopBtn.classList.remove("visible");
+            }
+        });
+        backToTopBtn.addEventListener("click", () => {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        });
+    }
+</script>
+
 <script src="/public/js/script.js"></script>
 <script src="/public/js/cookie-consent.js"></script>
 <?php if (isset($additionalJs)): ?>

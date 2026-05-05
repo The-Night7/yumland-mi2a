@@ -1156,3 +1156,45 @@ footer {
     .btn-checkout, .btn-update { width: 100%; text-align: center; }
     .cart-table th:nth-child(2), .cart-table td:nth-child(2) { display: none; } /* Cacher prix unitaire sur mobile */
 }
+
+/* --- BOUTON RETOUR EN HAUT --- */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background-color: var(--color-primary);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    border: none;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background-color: var(--color-primary-dark);
+    transform: translateY(-5px) scale(1.05);
+}
+
+@media screen and (max-width: 768px) {
+    .back-to-top {
+        bottom: 80px; /* Plus haut sur mobile pour ne pas gêner le bandeau cookie ou livreur */
+        right: 20px;
+        width: 45px;
+        height: 45px;
+    }
+}
