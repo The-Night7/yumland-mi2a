@@ -1,11 +1,24 @@
 <?php
+// session_start() doit être le premier appel, avant tout output
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once __DIR__ . '/../includes/config.php';
 require_once __DIR__ . '/../includes/header.php';
 require_once __DIR__ . '/../includes/commandes.php';
 
+if (!isset($_SESSION['user_role']) || $_SESSION['user_role'] !== 'Livreur') {
+    header('Location: index.php');
+    exit;
+}
+
 // Traitement de l'action de livraison
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'terminee') {
     updateCommandeStatus((int)$_POST['id_commande'], 'Livrée');
+    // On stocke le message flash AVANT la redirection
+    $_SESSION['flash_message'] = 'La commande #' . (int)$_POST['id_commande'] . ' a bien été marquée comme livrée.';
+    $_SESSION['flash_type']    = 'success';
     header('Location: /api/livreur/livraisons.php');
     exit;
 }
@@ -18,13 +31,22 @@ if (!$livreur_id) {
     $livreur_id = $liv ? $liv['id_user'] : 9;
 }
 $mes_livraisons = getCommandesByLivreur($livreur_id);
-
 ?>
 
 <section class="container" style="max-width: 600px; margin: 0 auto;">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
         <h1 style="margin: 0;">Mes Courses</h1>
     </div>
+    
+    <?php if (isset($_SESSION['flash_message'])): ?>
+        <div class="alert alert-<?= htmlspecialchars($_SESSION['flash_type'] ?? 'info') ?>" style="margin-bottom: 20px;">
+            <?= htmlspecialchars($_SESSION['flash_message']) ?>
+        </div>
+        <?php 
+        unset($_SESSION['flash_message']);
+        unset($_SESSION['flash_type']);
+        ?>
+    <?php endif; ?>
     
     <?php if (empty($mes_livraisons)): ?>
         <div class="alert alert-success">

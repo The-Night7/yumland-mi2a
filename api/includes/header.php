@@ -29,6 +29,7 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? $pageTitle . ' | ' . APP_NAME : APP_NAME ?></title>
+    <link rel="icon" href="/public/images/logo/logo-le-grand-miam.png">
     <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="/css/dark-mode.css">
     <!-- Intégration de FontAwesome pour des icônes professionnelles -->

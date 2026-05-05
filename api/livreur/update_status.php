@@ -38,4 +38,12 @@ try {
 } catch (PDOException $e) {
     echo json_encode(['success' => false, 'message' => 'Erreur lors de la mise à jour de la base de données.']);
 }
+
+// 1. On crée le message de succès
+$_SESSION['flash_message'] = "La commande a bien été marquée comme livrée !";
+$_SESSION['flash_type'] = "success"; // Permet de gérer la couleur (vert pour succès)
+
+// 2. On redirige vers la page des livraisons
+header('Location: livraisons.php');
+exit;
 ?>
