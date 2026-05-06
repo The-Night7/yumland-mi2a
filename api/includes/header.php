@@ -29,8 +29,8 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? $pageTitle . ' | ' . APP_NAME : APP_NAME ?></title>
-    <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="/css/dark-mode.css">
+    <link rel="stylesheet" href="/css/style.css?v=<?= time() ?>">
+    <link rel="stylesheet" href="/css/dark-mode.css?v=<?= time() ?>">
     <!-- Intégration de FontAwesome pour des icônes professionnelles -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Intégration de la police OpenDyslexic pour l'accessibilité -->
@@ -53,6 +53,18 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
         }
         main {
             flex: 1 0 auto;
+            position: relative;
+            z-index: 1 !important; /* Force le contenu à rester tout au fond */
+        }
+        
+        /* Forçage ultra-prioritaire UNIQUEMENT pour le header principal */
+        header.main-site-header {
+            position: sticky !important;
+            top: 0 !important;
+            z-index: 999999 !important;
+            background-color: rgba(255, 255, 255, 0.98) !important; /* Fond opaque */
+            backdrop-filter: none !important; /* FIX NAVIGATEUR : Le flou casse l'empilement */
+            -webkit-backdrop-filter: none !important;
         }
 
         /* Design du menu déroulant (Avatar client) */
@@ -80,7 +92,7 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
             background-color: var(--color-bg, #ffffff);
             min-width: 230px;
             box-shadow: 0px 8px 24px rgba(0,0,0,0.15);
-            z-index: 1000;
+            z-index: 999999 !important;
             border-radius: 8px;
             padding: 10px 0;
             list-style: none;
@@ -163,7 +175,7 @@ $fontClass = (isset($_COOKIE['font']) && $_COOKIE['font'] === 'dyslexic') ? 'dys
 </head>
 <body class="<?= trim($themeClass . ' ' . $fontClass) ?>">
 
-<header>
+<header class="main-site-header">
     <nav>
         <div class="logo-container">
             <a href="/api/index.php" class="logo-text">Le <span class="text-highlight">Grand</span> Miam</a>

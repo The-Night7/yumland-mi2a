@@ -99,6 +99,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 // Récupérer les commandes de l'utilisateur
 $commandes = getAllCommandes(null, $_SESSION['user_id'], 'DESC');
 
+// NOUVEAU : Vérifier quelles commandes ont déjà été notées
+$commandes_notees = [];
+try {
+    $stmtAvis = $pdo->prepare("SELECT id_commande FROM Avis WHERE id_client = ?");
+    $stmtAvis->execute([$_SESSION['user_id']]);
+    $commandes_notees = $stmtAvis->fetchAll(PDO::FETCH_COLUMN);
+} catch (Exception $e) { }
+
 // Définir la page courante pour le menu actif
 $currentPage = 'client_commandes';
 $pageTitle = 'Mes Commandes';
@@ -214,7 +222,11 @@ include_once __DIR__ . '/../includes/header.php';
                             <?php endif; ?>
                             
                             <?php if ($commande['statut'] === 'Livrée'): ?>
-                                <a href="/api/client/noter.php?commande_id=<?= $commande['id_commande'] ?>" class="btn-secondary" style="padding: 10px 15px; border: 1px solid var(--color-coal-black); color: var(--color-coal-black); text-decoration: none; border-radius: 4px;">⭐ Noter</a>
+                                <?php if (in_array($commande['id_commande'], $commandes_notees)): ?>
+                                    <span class="btn-secondary" style="padding: 10px 15px; border: 1px solid #ccc; color: #999; background: #f9f9f9; border-radius: 4px; cursor: not-allowed;" title="Vous avez déjà noté cette commande.">✅ Avis laissé</span>
+                                <?php else: ?>
+                                    <a href="/api/client/noter.php?commande_id=<?= $commande['id_commande'] ?>" class="btn-secondary" style="padding: 10px 15px; border: 1px solid var(--color-coal-black); color: var(--color-coal-black); text-decoration: none; border-radius: 4px;">⭐ Noter</a>
+                                <?php endif; ?>
                             <?php endif; ?>
                             <form method="POST" style="margin: 0;">
                                 <input type="hidden" name="action" value="recommander">
